@@ -53,9 +53,12 @@
                 <button class="nav-arrow left">&lt;</button>
                 <div class="memory-timeline" id="memory-timeline">
                     <div class="memory-item">
-                        <img src="images/memory-lane-1.jpg" alt="Memory Lane Pic 1">
-                        <h4>A Special Memory (Date)</h4>
-                        <p>This photo holds a special moment we shared.</p>
+                        <video controls width="100%" height="auto">
+                            <source src="videos/memory-lane-clip.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <h4>A Special Video Memory (Date)</h4>
+                        <p>This video holds a special moment we shared.</p>
                     </div>
                     <div class="memory-item">
                         <img src="images/poster.jpg" alt="The Poster">
@@ -77,7 +80,10 @@
             <h3>Level: Your Music Video!</h3>
             <p class="lyric-station" id="video-lyric-station">This is the world I imagine with you...</p>
             <div class="video-container">
-                <iframe src="https://drive.google.com/file/d/1fF2czq5_hBEnSdwkW7qsSGmbzUhpxcW9/preview" width="640" height="480" allow="autoplay"></iframe>
+                <video controls width="640" height="480">
+                    <source src="videos/music-video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
             <div class="video-section-particles" id="video-section-particles"></div>
             <button class="next-level-btn glow-button" data-target="hidden-heart-message-section">Unlock Hidden Heart Message</button>
