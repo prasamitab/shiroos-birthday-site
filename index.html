@@ -1,125 +1,103 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2566">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiroo's Special Drive</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Shiroo's Special Drive&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="stylesheet" href="style.css"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&amp;family=Roboto+Mono&amp;display=swap" rel="stylesheet"&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="loading-screen"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="loading-spinner"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Igniting the engine...&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="game-container" class="hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="garage-background"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="floor-glow"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="car-silhouette"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="co-driver-display" id="co-driver-display"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p id="co-driver-cue"&gt;&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="level-0" class="level-section"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3&gt;Welcome, Shiroo!&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;Your journey begins. Press the ignition to start.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="ignition-button" class="glow-button"&gt;Ignite Engine&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="level-1" class="level-section hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3&gt;Level 1: The Artwork Wall&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;Designed by your favorite artist &amp; copilot.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="artwork-frame" id="artwork-frame"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Main artwork - assuming you save this as 'main-art.jpg' in your 'images' folder --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;img src="images/main-art.jpg" alt="Main Artwork" class="artwork-img"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="artwork-spotlight" id="artwork-spotlight"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="artwork-message"&gt;Click the artwork to reveal the masterpiece!&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="next-level-btn glow-button" data-target="level-2"&gt;Next Level&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="artwork-overlay" class="overlay-message hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="overlay-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;This artwork is made thinking about you. It holds a piece of my heart. Not just ink on paper, but a memory you can keep forever.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button class="close-overlay-btn glow-button"&gt;Close&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="level-2" class="level-section hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3&gt;Level 2: Memory Lane&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;Remember this pitstop? You drove through like a champ.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="memory-timeline-wrapper"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;button class="nav-arrow left"&gt;&amp;lt;&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="memory-timeline" id="memory-timeline"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="memory-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;!-- Memory Lane Pic 1 - assuming you save this as 'memory-lane-1.jpg' in your 'images' folder --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;img src="images/memory-lane-1.jpg" alt="Memory Lane Pic 1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h4&gt;A Special Memory (Date)&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p&gt;This photo holds a special moment we shared.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="memory-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;!-- The Poster - assuming you save this as 'poster.jpg' in your 'images' folder --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;img src="images/poster.jpg" alt="The Poster"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h4&gt;The Poster (Date)&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p&gt;A cool poster for our journey ahead!&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="memory-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;!-- Car Art - assuming you save this as 'car-art.jpg' in your 'images' folder --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;img src="images/car-art.jpg" alt="Car Art"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h4&gt;Car Art (Date)&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p&gt;Our ride, perfectly captured.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Add more memory items here following the same structure --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;button class="nav-arrow right"&gt;&amp;gt;&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="next-level-btn glow-button" data-target="level-music-video"&gt;Next Level&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="level-music-video" class="level-section hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3&gt;Level: Your Music Video!&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="lyric-station" id="video-lyric-station"&gt;This is the world I imagine with you...&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="video-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Your Google Drive Music Video Embed Code --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;iframe src="https://drive.google.com/file/d/1fF2czq5_hBEnSdwkW7qsSGmbzUhpxcW9/preview" width="640" height="480" allow="autoplay"&gt;&lt;/iframe&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="video-section-particles" id="video-section-particles"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="next-level-btn glow-button" data-target="hidden-heart-message-section"&gt;Unlock Hidden Heart Message&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="hidden-heart-message-section" class="level-section hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3&gt;A Message From My Heart&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="heart-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="heart"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="heart-message"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;Happy Birthday, Shiroo!&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;You're the most amazing person I know. Every moment with you is a treasure. May your day be filled with joy, laughter, and everything you wish for.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;Love always,&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;Your Co-Pilot&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="particle-background"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="script.js"&gt;&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+    <div id="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Igniting the engine...</p>
+    </div>
+
+    <div id="game-container" class="hidden">
+        <div class="garage-background"></div>
+        <div class="floor-glow"></div>
+        <div class="car-silhouette"></div>
+
+        <div class="co-driver-display" id="co-driver-display">
+            <p id="co-driver-cue"></p>
+        </div>
+
+        <div id="level-0" class="level-section">
+            <h3>Welcome, Shiroo!</h3>
+            <p>Your journey begins. Press the ignition to start.</p>
+            <button id="ignition-button" class="glow-button">Ignite Engine</button>
+        </div>
+
+        <div id="level-1" class="level-section hidden">
+            <h3>Level 1: The Artwork Wall</h3>
+            <p>Designed by your favorite artist & copilot.</p>
+            <div class="artwork-frame" id="artwork-frame">
+                <img src="images/main-art.jpg" alt="Main Artwork" class="artwork-img">
+                <div class="artwork-spotlight" id="artwork-spotlight"></div>
+            </div>
+            <p class="artwork-message">Click the artwork to reveal the masterpiece!</p>
+            <button class="next-level-btn glow-button" data-target="level-2">Next Level</button>
+
+            <div id="artwork-overlay" class="overlay-message hidden">
+                <div class="overlay-content">
+                    <p>This artwork is made thinking about you. It holds a piece of my heart. Not just ink on paper, but a memory you can keep forever.</p>
+                    <button class="close-overlay-btn glow-button">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="level-2" class="level-section hidden">
+            <h3>Level 2: Memory Lane</h3>
+            <p>Remember this pitstop? You drove through like a champ.</p>
+            <div class="memory-timeline-wrapper">
+                <button class="nav-arrow left">&lt;</button>
+                <div class="memory-timeline" id="memory-timeline">
+                    <div class="memory-item">
+                        <img src="images/memory-lane-1.jpg" alt="Memory Lane Pic 1">
+                        <h4>A Special Memory (Date)</h4>
+                        <p>This photo holds a special moment we shared.</p>
+                    </div>
+                    <div class="memory-item">
+                        <img src="images/poster.jpg" alt="The Poster">
+                        <h4>The Poster (Date)</h4>
+                        <p>A cool poster for our journey ahead!</p>
+                    </div>
+                    <div class="memory-item">
+                        <img src="images/car-art.jpg" alt="Car Art">
+                        <h4>Car Art (Date)</h4>
+                        <p>Our ride, perfectly captured.</p>
+                    </div>
+                    </div>
+                <button class="nav-arrow right">&gt;</button>
+            </div>
+            <button class="next-level-btn glow-button" data-target="level-music-video">Next Level</button>
+        </div>
+
+        <div id="level-music-video" class="level-section hidden">
+            <h3>Level: Your Music Video!</h3>
+            <p class="lyric-station" id="video-lyric-station">This is the world I imagine with you...</p>
+            <div class="video-container">
+                <iframe src="https://drive.google.com/file/d/1fF2czq5_hBEnSdwkW7qsSGmbzUhpxcW9/preview" width="640" height="480" allow="autoplay"></iframe>
+            </div>
+            <div class="video-section-particles" id="video-section-particles"></div>
+            <button class="next-level-btn glow-button" data-target="hidden-heart-message-section">Unlock Hidden Heart Message</button>
+        </div>
+
+        <div id="hidden-heart-message-section" class="level-section hidden">
+            <h3>A Message From My Heart</h3>
+            <div class="heart-container">
+                <div class="heart"></div>
+                <div class="heart-message">
+                    <p>Happy Birthday, Shiroo!</p>
+                    <p>You're the most amazing person I know. Every moment with you is a treasure. May your day be filled with joy, laughter, and everything you wish for.</p>
+                    <p>Love always,</p>
+                    <p>Your Co-Pilot</p>
+                </div>
+            </div>
+            <div class="particle-background"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
