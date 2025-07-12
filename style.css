@@ -1,0 +1,546 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0a0a1a; /* Dark background for the overall page */
+    font-family: 'Orbitron', sans-serif;
+    color: #0ff; /* Neon blue for general text */
+    text-shadow: 0 0 5px #0ff;
+}
+
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0a0a1a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #0ff;
+    font-size: 1.5em;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    border: 8px solid rgba(0, 255, 255, 0.2);
+    border-top: 8px solid #0ff;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.garage-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #1a1a3a, #0a0a1a);
+    z-index: -3;
+}
+
+.floor-glow {
+    position: absolute;
+    bottom: 0;
+    width: 150%;
+    height: 200px;
+    background: radial-gradient(ellipse at center, rgba(0, 255, 255, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(50px);
+    z-index: -2;
+}
+
+.car-silhouette {
+    position: absolute;
+    bottom: -50px; /* Adjust to show only part of the car */
+    width: 80%;
+    max-width: 800px;
+    height: 400px; /* Adjust height as needed */
+    background: rgba(0, 0, 0, 0.7); /* Dark silhouette */
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+    z-index: -1;
+    transform: perspective(1000px) rotateX(10deg); /* Slight 3D effect */
+}
+
+.co-driver-display {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #0ff;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-family: 'Roboto Mono', monospace;
+    color: #0ff;
+    font-size: 1.1em;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+    z-index: 10;
+    min-width: 300px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+.co-driver-display.active {
+    opacity: 1;
+}
+
+.level-section {
+    background: rgba(10, 10, 30, 0.9);
+    border: 2px solid #f0f; /* Neon pink border */
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.7);
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 800px;
+    width: 90%;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    z-index: 5;
+}
+
+.level-section.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hidden {
+    display: none;
+}
+
+h3 {
+    color: #0ff;
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #0ff;
+}
+
+p {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.1em;
+    color: #eee;
+    margin-bottom: 25px;
+}
+
+.glow-button {
+    background: linear-gradient(45deg, #0ff, #f0f);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    color: #0a0a1a;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2em;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.7), 0 0 15px rgba(255, 0, 255, 0.7);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.glow-button:hover {
+    background: linear-gradient(45deg, #f0f, #0ff);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 1), 0 0 25px rgba(255, 0, 255, 1);
+    transform: translateY(-3px);
+}
+
+/* Artwork Wall Specific Styles */
+.artwork-frame {
+    position: relative; /* Needed for absolute positioning of spotlight */
+    margin: 20px auto;
+    width: 70%;
+    max-width: 400px;
+    border: 3px solid #f0f;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.7);
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden; /* To contain the blur */
+}
+.artwork-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    filter: blur(5px); /* Start more blurred */
+    transition: filter 1s ease-in-out;
+}
+.artwork-img.unblurred {
+    filter: blur(0);
+}
+
+.artwork-spotlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255,255,200,0.5) 0%, transparent 40%);
+    opacity: 0; /* Hidden initially */
+    transition: opacity 1s ease-in-out;
+    pointer-events: none; /* Allows clicks to pass through */
+}
+.artwork-frame:active .artwork-spotlight {
+    opacity: 1; /* Show spotlight on click/active */
+}
+
+/* Overlay message style */
+.overlay-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85); /* Darker overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; /* Above everything else */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none; /* Initially allow clicks to pass through */
+}
+.overlay-message.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+.overlay-content {
+    background: rgba(20, 20, 50, 0.95);
+    padding: 40px;
+    border-radius: 15px;
+    border: 2px solid #ffcc00;
+    box-shadow: 0 0 30px rgba(255, 204, 0, 0.7);
+    max-width: 600px;
+    text-align: center;
+    transform: scale(0.8);
+    transition: transform 0.3s ease-out;
+}
+.overlay-message.show .overlay-content {
+    transform: scale(1);
+}
+.overlay-content p {
+    font-size: 1.2em;
+    color: #eee;
+    margin-bottom: 20px;
+}
+.close-overlay-btn {
+    /* Inherits glow-button style, maybe adjust size */
+    padding: 10px 20px;
+    font-size: 1em;
+}
+
+/* Memory Lane Specific Styles */
+.memory-timeline-wrapper {
+    position: relative;
+    margin: 20px auto;
+    max-width: 90%;
+    overflow: hidden; /* Hide scrollbar but allow content to flow */
+    display: flex;
+    align-items: center;
+}
+.memory-timeline {
+    display: flex; /* Make items horizontal */
+    overflow-x: scroll; /* Enable horizontal scrolling */
+    scroll-snap-type: x mandatory; /* Snap to items */
+    -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
+    gap: 20px; /* Space between items */
+    padding: 15px 0; /* Padding for items at edges */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none;  /* Hide scrollbar for IE/Edge */
+    animation: none; /* Remove previous animation */
+    width: 100%; /* Take full width of wrapper */
+}
+.memory-timeline::-webkit-scrollbar { /* Hide scrollbar for Chrome/Safari */
+    display: none;
+}
+
+.memory-item {
+    flex: 0 0 300px; /* Fixed width for each item (adjust as needed) */
+    scroll-snap-align: center; /* Snap to center of item */
+    background: rgba(20, 20, 50, 0.7);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #777;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+.memory-item:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 0 15px rgba(255, 255, 0, 0.8), 0 0 30px rgba(255, 255, 0, 0.6);
+}
+.memory-item img {
+    max-width: 100%;
+    height: 200px; /* Fixed height for consistency */
+    object-fit: cover; /* Cover the area, cropping if needed */
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.memory-item h4 {
+    color: #ffefd5;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+.memory-item p {
+    font-size: 0.9em;
+    color: #ccc;
+}
+
+.nav-arrow {
+    background: rgba(0, 0, 0, 0.5);
+    color: #0ff;
+    border: 1px solid #0ff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+.nav-arrow.left { left: -20px; }
+.nav-arrow.right { right: -20px; }
+.nav-arrow:hover {
+    background: #0ff;
+    color: black;
+    box-shadow: 0 0 15px #0ff;
+}
+
+/* Music Video Specific Styles */
+.lyric-station {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.2em;
+    color: #0ff;
+    text-shadow: 0 0 8px #0ff;
+    margin-bottom: 20px;
+}
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    margin: 20px auto;
+    background: rgba(0, 0, 0, 0.9);
+    border: 3px solid #0ff;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+    border-radius: 10px;
+    overflow: hidden; /* Ensures video stays within bounds */
+}
+.video-container iframe {
+    width: 100%;
+    height: 400px; /* Adjust height as needed */
+    display: block;
+}
+
+.video-section-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1; /* Behind video content */
+    background: radial-gradient(circle at center, rgba(100,0,150,0.1) 0%, transparent 70%);
+    animation: subtleGlow 10s ease-in-out infinite alternate;
+}
+/* Example for actual particles - more complex, may need JS */
+.video-section-particles::before {
+    content: '';
+    position: absolute;
+    width: 10px; height: 10px;
+    background: radial-gradient(white, rgba(255,255,255,0.5));
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(255,255,255,0.7);
+    animation: floatParticles 15s infinite ease-in-out;
+    top: 10%; left: 20%;
+    animation-delay: 0s;
+}
+.video-section-particles::after {
+    content: '';
+    position: absolute;
+    width: 8px; height: 8px;
+    background: radial-gradient(cyan, rgba(0,255,255,0.5));
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0,255,255,0.7);
+    animation: floatParticles 18s infinite ease-in-out;
+    top: 80%; left: 70%;
+    animation-delay: 3s;
+}
+@keyframes floatParticles {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+    50% { transform: translate(50px, -50px) scale(1.1); opacity: 1; }
+    100% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+}
+@keyframes subtleGlow {
+    0% { background-color: rgba(0, 0, 20, 0.5); }
+    50% { background-color: rgba(0, 0, 30, 0.6); }
+    100% { background-color: rgba(0, 0, 20, 0.5); }
+}
+
+
+/* Hidden Heart Message Specific Styles */
+.heart-container {
+    position: relative;
+    width: 300px;
+    height: 270px;
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.heart {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #f0f; /* Neon pink heart */
+    transform: rotate(-45deg);
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.8);
+    animation: pulse 1.5s infinite alternate;
+}
+
+.heart::before,
+.heart::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #f0f;
+    border-radius: 50%;
+}
+
+.heart::before {
+    top: -50%;
+    left: 0;
+}
+
+.heart::after {
+    top: 0;
+    right: -50%;
+}
+
+.heart-message {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.1em;
+    text-shadow: 0 0 8px #fff;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.heart-message p {
+    margin: 10px 0;
+    color: #fff; /* Ensure white text for readability on heart */
+}
+
+@keyframes pulse {
+    0% { transform: rotate(-45deg) scale(1); box-shadow: 0 0 30px rgba(255, 0, 255, 0.8); }
+    100% { transform: rotate(-45deg) scale(1.05); box-shadow: 0 0 40px rgba(255, 0, 255, 1); }
+}
+
+.particle-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.particle-background::before,
+.particle-background::after {
+    content: '';
+    position: absolute;
+    background-color: #fff;
+    border-radius: 50%;
+    opacity: 0;
+    animation: floatAndFade 15s infinite ease-in-out;
+}
+
+.particle-background::before {
+    width: 5px; height: 5px;
+    top: 20%; left: 10%;
+    animation-delay: 0s;
+}
+.particle-background::after {
+    width: 8px; height: 8px;
+    top: 70%; left: 80%;
+    animation-delay: 5s;
+}
+/* Add more ::before/::after or use JS for more particles */
+
+@keyframes floatAndFade {
+    0% { transform: translate(0, 0) scale(0); opacity: 0; }
+    20% { opacity: 1; transform: scale(1); }
+    80% { opacity: 1; }
+    100% { transform: translate(100px, -100px) scale(0.5); opacity: 0; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    h3 {
+        font-size: 1.5em;
+    }
+    p {
+        font-size: 0.9em;
+    }
+    .glow-button {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+    .level-section {
+        padding: 20px;
+    }
+    .co-driver-display {
+        font-size: 0.9em;
+        min-width: unset;
+        width: 80%;
+    }
+    .artwork-frame {
+        width: 90%;
+    }
+    .memory-item {
+        flex: 0 0 250px;
+    }
+    .video-container iframe {
+        height: 250px;
+    }
+}
