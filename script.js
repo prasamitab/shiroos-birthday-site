@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ignitionButton = document.getElementById('ignition-button');
     const artworkFrame = document.getElementById('artwork-frame');
     const artworkOverlay = document.getElementById('artwork-overlay');
-    const closeOverlayBtns = document.querySelectorAll('.close-overlay-btn'); // Use querySelectorAll
+    const closeOverlayBtns = document.querySelectorAll('.close-overlay-btn');
     const memoryTimeline = document.getElementById('memory-timeline');
     const navArrows = document.querySelectorAll('.nav-arrow');
     const nextLevelBtns = document.querySelectorAll('.next-level-btn');
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- Loading Sequence ---
-    // Simulate loading time and play music
+    // Simulate loading time
     setTimeout(() => {
         loadingScreen.classList.add('hidden');
         gameContainer.classList.remove('hidden');
@@ -51,71 +51,82 @@ document.addEventListener('DOMContentLoaded', () => {
             backgroundMusic.volume = 0.5; // Set a default volume
             backgroundMusic.play().catch(e => console.log("Music autoplay blocked:", e));
         }
+
+        // Display the long intro message immediately in typewriter style
         displayCoDriverCue(introMessage, true, () => {
-            // Callback after typing effect completes
+            // Callback after typing effect completes for the intro message
+            // Fade out the intro message display
+            coDriverDisplay.style.opacity = '0';
             setTimeout(() => {
-                displayCoDriverCue("System initiated. Ready for pilot input."); // Shorter message after intro
-            }, 1000);
+                coDriverDisplay.classList.add('hidden'); // Hide the display entirely
+                showLevel('level-0'); // Then show the first game level
+            }, 500); // Small delay after fade out
         });
-    }, 3000); // 3 seconds loading
+
+    }, 3000); // 3 seconds loading screen
+
 
     function displayCoDriverCue(message, typewriter = false, callback = null) {
         coDriverCue.textContent = ''; // Clear existing content
         coDriverCue.classList.remove('typewriter'); // Reset typewriter class
         coDriverCue.style.animation = 'none'; // Reset any previous animation
-        void coDriverCue.offsetWidth; // Trigger reflow
+        coDriverDisplay.classList.remove('hidden'); // Ensure display is visible
+        coDriverDisplay.style.opacity = '1'; // Ensure display is fully opaque
+
+        void coDriverCue.offsetWidth; // Trigger reflow for animation reset
 
         if (typewriter) {
             coDriverCue.classList.add('typewriter');
-            let i = 0;
-            const speed = 25; // Typing speed in ms
-            const cursorBlinkInterval = 750; // Cursor blink speed in ms
+            // Calculate animation duration based on message length and typing speed
+            const speed = 25; // Typing speed in ms per character
+            const typingAnimationDuration = message.length * speed / 1000; // Duration in seconds
 
-            // Remove existing typing/blink animations if any
-            coDriverCue.style.animation = 'none';
-            void coDriverCue.offsetWidth; // Reflow
+            // Set the message immediately so width calculation is correct for animation
+            coDriverCue.textContent = message;
+            coDriverCue.style.whiteSpace = 'pre-wrap'; // Preserve line breaks
 
-            // Apply typing animation
-            const typingAnimationDuration = message.length * speed / 1000;
+            // Apply typing and blink-caret animations directly via style
             coDriverCue.style.animation = `typing ${typingAnimationDuration}s steps(${message.length}, end) forwards, blink-caret .75s step-end infinite`;
-            coDriverCue.style.width = '100%'; // Ensure width is sufficient for text
+            coDriverCue.style.width = '100%'; // Allow text to fill the frame
 
-            // Use innerText for typing, and ensure whitespace is preserved
-            coDriverCue.textContent = message; // Set text content immediately for animation
-            coDriverCue.style.whiteSpace = 'pre-wrap';
-
-            // Calculate when typing is done and execute callback
+            // Set a timeout for when the typing is finished and call the callback
             setTimeout(() => {
                 coDriverCue.style.borderRight = 'none'; // Hide cursor
                 if (callback) callback();
-            }, typingAnimationDuration * 1000 + 500); // A small delay after typing
+            }, typingAnimationDuration * 1000 + 500); // A small delay after typing for cursor to disappear
         } else {
+            // For standard, non-typewriter messages
             coDriverCue.textContent = message;
             coDriverCue.style.opacity = '1';
             coDriverCue.style.animation = 'textAppear 1s forwards'; // Simple fade in
             setTimeout(() => {
-                coDriverDisplay.style.opacity = '0';
-                coDriverCue.style.opacity = '0';
-                coDriverCue.style.animation = 'none'; // Stop fade-out animation
+                coDriverDisplay.style.opacity = '0'; // Fade out the display
+                // Only hide the display entirely if it's not the initial intro that transitions to level-0
+                // For regular cues, just fade out
             }, 5000); // Co-driver message visible for 5 seconds
         }
-        coDriverDisplay.style.opacity = '1';
     }
 
 
     // --- NEW: Fuel Tank Animation ---
     let fuelLevel = 0;
-    const maxFuelLevels = 5; // Total levels/stages that increase fuel
-    let currentFuelStage = 0;
+    // intro message (0), level-0 (1), level-1 (2), quiz (3), level-2 (4), QA (5), music video (6), healing (7), final message (8)
+    // 9 stages in total for fuel to fill up from 0 to 8
+    const maxFuelLevels = 8; // Number of "levels" that increase fuel, including the final message section
+    let currentFuelStage = -1; // Start at -1, so the first call to updateFuelTank for level-0 makes it stage 0
 
     function updateFuelTank() {
-        currentFuelStage++;
+        currentFuelStage++; // Increment stage each time this is called
         if (currentFuelStage > maxFuelLevels) {
             currentFuelStage = maxFuelLevels; // Cap at max
         }
         fuelLevel = (currentFuelStage / maxFuelLevels) * 100;
         fuelFill.style.height = `${fuelLevel}%`;
-        displayCoDriverCue(`Fuel level increased to ${Math.round(fuelLevel)}%!`);
+
+        // Only show fuel update message if it's not the very first intro/level-0 transition
+        if (currentFuelStage >= 0) {
+            displayCoDriverCue(`Fuel level increased to ${Math.round(fuelLevel)}%!`);
+        }
     }
 
     // --- Level Transitions ---
@@ -124,10 +135,11 @@ document.addEventListener('DOMContentLoaded', () => {
             section.classList.add('hidden');
         });
         document.getElementById(levelId).classList.remove('hidden');
-        updateFuelTank(); // Increase fuel with each level completion
+        updateFuelTank(); // Increase fuel with each level change
+
         // Specific cues for each level
         if (levelId === 'level-0') {
-            displayCoDriverCue("Welcome, Pilot. Press the ignition.");
+            displayCoDriverCue("System initiated. Ready for pilot input.");
         } else if (levelId === 'level-1') {
             displayCoDriverCue("Initiating Artwork Wall. Observe carefully.");
         } else if (levelId === 'level-quiz') {
@@ -137,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             quizFeedback.textContent = '';
             quizFeedback.classList.remove('correct', 'incorrect');
             quizNextLevelBtn.classList.add('hidden');
+            submitQuizBtn.classList.remove('hidden'); // Make sure submit is visible for quiz
         }
         else if (levelId === 'level-2') {
             displayCoDriverCue("Entering Memory Lane. Navigate with care.");
@@ -168,9 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Initial Level
-    showLevel('level-0'); // Will increase fuel by 1 for initial load
-
     // --- Event Listeners ---
     if (ignitionButton) {
         ignitionButton.addEventListener('click', () => {
@@ -178,7 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
             displayCoDriverCue("Engine ignited. Proceed to Level 1.");
         });
     }
-
 
     nextLevelBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -197,10 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (closeOverlayBtns) { // Use for all close buttons
+    if (closeOverlayBtns) {
         closeOverlayBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                btn.closest('.overlay-message').classList.remove('visible'); // Find parent overlay
+                btn.closest('.overlay-message').classList.remove('visible');
                 if (artworkFrame && btn.closest('#artwork-overlay')) {
                     artworkFrame.classList.remove('revealed'); // Reset artwork state
                 }
@@ -213,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
         navArrows.forEach(arrow => {
             arrow.addEventListener('click', () => {
                 const memoryItem = memoryTimeline.querySelector('.memory-item');
-                if (!memoryItem) return; // Exit if no items
+                if (!memoryItem) return;
                 const scrollAmount = memoryItem.offsetWidth + 30; // Item width + margin
                 if (arrow.classList.contains('left')) {
                     memoryTimeline.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
@@ -224,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- NEW: Quiz Logic (Stage 1) ---
+    // --- Quiz Logic (Stage 1) ---
     if (submitQuizBtn) {
         submitQuizBtn.addEventListener('click', () => {
             const answers = {
@@ -263,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- NEW: Q&A Logic (Stage 2) ---
+    // --- Q&A Logic (Stage 2) ---
     if (qaNextBtns.length > 0) {
         qaNextBtns.forEach((btn, index) => {
             btn.addEventListener('click', () => {
@@ -365,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
         typeLyric();
     }
 
-    // --- NEW: Healing Toolkit / Hug Logic ---
+    // --- Healing Toolkit / Hug Logic ---
     if (hugButton) {
         hugButton.addEventListener('click', () => {
             hugOverlay.classList.add('visible');
