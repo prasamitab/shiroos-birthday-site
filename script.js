@@ -3,15 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('game-container');
     const coDriverDisplay = document.getElementById('co-driver-display');
     const coDriverCue = document.getElementById('co-driver-cue');
-    const ignitionStartButton = document.getElementById('ignition-start-button');
+    // Removed ignitionStartButton as it's no longer needed
+
     const fuelFill = document.getElementById('fuel-fill');
     const loveQuoteElement = document.getElementById('love-quote');
     const backgroundMusic = document.getElementById('background-music');
     const birthdayAudio = document.getElementById('birthday-audio');
 
-    // Level elements
-    const level0 = document.getElementById('level-0');
-    const ignitionButton = document.getElementById('ignition-button');
+    // Level elements (level-0 and ignitionButton removed)
     const level1 = document.getElementById('level-1');
     const artworkFrame = document.getElementById('artwork-frame');
     const artworkOverlay = document.getElementById('artwork-overlay');
@@ -60,27 +59,39 @@ document.addEventListener('DOMContentLoaded', () => {
     let loveQuoteInterval;
     let fuelLevel = 100; // Starting fuel level
 
+    // Adjust this final message if you want it shorter or different
     const finalMessage = "Happy Birthday, Shiroo!\n\nYou're the most amazing person I know. Every moment with you is a treasure. May your day be filled with joy, laughter, and everything you wish for.\n\nLove always,\nYour Co-Pilot";
 
 
-    // --- Initial Setup ---
+    // --- Initial Setup - Now directly starts game after loading screen ---
     setTimeout(() => {
         loadingScreen.style.opacity = 0;
         loadingScreen.addEventListener('transitionend', () => {
             loadingScreen.remove();
             gameContainer.classList.add('visible');
-            displayCoDriverMessage('Your Birthday Garage Baby - Only You Have the Keys.', true);
+            // Attempt to play background music immediately
+            const playPromise = backgroundMusic.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    console.log("Background music started automatically.");
+                }).catch(error => {
+                    // Autoplay was prevented. User will need to interact.
+                    console.warn("Background music autoplay prevented:", error);
+                    // Optionally, you can add a message on screen:
+                    // coDriverCue.textContent = "Click anywhere to start the music!";
+                    // coDriverDisplay.classList.remove('hidden');
+                });
+            }
+
+            // Immediately show the first level (e.g., Level 1: Artwork Wall)
+            showLevel('level-1'); // Or 'level-quiz' if you want quiz first
             startLoveQuotes();
         }, { once: true });
     }, 2000); // Simulate loading time
 
-    function displayCoDriverMessage(message, showButton = false) {
+    function displayCoDriverMessage(message) { // Removed showButton parameter as it's not needed for initial display
         coDriverCue.textContent = message;
-        if (showButton) {
-            ignitionStartButton.classList.remove('hidden');
-        } else {
-            ignitionStartButton.classList.add('hidden');
-        }
+        coDriverDisplay.classList.remove('hidden'); // Co-driver display always visible for messages
     }
 
     function startLoveQuotes() {
@@ -107,19 +118,20 @@ document.addEventListener('DOMContentLoaded', () => {
         updateFuelDisplay(); // Update fuel on level change, if needed
 
         // Specific actions for levels
-        if (levelId === 'level-0') {
-            coDriverDisplay.classList.remove('hidden');
-            displayCoDriverMessage('Your Birthday Garage Baby - Only You Have the Keys.', true);
-        } else if (levelId === 'level-1') {
-            displayCoDriverMessage('Go on, find the hidden masterpiece.', false);
+        if (levelId === 'level-1') {
+            displayCoDriverMessage('Go on, find the hidden masterpiece.');
         } else if (levelId === 'level-quiz') {
-            displayCoDriverMessage('Time to test your knowledge, Driver!', false);
+            displayCoDriverMessage('Time to test your knowledge, Driver!');
+            // Reset quiz for retake
+            quizFeedback.classList.add('hidden');
+            document.querySelector('#level-quiz .next-level-btn').classList.add('hidden');
+            quizQuestions.forEach(q => q.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false));
         } else if (levelId === 'level-2') {
-            displayCoDriverMessage('Look back at how far we\'ve come...', false);
+            displayCoDriverMessage('Look back at how far we\'ve come...');
             // Ensure videos are loaded/reset
             memoryTimeline.querySelectorAll('video').forEach(video => video.load());
         } else if (levelId === 'level-qa') {
-            displayCoDriverMessage('Answer from the heart, Co-Driver.', false);
+            displayCoDriverMessage('Answer from the heart, Co-Driver.');
             qaCards.forEach((card, index) => {
                 if (index === 0) card.classList.remove('hidden');
                 else card.classList.add('hidden');
@@ -127,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             qaInputs.forEach(input => input.value = ''); // Clear previous answers
             qaFinalMessage.classList.add('hidden');
         } else if (levelId === 'level-music-video') {
-            displayCoDriverMessage('Your anthem for our journey ahead!', false);
+            displayCoDriverMessage('Your anthem for our journey ahead!');
             // Attempt to play music video, handling autoplay policy
             const playPromise = musicVideoPlayer.play();
             if (playPromise !== undefined) {
@@ -137,21 +149,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }).catch(error => {
                     // Autoplay was prevented. Show a play button or message.
                     console.warn('Music video autoplay prevented:', error);
-                    videoLyricStation.textContent = "Click anywhere to play your video!";
-                    // You might want to show a visible play button if autoplay fails
+                    videoLyricStation.textContent = "Click the video to play!"; // Instruct user to click
                 });
             }
         } else if (levelId === 'level-healing-toolkit') {
-            displayCoDriverMessage('A quick pitstop for healing, Driver.', false);
+            displayCoDriverMessage('A quick pitstop for healing, Driver.');
             updateDashboardGauges();
         } else if (levelId === 'hidden-heart-message-section') {
-            displayCoDriverMessage('The final secret awaits your touch.', false);
+            displayCoDriverMessage('The final secret awaits your touch.');
             typeWriterEffect(finalMessageText, finalMessage, () => {
                 finalBirthdayMessage.style.opacity = 1; // Make birthday message visible after typing
             });
-            // startParticleBackground(); // Call this function to start particles
+            // startParticleBackground(); // Call this function to start particles if implemented
         } else if (levelId === 'level-audio-message') {
-            displayCoDriverMessage('A special message from me, just for you!', false);
+            displayCoDriverMessage('A special message from me, just for you!');
             const playPromise = birthdayAudio.play();
             if (playPromise !== undefined) {
                 playPromise.then(_ => {
@@ -186,38 +197,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
 
-    // Initial "IGNITE THE ENGINE" button
-    ignitionStartButton.addEventListener('click', () => {
-        backgroundMusic.play().then(() => {
-            console.log("Background music started.");
-            coDriverDisplay.classList.add('hidden');
-            showLevel('level-0');
-        }).catch(error => {
-            console.warn("Background music autoplay prevented:", error);
-            coDriverDisplay.classList.add('hidden');
-            showLevel('level-0');
-            // If autoplay fails, the user will still start the game.
-            // Consider adding a visible play button for music if desired.
-        });
-    });
-
-
-    // Level 0: Start the Journey
-    ignitionButton.addEventListener('click', () => {
-        showLevel('level-1');
-    });
-
     // Level 1: Artwork Spotlight
     artworkFrame.addEventListener('click', () => {
         artworkFrame.classList.add('revealed');
         artworkOverlay.classList.add('visible');
-        displayCoDriverMessage('Isn\'t it wonderful, Driver?', false);
+        displayCoDriverMessage('Isn\'t it wonderful, Driver?');
     });
 
     closeArtworkOverlayBtn.addEventListener('click', () => {
         artworkOverlay.classList.remove('visible');
         artworkFrame.classList.remove('revealed');
-        displayCoDriverMessage('Onwards to the next checkpoint!', false);
+        displayCoDriverMessage('Onwards to the next checkpoint!');
     });
 
     // Level Quiz
@@ -228,11 +218,11 @@ document.addEventListener('DOMContentLoaded', () => {
             q3: document.querySelector('input[name="q3"]:checked')?.value
         };
 
-        // Correct answers
+        // Correct answers (adjust these as per your desired answers)
         const correctAnswers = {
-            q1: 'hugs', // Example, adjust as per your desired answers
-            q2: 'black', // Example
-            q3: 'ironman' // Example
+            q1: 'hugs', // Example: 'hugs' or 'kisses'
+            q2: 'black', // Example: 'black' or 'white'
+            q3: 'ironman' // Example: 'batman', 'superman', or 'ironman'
         };
 
         let allCorrect = true;
@@ -248,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
             quizFeedback.classList.remove('incorrect');
             quizFeedback.classList.add('correct');
             document.querySelector('#level-quiz .next-level-btn').classList.remove('hidden');
-            displayCoDriverMessage('Excellent driving, Driver! Your intuition is spot on.', false);
+            displayCoDriverMessage('Excellent driving, Driver! Your intuition is spot on.');
         } else {
             quizFeedback.textContent = "Incorrect answers. Try again, Driver! 😔";
             quizFeedback.classList.remove('correct');
@@ -282,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (index < qaCards.length - 1) {
                     currentCard.classList.add('hidden');
                     qaCards[index + 1].classList.remove('hidden');
-                    displayCoDriverMessage('Keep going! Your answers are precious.', false);
+                    displayCoDriverMessage('Keep going! Your answers are precious.');
                 } else {
                     // Last question answered
                     qaCards.forEach(card => card.classList.add('hidden')); // Hide all Q&A cards
@@ -290,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     qaFinalMessage.classList.remove('hidden');
                     qaFinalMessage.classList.add('correct');
                     document.querySelector('#level-qa .next-level-btn').classList.remove('hidden');
-                    displayCoDriverMessage('You\'ve unlocked the next destination, Driver!', false);
+                    displayCoDriverMessage('You\'ve unlocked the next destination, Driver!');
                 }
             } else {
                 alert('Please type your answer before proceeding!');
@@ -314,12 +304,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     hugButton.addEventListener('click', () => {
         hugOverlay.classList.add('visible');
-        displayCoDriverMessage('Hug delivered! Feeling better, Driver?', false);
+        displayCoDriverMessage('Hug delivered! Feeling better, Driver?');
     });
 
     closeHugOverlayBtn.addEventListener('click', () => {
         hugOverlay.classList.remove('visible');
-        displayCoDriverMessage('Ready to continue your journey?', false);
+        displayCoDriverMessage('Ready to continue your journey?');
     });
 
 
