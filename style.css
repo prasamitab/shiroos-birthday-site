@@ -471,11 +471,16 @@ body {
     padding: 20px;
     text-align: center;
     box-sizing: border-box;
+    display: flex; /* Use flex for internal layout */
+    flex-direction: column;
+    justify-content: space-between; /* Distribute space */
+    height: 400px; /* Increased height for memory items */
 }
 
 .memory-item img, .memory-item video {
     max-width: 100%;
-    height: auto;
+    height: 250px; /* Increased height for media inside memory items */
+    object-fit: contain; /* Ensure content fits without cropping */
     border: 1px solid #00ffcc;
     margin-bottom: 15px;
 }
@@ -582,39 +587,134 @@ body {
     min-height: 1.5em; /* Prevent layout shift */
 }
 
-/* Healing Toolkit */
+/* Healing Toolkit - Car Dashboard Style */
+#level-healing-toolkit {
+    max-width: 1000px; /* Wider for dashboard */
+    padding: 30px;
+}
+
 .toolkit-dashboard {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, 1fr); /* Three columns for gauges/indicators */
+    grid-template-rows: auto auto; /* Two rows for content */
     gap: 20px;
     width: 100%;
-    max-width: 800px;
-    margin: 30px auto;
+    background: rgba(20, 20, 20, 0.9); /* Darker background for dashboard */
+    border: 3px solid #333;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 0 30px rgba(0, 255, 204, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.1);
+    position: relative;
+    margin-top: 30px;
 }
 
-.dashboard-item {
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid #00ffcc;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+.toolkit-dashboard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(50, 50, 50, 0.8), rgba(20, 20, 20, 0.5));
+    border-radius: 12px 12px 0 0;
+    z-index: -1;
+}
+
+.dashboard-gauge {
+    background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 70%);
+    border: 2px solid #00ffcc;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: inset 0 0 15px rgba(0, 255, 204, 0.3), 0 0 10px rgba(0, 255, 204, 0.5);
+    overflow: hidden; /* Hide needle overflow */
 }
 
-.dashboard-item i {
-    font-size: 3em;
+.gauge-needle {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    width: 4px;
+    height: 60px; /* Length of the needle */
+    background: #ff00ff; /* Pink needle */
+    transform-origin: bottom center;
+    transform: translateX(-50%) rotate(-120deg); /* Start position */
+    border-radius: 2px 2px 0 0;
+    transition: transform 1s ease-out;
+    z-index: 2;
+}
+
+.gauge-needle::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 15px;
+    background-color: #ff00ff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ff00ff;
+}
+
+.gauge-label {
+    position: absolute;
+    top: 20px;
+    font-size: 0.9em;
+    color: #00ffcc;
+    text-shadow: 0 0 5px #00ffcc;
+    z-index: 3;
+}
+
+.gauge-reading {
+    position: absolute;
+    bottom: 20px;
+    font-size: 1.2em;
+    font-family: 'Roboto Mono', monospace;
+    color: #fff;
+    text-shadow: 0 0 8px #fff;
+    z-index: 3;
+}
+
+.dashboard-indicator {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #00ffcc;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+    border-radius: 8px;
+}
+
+.dashboard-indicator i {
+    font-size: 2.5em;
     color: #00ffcc;
     margin-bottom: 10px;
-    text-shadow: 0 0 10px #00ffcc;
+    text-shadow: 0 0 8px #00ffcc;
 }
 
-.dashboard-item .item-text {
+.dashboard-indicator .indicator-text {
     font-family: 'Roboto Mono', monospace;
-    font-size: 1em;
+    font-size: 0.9em;
     color: #e0e0e0;
+    margin-bottom: 0; /* Override default p margin */
+}
+
+.dashboard-control {
+    grid-column: 1 / -1; /* Span all columns */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
 }
 
 #hug-button {
@@ -772,4 +872,34 @@ body {
     0% { text-shadow: 0 0 15px rgba(255, 105, 180, 0.9); transform: scale(1); }
     50% { text-shadow: 0 0 25px rgba(255, 105, 180, 1.2), 0 0 35px rgba(255, 105, 180, 0.8); transform: scale(1.02); }
     100% { text-shadow: 0 0 15px rgba(255, 105, 180, 0.9); transform: scale(1); }
+}
+
+/* NEW: Audio Player Container */
+.audio-player-container {
+    margin: 30px auto;
+    width: 100%;
+    max-width: 500px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #00ffcc;
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.audio-player-container audio {
+    width: 100%;
+    background-color: #0a0a0a;
+    border-radius: 5px;
+}
+
+/* Style for default audio controls (may vary by browser) */
+.audio-player-container audio::-webkit-media-controls-panel {
+    background-color: #1a1a1a;
+    color: #00ffcc;
+}
+
+.audio-player-container audio::-webkit-media-controls-play-button,
+.audio-player-container audio::-webkit-media-controls-current-time-display,
+.audio-player-container audio::-webkit-media-controls-time-remaining-display {
+    color: #00ffcc;
 }
