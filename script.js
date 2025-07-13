@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3000); // 3 seconds loading screen
 
 
-    // --- NEW: displayCoDriverCue function to handle both typewriter and fade-in ---
+    // --- displayCoDriverCue function to handle both typewriter and fade-in ---
     function displayCoDriverCue(message, useTypewriter = false, callback = null) {
         coDriverCue.textContent = ''; // Clear existing content
         coDriverCue.classList.remove('typewriter'); // Reset typewriter class
@@ -222,19 +222,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // After a delay, fade out the co-driver display
+            const fadeOutDelay = 8000; // Increased duration for fade-in messages (8 seconds)
             setTimeout(() => {
                 coDriverDisplay.style.opacity = '0'; // Fade out the display
                 // Completely hide after fade out
                 setTimeout(() => {
                     coDriverDisplay.classList.add('hidden');
                     if (callback) callback(); // Execute callback after fade out
-                }, 1000); // Wait for fadeOut animation
-            }, 5000); // Message visible for 5 seconds
+                }, 1000); // Wait for fadeOut animation (1 second)
+            }, fadeOutDelay);
         }
     }
 
 
-    // --- NEW: Function to type out the final message ---
+    // --- Function to type out the final message ---
     let finalMessageCharIndex = 0;
     let finalMessageTypingTimeout;
 
@@ -326,6 +327,8 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (levelId === 'hidden-heart-message-section') {
             displayCoDriverCue("I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line. Final destination reached. Prepare for Heart Message protocol.", false, () => {
                 // After this cue fades out, start typing the final message
+                finalMessageCharIndex = 0; // Reset for re-typing if needed
+                finalMessageDisplayArea.textContent = ''; // Clear previous text
                 typeFinalMessage(); // Start typewriter effect for final message
             });
             createParticles(document.querySelector('#hidden-heart-message-section .particle-background'), 100);
