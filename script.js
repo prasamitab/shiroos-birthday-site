@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('game-container');
     const coDriverDisplay = document.getElementById('co-driver-display');
     const coDriverCue = document.getElementById('co-driver-cue');
-    const ignitionButton = document.getElementById('ignition-button');
+    const ignitionStartButton = document.getElementById('ignition-start-button'); // NEW button for intro to level-1 transition
+    const ignitionButton = document.getElementById('ignition-button'); // Original START THE JOURNEY button (now on level-0)
     const artworkFrame = document.getElementById('artwork-frame');
     const artworkOverlay = document.getElementById('artwork-overlay');
     const closeOverlayBtns = document.querySelectorAll('.close-overlay-btn');
@@ -122,18 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
             backgroundMusic.play().catch(e => console.log("Music autoplay blocked:", e));
         }
 
-        // Display the long intro message immediately in typewriter style
-        displayCoDriverCue(introMessage, true, () => {
-            // Callback after typing effect completes for the intro message
-            // Fade out the intro message display
-            coDriverDisplay.style.opacity = '0';
-            setTimeout(() => {
-                coDriverDisplay.classList.add('hidden'); // Hide the display entirely
-                showLevel('level-0', false); // Then show the first game level without immediate fuel update
-                // Start love quote pop-ups after intro
-                quoteInterval = setInterval(showLoveQuote, 10000); // Every 10 seconds
-            }, 500); // Small delay after fade out
-        });
+        // Initially show level-0 instead of the long intro message
+        showLevel('level-0', false); // No fuel update yet, this is the very first visible state
+        // Start love quote pop-ups immediately (or you can delay until after intro message)
+        quoteInterval = setInterval(showLoveQuote, 10000); // Every 10 seconds
 
     }, 3000); // 3 seconds loading screen
 
@@ -149,8 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (typewriter) {
             coDriverCue.classList.add('typewriter');
-            // Calculate animation duration based on message length and typing speed
-            const speed = 25; // Typing speed in ms per character
+            // Increased typing speed for longer read time (larger value for 'speed' makes it slower)
+            const speed = 70; // Typing speed in ms per character
             const typingAnimationDuration = message.length * speed / 1000; // Duration in seconds
 
             // Set the message immediately so width calculation is correct for animation
@@ -183,18 +176,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- NEW: Fuel Tank Animation ---
     let fuelLevel = 0;
     // Stages that contribute to fuel:
-    // 0. (Implicit: After intro before level-0 display)
-    // 1. Level 0 shown (after intro message)
-    // 2. Level 1 shown (after ignition)
-    // 3. Level Quiz shown
-    // 4. Level 2 (Memory Lane) shown
-    // 5. Level QA shown
-    // 6. Level Music Video shown
-    // 7. Level Healing Toolkit shown
-    // 8. Hidden Heart Message Section shown (final fuel increment)
-    // Total 8 "steps" to fill from 0% to 100%
-    const maxFuelLevels = 8;
-    let currentFuelStage = -1; // Start at -1, so the first showLevel call (for level-0) makes it stage 0
+    // 0. (Implicit: Start of game at level-0)
+    // 1. After START THE JOURNEY -> Intro Message complete -> IGNITE THE ENGINE click -> Level 1
+    // 2. Level Quiz shown
+    // 3. Level 2 (Memory Lane) shown
+    // 4. Level QA shown
+    // 5. Level Music Video shown
+    // 6. Level Healing Toolkit shown
+    // 7. Hidden Heart Message Section shown (final fuel increment)
+    // Total 7 "steps" to fill from 0% to 100% after the initial level-0
+    const maxFuelLevels = 7;
+    let currentFuelStage = 0; // Start at 0, representing the "Ready for pilot input." stage (level-0)
 
     function updateFuelTank() {
         currentFuelStage++; // Increment stage each time this is called
@@ -203,11 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         fuelLevel = (currentFuelStage / maxFuelLevels) * 100;
         fuelFill.style.height = `${fuelLevel}%`;
-
-        // Only show fuel update message if it's not the very first intro/level-0 transition
-        if (currentFuelStage > 0) { // Check if it's past the initial stage 0 (level-0 display)
-            displayCoDriverCue(`Fuel level increased to ${Math.round(fuelLevel)}%!`);
-        }
+        displayCoDriverCue(`Fuel level increased to ${Math.round(fuelLevel)}%!`);
     }
 
     // --- Level Transitions ---
@@ -219,7 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (updateFuel) {
             updateFuelTank(); // Increase fuel with each level change
         }
-
 
         // Specific cues for each level
         if (levelId === 'level-0') {
@@ -267,12 +254,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Event Listeners ---
+    // NEW: Handle the "START THE JOURNEY" button on Level 0
     if (ignitionButton) {
         ignitionButton.addEventListener('click', () => {
-            showLevel('level-1');
-            // Fuel update for level-0 to level-1 transition is handled by showLevel('level-1')
+            document.getElementById('level-0').classList.add('hidden'); // Hide level-0
+            coDriverDisplay.classList.remove('hidden'); // Show co-driver display
+            displayCoDriverCue(introMessage, true, () => {
+                // Callback after introMessage typing finishes
+                ignitionStartButton.classList.remove('hidden'); // Show "IGNITE THE ENGINE" button
+            });
         });
     }
+
+    // NEW: Handle the "IGNITE THE ENGINE" button on co-driver-display
+    if (ignitionStartButton) {
+        ignitionStartButton.addEventListener('click', () => {
+            coDriverDisplay.classList.add('hidden'); // Hide co-driver display
+            ignitionStartButton.classList.add('hidden'); // Hide the button itself
+            showLevel('level-1', true); // Transition to Level 1, update fuel
+        });
+    }
+
 
     nextLevelBtns.forEach(btn => {
         btn.addEventListener('click', () => {
