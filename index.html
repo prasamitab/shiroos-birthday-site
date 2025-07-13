@@ -1,213 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shiroo's Special Drive</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>Shiroo's Special Drive</title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2566">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
 </head>
 <body>
-    <div id="loading-screen">
-        <div class="loading-spinner"></div>
-        <p>Igniting the engine...</p>
+<div id="loading-screen">
+  <div class="loading-spinner"></div>
+  <p>Igniting the engine...</p>
+</div>
+
+<audio id="background-music" src="audio/background-music.mp4" loop autoplay></audio>
+
+<div id="game-container" class="hidden">
+  <div class="garage-background"></div>
+  <div class="floor-glow"></div>
+  <div class="car-silhouette"></div>
+
+  <div class="co-driver-display" id="co-driver-display">
+    <p id="co-driver-cue"></p>
+    <button id="ignition-start-button" class="glow-button hidden">IGNITE THE ENGINE</button>
+  </div>
+
+  <div class="fuel-tank-container">
+    <div class="fuel-tank-fill" id="fuel-fill"></div>
+    <div class="fuel-tank-label">FUEL</div>
+  </div>
+
+  <div id="level-0" class="level-section hidden">
+    <h3>Welcome, Shiroo!</h3>
+    <p>Your co-driver's waiting inside... Let’s start the ride.</p>
+    <button id="ignition-button" class="glow-button">START THE JOURNEY</button>
+  </div>
+
+  <div id="level-1" class="level-section hidden">
+    <h3>Level 1: The Artwork Wall</h3>
+    <p>Designed by your favorite artist & copilot.</p>
+    <div class="artwork-frame" id="artwork-frame">
+      <img src="images/main-art.jpg" alt="Main Artwork" class="artwork-img">
+      <div class="artwork-spotlight" id="artwork-spotlight"></div>
     </div>
+    <p class="artwork-message">Click the artwork to reveal the masterpiece!</p>
+    <button class="next-level-btn glow-button" data-target="level-quiz">Next Level</button>
 
-    <audio id="background-music" src="audio/background-music.mp3" loop></audio>
-
-    <div id="game-container" class="hidden">
-        <div class="co-driver-display" id="co-driver-display">
-            <p id="co-driver-cue"></p>
-        </div>
-
-        <div class="fuel-tank-container">
-            <div class="fuel-tank-fill" id="fuel-fill"></div>
-            <div class="fuel-tank-label">FUEL</div>
-        </div>
-
-        <div class="love-quotes-container">
-            <p id="love-quote">"The best things in life are better with you."</p>
-        </div>
-
-        <div id="level-1" class="level-section hidden">
-            <h3>Level 1: The Artwork Wall</h3>
-            <p>Designed by your favorite artist & copilot.</p>
-            <div class="artwork-frame" id="artwork-frame">
-                <img src="images/main-art.jpg" alt="Main Artwork" class="artwork-img">
-                <div class="artwork-spotlight" id="artwork-spotlight"></div>
-            </div>
-            <p class="artwork-message">Click the artwork to reveal the masterpiece!</p>
-            <button class="next-level-btn glow-button" data-target="level-quiz">Next Level</button>
-
-            <div id="artwork-overlay" class="overlay-message hidden">
-                <div class="overlay-content">
-                    <p>This artwork is made thinking about you. It holds a piece of my heart. Not just ink on paper, but a memory you can keep forever.</p>
-                    <button class="close-overlay-btn glow-button">Close</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="level-quiz" class="level-section hidden">
-            <h3>Stage 1: Quiz to Unlock the Letter</h3>
-            <p>"Answer truthfully, Driver — your Co-Driver’s watching 😏"</p>
-            <div class="quiz-questions">
-                <div class="quiz-question" data-question="hugs_or_kisses">
-                    <p>Hugs or Kisses?</p>
-                    <label for="q1_hugs"><input type="radio" id="q1_hugs" name="q1" value="hugs"> Hugs</label>
-                    <label for="q1_kisses"><input type="radio" id="q1_kisses" name="q1" value="kisses"> Kisses</label>
-                </div>
-                <div class="quiz-question" data-question="black_or_white">
-                    <p>Black or White?</p>
-                    <label for="q2_black"><input type="radio" id="q2_black" name="q2" value="black"> Black</label>
-                    <label for="q2_white"><input type="radio" id="q2_white" name="q2" value="white"> White</label>
-                </div>
-                <div class="quiz-question" data-question="superhero">
-                    <p>Which superhero do you secretly think you are?</p>
-                    <label for="q3_batman"><input type="radio" id="q3_batman" name="q3" value="batman"> Batman</label>
-                    <label for="q3_superman"><input type="radio" id="q3_superman" name="q3" value="superman"> Superman</label>
-                    <label for="q3_ironman"><input type="radio" id="q3_ironman" name="q3" value="ironman"> Iron Man</label>
-                </div>
-            </div>
-            <button id="submit-quiz-btn" class="glow-button">Submit Answers</button>
-            <div id="quiz-feedback" class="feedback-message"></div>
-            <button class="next-level-btn glow-button hidden" data-target="level-2">Next Checkpoint</button>
-        </div>
-
-        <div id="level-2" class="level-section hidden">
-            <h3>Level 2: Memory Lane</h3>
-            <p>Remember this pitstop? You drove through like a champ.</p>
-            <div class="memory-timeline-wrapper">
-                <button class="nav-arrow left">&lt;</button>
-                <div class="memory-timeline" id="memory-timeline">
-                    <div class="memory-item">
-                        <video controls>
-                            <source src="videos/memory-lane-clip.mp4" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <h4>A Special Video Memory</h4>
-                        <p>This video holds a special moment we shared.</p>
-                    </div>
-                    <div class="memory-item">
-                        <img src="images/poster.jpg" alt="The Poster">
-                        <h4>The Poster</h4>
-                        <p>A cool poster for our journey ahead!</p>
-                    </div>
-                    <div class="memory-item">
-                        <img src="images/car-art.jpg" alt="Car Art">
-                        <h4>Car Art</h4>
-                        <p>Our ride, perfectly captured.</p>
-                    </div>
-                    </div>
-                <button class="nav-arrow right">&gt;</button>
-            </div>
-            <button class="next-level-btn glow-button" data-target="level-qa">Next Level</button>
-        </div>
-
-        <div id="level-qa" class="level-section hidden">
-            <h3>Stage 2: Heart Unlock Q&A</h3>
-            <p>These are just for fun, Driver. Answer from the heart.</p>
-            <div class="qa-cards-container">
-                <div class="qa-card" id="qa-card-1">
-                    <p class="qa-question">Q: What’s your dream road trip destination?</p>
-                    <input type="text" class="qa-input" placeholder="Type your answer...">
-                    <button class="qa-next-btn glow-button">Next</button>
-                </div>
-                <div class="qa-card hidden" id="qa-card-2">
-                    <p class="qa-question">Q: Describe our bond in 3 words.</p>
-                    <input type="text" class="qa-input" placeholder="Type your answer...">
-                    <button class="qa-next-btn glow-button">Next</button>
-                </div>
-                <div class="qa-card hidden" id="qa-card-3">
-                    <p class="qa-question">Q: If we switched roles for a day, kya karvate merese?</p>
-                    <input type="text" class="qa-input" placeholder="Type your answer...">
-                    <button class="qa-next-btn glow-button">Next</button>
-                </div>
-            </div>
-            <p id="qa-final-message" class="feedback-message hidden"></p>
-            <button class="next-level-btn glow-button hidden" data-target="level-music-video">Next Level</button>
-        </div>
-
-        <div id="level-music-video" class="level-section hidden">
-            <h3>Level: Your Music Video!</h3>
-            <p class="lyric-station" id="video-lyric-station">This is the world I imagine with you...</p>
-            <div class="video-container">
-                <video id="music-video" class="music-video-player" controls>
-                    <source src="videos/music-video.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-            <div class="video-section-particles" id="video-section-particles"></div>
-            <button class="next-level-btn glow-button" data-target="level-healing-toolkit">Unlock Healing Toolkit</button>
-        </div>
-
-        <div id="level-healing-toolkit" class="level-section hidden">
-            <h3>The Healing Toolkit</h3>
-            <p>A pitstop for your soul, Driver.</p>
-            <div class="toolkit-dashboard">
-                <div class="dashboard-gauge fuel">
-                    <div class="gauge-needle" id="fuel-needle"></div>
-                    <div class="gauge-label">Fuel Level</div>
-                    <div class="gauge-reading" id="fuel-reading">FULL</div>
-                </div>
-                <div class="dashboard-gauge temp">
-                    <div class="gauge-needle" id="temp-needle"></div>
-                    <div class="gauge-label">Engine Temp</div>
-                    <div class="gauge-reading" id="temp-reading">OPTIMAL</div>
-                </div>
-                <div class="dashboard-indicator note">
-                    <i class="fas fa-comment"></i>
-                    <p class="indicator-text">You’re not alone. You’re loved.</p>
-                </div>
-                <div class="dashboard-indicator hydration">
-                    <i class="fas fa-tint"></i>
-                    <p class="indicator-text">Hydration Level: High</p>
-                </div>
-                <div class="dashboard-control">
-                    <button id="hug-button" class="glow-button">
-                        <i class="fas fa-heart glowing-heart"></i> Need a hug?
-                    </button>
-                </div>
-            </div>
-            <button class="next-level-btn glow-button" data-target="hidden-heart-message-section">Unlock Final Message</button>
-        </div>
-
-        <div id="hug-overlay" class="overlay-message hidden">
-            <div class="overlay-content hug-content">
-                <p>Virtual Hug from your Co-Driver delivered 💛</p>
-                <div class="hug-arms"></div>
-                <button class="close-overlay-btn glow-button">Close</button>
-            </div>
-        </div>
-
-        <div id="hidden-heart-message-section" class="level-section hidden">
-            <h3>A Message From My Heart</h3>
-            <div class="heart-container">
-                <div class="heart"></div>
-                <div class="heart-message">
-                    <span id="final-message-text"></span>
-                </div>
-            </div>
-            <h2 id="final-birthday-message">Happyy Birthdayyyy</h2>
-            <div class="particle-background"></div>
-            <button class="next-level-btn glow-button" data-target="level-audio-message">Message from your Co-Driver</button>
-        </div>
-
-        <div id="level-audio-message" class="level-section hidden">
-            <h3>A Voice From Your Co-Driver</h3>
-            <p>Listen closely, Driver. This message is just for you.</p>
-            <div class="audio-player-container">
-                <audio id="birthday-audio" controls>
-                    <source src="audio/birthday-message.mp3" type="audio/mp3">
-                    Your browser does not support the audio element.
-                </audio>
-            </div>
-            <p>I hope you enjoyed the journey, Shiroo. More adventures await!</p>
-            <button class="glow-button" onclick="location.reload()">Restart Journey</button>
-        </div>
-
+    <div id="artwork-overlay" class="overlay-message hidden">
+      <div class="overlay-content">
+        <p>This artwork is made thinking about you. It holds a piece of my heart. Not just ink on paper, but a memory you can keep forever.</p>
+        <button class="close-overlay-btn glow-button">Close</button>
+      </div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
+  <div id="level-quiz" class="level-section hidden">
+    <h3>Stage 1: Quiz to Unlock the Letter</h3>
+    <p>"Answer truthfully, Driver — your Co-Driver’s watching 😏"</p>
+    <div class="quiz-questions">
+      <div class="quiz-question" data-question="hugs_or_kisses">
+        <p>Hugs or Kisses?</p>
+        <label for="q1_hugs"><input type="radio" id="q1_hugs" name="q1" value="hugs"> Hugs</label>
+        <label for="q1_kisses"><input type="radio" id="q1_kisses" name="q1" value="kisses"> Kisses</label>
+      </div>
+      <div class="quiz-question" data-question="black_or_white">
+        <p>Black or White?</p>
+        <label for="q2_black"><input type="radio" id="q2_black" name="q2" value="black"> Black</label>
+        <label for="q2_white"><input type="radio" id="q2_white" name="q2" value="white"> White</label>
+      </div>
+      <div class="quiz-question" data-question="superhero">
+        <p>Which superhero do you secretly think you are?</p>
+        <label for="q3_batman"><input type="radio" id="q3_batman" name="q3" value="batman"> Batman</label>
+        <label for="q3_superman"><input type="radio" id="q3_superman" name="q3" value="superman"> Superman</label>
+        <label for="q3_ironman"><input type="radio" id="q3_ironman" name="q3" value="ironman"> Iron Man</label>
+      </div>
+    </div>
+    <button id="submit-quiz-btn" class="glow-button">Submit Answers</button>
+    <div id="quiz-feedback" class="feedback-message"></div>
+    <button class="next-level-btn glow-button hidden" data-target="level-2">Next Checkpoint</button>
+  </div>
+
+  <div id="level-2" class="level-section hidden">
+    <h3>Level 2: Memory Lane</h3>
+    <p>Remember this pitstop? You drove through like a champ.</p>
+    <div class="memory-timeline-wrapper">
+      <button class="nav-arrow left">&lt;</button>
+      <div class="memory-timeline" id="memory-timeline">
+        <div class="memory-item">
+          <video controls width="100%" height="auto">
+            <source src="videos/memory-lane-clip.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <h4>A Special Video Memory</h4>
+          <p>This video holds a special moment we shared.</p>
+        </div>
+        <div class="memory-item">
+          <img src="images/poster.jpg" alt="The Poster">
+          <h4>The Poster</h4>
+          <p>A cool poster for our journey ahead!</p>
+        </div>
+        <div class="memory-item">
+          <img src="images/car-art.jpg" alt="Car Art">
+          <h4>Car Art</h4>
+          <p>Our ride, perfectly captured.</p>
+        </div>
+        </div>
+      <button class="nav-arrow right">&gt;</button>
+    </div>
+    <button class="next-level-btn glow-button" data-target="level-qa">Next Level</button>
+  </div>
+
+  <div id="level-qa" class="level-section hidden">
+    <h3>Stage 2: Heart Unlock Q&A</h3>
+    <p>These are just for fun, Driver. Answer from the heart.</p>
+    <div class="qa-cards-container">
+      <div class="qa-card" id="qa-card-1">
+        <p class="qa-question">Q: What’s your dream road trip destination?</p>
+        <input type="text" class="qa-input" placeholder="Type your answer...">
+        <button class="qa-next-btn glow-button">Next</button>
+      </div>
+      <div class="qa-card hidden" id="qa-card-2">
+        <p class="qa-question">Q: Describe our bond in 3 words.</p>
+        <input type="text" class="qa-input" placeholder="Type your answer...">
+        <button class="qa-next-btn glow-button">Next</button>
+      </div>
+      <div class="qa-card hidden" id="qa-card-3">
+        <p class="qa-question">Q: If we switched roles for a day, kya karvate merese?</p>
+        <input type="text" class="qa-input" placeholder="Type your answer...">
+        <button class="qa-next-btn glow-button">Next</button>
+      </div>
+    </div>
+    <p id="qa-final-message" class="feedback-message hidden"></p>
+    <button class="next-level-btn glow-button hidden" data-target="level-music-video">Next Level</button>
+  </div>
+
+  <div id="level-music-video" class="level-section hidden">
+    <h3>Level: Your Music Video!</h3>
+    <p class="lyric-station" id="video-lyric-station">This is the world I imagine with you...</p>
+    <div class="video-container">
+      <video controls width="640" height="480">
+        <source src="videos/music-video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="video-section-particles" id="video-section-particles"></div>
+    <button class="next-level-btn glow-button" data-target="level-healing-toolkit">Unlock Healing Toolkit</button>
+  </div>
+
+  <div id="level-healing-toolkit" class="level-section hidden">
+    <h3>The Healing Toolkit</h3>
+    <p>A pitstop for your soul, Driver.</p>
+    <div class="toolkit-dashboard">
+      <div class="dashboard-item">
+        <i class="fas fa-tint"></i>
+        <p class="item-text">Hydration Level: Low — drink water now!</p>
+      </div>
+      <div class="dashboard-item">
+        <i class="fas fa-thermometer-half"></i>
+        <p class="item-text">Engine temperature: Rest mode ON</p>
+      </div>
+      <div class="dashboard-item">
+        <i class="fas fa-comment"></i>
+        <p class="item-text">System note: You’re not alone. You’re loved.</p>
+      </div>
+    </div>
+    <button id="hug-button" class="glow-button">
+      <i class="fas fa-heart glowing-heart"></i> Need a hug?
+    </button>
+    <button class="next-level-btn glow-button" data-target="hidden-heart-message-section">Unlock Final Message</button>
+  </div>
+
+  <div id="hug-overlay" class="overlay-message hidden">
+    <div class="overlay-content hug-content">
+      <p>Virtual Hug from your Co-Driver delivered 💛</p>
+      <div class="hug-arms"></div>
+      <button class="close-overlay-btn glow-button">Close</button>
+    </div>
+  </div>
+
+
+  <div id="hidden-heart-message-section" class="level-section hidden">
+    <h3>A Message From My Heart</h3>
+    <div class="heart-container">
+      <div class="heart"></div>
+      <div class="heart-message">
+        <span id="final-message-text"></span>
+      </div>
+    </div>
+    <h2 id="final-birthday-message">Happyy Birthdayyyy</h2>
+    <div class="particle-background"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
