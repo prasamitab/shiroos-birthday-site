@@ -94,7 +94,7 @@
       <button class="nav-arrow left">&lt;</button>
       <div class="memory-timeline" id="memory-timeline">
         <div class="memory-item">
-          <video controls width="100%" height="auto">
+          <video controls>
             <source src="videos/memory-lane-clip.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
@@ -158,22 +158,30 @@
     <h3>The Healing Toolkit</h3>
     <p>A pitstop for your soul, Driver.</p>
     <div class="toolkit-dashboard">
-      <div class="dashboard-item">
-        <i class="fas fa-tint"></i>
-        <p class="item-text">Hydration Level: Low — drink water now!</p>
+      <div class="dashboard-gauge fuel">
+        <div class="gauge-needle" id="fuel-needle"></div>
+        <div class="gauge-label">Fuel Level</div>
+        <div class="gauge-reading" id="fuel-reading">FULL</div>
       </div>
-      <div class="dashboard-item">
-        <i class="fas fa-thermometer-half"></i>
-        <p class="item-text">Engine temperature: Rest mode ON</p>
+      <div class="dashboard-gauge temp">
+        <div class="gauge-needle" id="temp-needle"></div>
+        <div class="gauge-label">Engine Temp</div>
+        <div class="gauge-reading" id="temp-reading">OPTIMAL</div>
       </div>
-      <div class="dashboard-item">
+      <div class="dashboard-indicator note">
         <i class="fas fa-comment"></i>
-        <p class="item-text">System note: You’re not alone. You’re loved.</p>
+        <p class="indicator-text">You’re not alone. You’re loved.</p>
+      </div>
+      <div class="dashboard-indicator hydration">
+        <i class="fas fa-tint"></i>
+        <p class="indicator-text">Hydration Level: High</p>
+      </div>
+      <div class="dashboard-control">
+        <button id="hug-button" class="glow-button">
+          <i class="fas fa-heart glowing-heart"></i> Need a hug?
+        </button>
       </div>
     </div>
-    <button id="hug-button" class="glow-button">
-      <i class="fas fa-heart glowing-heart"></i> Need a hug?
-    </button>
     <button class="next-level-btn glow-button" data-target="hidden-heart-message-section">Unlock Final Message</button>
   </div>
 
@@ -185,7 +193,6 @@
     </div>
   </div>
 
-
   <div id="hidden-heart-message-section" class="level-section hidden">
     <h3>A Message From My Heart</h3>
     <div class="heart-container">
@@ -196,7 +203,22 @@
     </div>
     <h2 id="final-birthday-message">Happyy Birthdayyyy</h2>
     <div class="particle-background"></div>
+    <button class="next-level-btn glow-button" data-target="level-audio-message">Message from your Co-Driver</button>
   </div>
+
+  <div id="level-audio-message" class="level-section hidden">
+    <h3>A Voice From Your Co-Driver</h3>
+    <p>Listen closely, Driver. This message is just for you.</p>
+    <div class="audio-player-container">
+      <audio id="birthday-audio" controls>
+        <source src="audio/birthday-message.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+    <p>I hope you enjoyed the journey, Shiroo. More adventures await!</p>
+    <button class="glow-button" onclick="location.reload()">Restart Journey</button>
+  </div>
+
 </div>
 
 <script src="script.js"></script>
