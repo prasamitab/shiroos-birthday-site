@@ -41,6 +41,76 @@ document.addEventListener('DOMContentLoaded', () => {
     You are my sunshine, my only sunshine, and you make me so, so happy. I want to live in this magical world of ours forever, and never leave. You are my everything — my heart, my soul, my world.`;
 
 
+    // --- Love Quotes for Pop-In Alerts ---
+    const loveQuotes = [
+        "💗 Made with my hands, but full of memories with you.",
+        "💛 Some people just get you — like roads get wheels. You’re that person.",
+        "🔐 Your Birthday Garage Baby — Only You Have the Keys.",
+        "💌 I hope you always keep driving towards what makes you feel alive.",
+        "✍️ Not just ink on paper, but a memory you can keep forever.",
+        "💭 To the boy who deserves all — Happy Birthday.",
+        "💘 You’re someone who never stops moving forward — and I love you for that."
+    ];
+    let quoteInterval;
+
+    function showLoveQuote() {
+        const randomIndex = Math.floor(Math.random() * loveQuotes.length);
+        const quote = loveQuotes[randomIndex];
+        // Create a temporary pop-up element
+        const popUp = document.createElement('div');
+        popUp.classList.add('love-quote-popup');
+        popUp.textContent = quote;
+        document.body.appendChild(popUp);
+
+        // Position and animate
+        const startX = Math.random() * (window.innerWidth - 300) + 50; // Random x position
+        const startY = Math.random() * (window.innerHeight - 200) + 50; // Random y position
+        popUp.style.left = `${startX}px`;
+        popUp.style.top = `${startY}px`;
+
+        // Force reflow for animation
+        void popUp.offsetWidth;
+        popUp.classList.add('show');
+
+        setTimeout(() => {
+            popUp.classList.remove('show');
+            popUp.classList.add('hide'); // For fade-out animation
+            popUp.addEventListener('transitionend', () => popUp.remove());
+        }, 5000); // Quote visible for 5 seconds
+    }
+
+    // Add styles for love quote pop-ups dynamically
+    const loveQuoteStyle = document.createElement("style");
+    loveQuoteStyle.type = "text/css";
+    loveQuoteStyle.innerText = `
+        .love-quote-popup {
+            position: fixed;
+            background: rgba(255, 105, 180, 0.8); /* Hot pink */
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.1em;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.7), inset 0 0 8px rgba(255, 255, 255, 0.5);
+            z-index: 200;
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.5s ease-out;
+            pointer-events: none; /* Allows clicks to pass through to elements below */
+        }
+        .love-quote-popup.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .love-quote-popup.hide {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.9);
+        }
+    `;
+    document.head.appendChild(loveQuoteStyle);
+
+
     // --- Loading Sequence ---
     // Simulate loading time
     setTimeout(() => {
@@ -59,7 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
             coDriverDisplay.style.opacity = '0';
             setTimeout(() => {
                 coDriverDisplay.classList.add('hidden'); // Hide the display entirely
-                showLevel('level-0'); // Then show the first game level
+                showLevel('level-0', false); // Then show the first game level without immediate fuel update
+                // Start love quote pop-ups after intro
+                quoteInterval = setInterval(showLoveQuote, 10000); // Every 10 seconds
             }, 500); // Small delay after fade out
         });
 
@@ -110,10 +182,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- NEW: Fuel Tank Animation ---
     let fuelLevel = 0;
-    // intro message (0), level-0 (1), level-1 (2), quiz (3), level-2 (4), QA (5), music video (6), healing (7), final message (8)
-    // 9 stages in total for fuel to fill up from 0 to 8
-    const maxFuelLevels = 8; // Number of "levels" that increase fuel, including the final message section
-    let currentFuelStage = -1; // Start at -1, so the first call to updateFuelTank for level-0 makes it stage 0
+    // Stages that contribute to fuel:
+    // 0. (Implicit: After intro before level-0 display)
+    // 1. Level 0 shown (after intro message)
+    // 2. Level 1 shown (after ignition)
+    // 3. Level Quiz shown
+    // 4. Level 2 (Memory Lane) shown
+    // 5. Level QA shown
+    // 6. Level Music Video shown
+    // 7. Level Healing Toolkit shown
+    // 8. Hidden Heart Message Section shown (final fuel increment)
+    // Total 8 "steps" to fill from 0% to 100%
+    const maxFuelLevels = 8;
+    let currentFuelStage = -1; // Start at -1, so the first showLevel call (for level-0) makes it stage 0
 
     function updateFuelTank() {
         currentFuelStage++; // Increment stage each time this is called
@@ -124,26 +205,29 @@ document.addEventListener('DOMContentLoaded', () => {
         fuelFill.style.height = `${fuelLevel}%`;
 
         // Only show fuel update message if it's not the very first intro/level-0 transition
-        if (currentFuelStage >= 0) {
+        if (currentFuelStage > 0) { // Check if it's past the initial stage 0 (level-0 display)
             displayCoDriverCue(`Fuel level increased to ${Math.round(fuelLevel)}%!`);
         }
     }
 
     // --- Level Transitions ---
-    function showLevel(levelId) {
+    function showLevel(levelId, updateFuel = true) {
         document.querySelectorAll('.level-section').forEach(section => {
             section.classList.add('hidden');
         });
         document.getElementById(levelId).classList.remove('hidden');
-        updateFuelTank(); // Increase fuel with each level change
+        if (updateFuel) {
+            updateFuelTank(); // Increase fuel with each level change
+        }
+
 
         // Specific cues for each level
         if (levelId === 'level-0') {
             displayCoDriverCue("System initiated. Ready for pilot input.");
         } else if (levelId === 'level-1') {
-            displayCoDriverCue("Initiating Artwork Wall. Observe carefully.");
+            displayCoDriverCue("Checkpoint reached! Told ya you’d make it 😉 Initiating Artwork Wall. Observe carefully.");
         } else if (levelId === 'level-quiz') {
-            displayCoDriverCue("Initiating Stage 1: Quiz. Answer wisely, Driver.");
+            displayCoDriverCue("You’ve always been behind the wheel, but you never noticed the map in my hands. Let’s unlock this next gear — together. Initiating Stage 1: Quiz. Answer wisely, Driver.");
             // Reset quiz state
             document.querySelectorAll('.quiz-question input[type="radio"]').forEach(radio => radio.checked = false);
             quizFeedback.textContent = '';
@@ -152,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitQuizBtn.classList.remove('hidden'); // Make sure submit is visible for quiz
         }
         else if (levelId === 'level-2') {
-            displayCoDriverCue("Entering Memory Lane. Navigate with care.");
+            displayCoDriverCue("Careful… this next level's got heart speed bumps 😳💌 Entering Memory Lane. Navigate with care.");
             // Ensure timeline is scrolled to start on level entry
             if (memoryTimeline) memoryTimeline.scrollLeft = 0;
         } else if (levelId === 'level-qa') {
@@ -176,8 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
             displayCoDriverCue("Welcome to the Healing Toolkit. Take a moment to recharge.");
         }
         else if (levelId === 'hidden-heart-message-section') {
-            displayCoDriverCue("Final destination reached. Prepare for Heart Message protocol.");
+            displayCoDriverCue("I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line. Final destination reached. Prepare for Heart Message protocol.");
             createParticles(document.querySelector('#hidden-heart-message-section .particle-background'), 100);
+            updateFuelTank(); // Final fuel update
         }
     }
 
@@ -185,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ignitionButton) {
         ignitionButton.addEventListener('click', () => {
             showLevel('level-1');
-            displayCoDriverCue("Engine ignited. Proceed to Level 1.");
+            // Fuel update for level-0 to level-1 transition is handled by showLevel('level-1')
         });
     }
 
