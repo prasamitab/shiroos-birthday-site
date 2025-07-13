@@ -15,7 +15,7 @@ body {
     margin: 0;
     overflow: hidden;
     font-family: 'Roboto Mono', monospace;
-    background-color: var(--dark-bg);
+    background-color: var(--dark-bg); /* This will be your primary background */
     color: var(--text-color);
     display: flex;
     justify-content: center;
@@ -67,8 +67,8 @@ body {
     align-items: center;
     opacity: 0;
     transition: opacity 1s ease-in;
-    transform-style: preserve-3d; /* For 3D effects */
-    perspective: 1000px; /* For 3D effects */
+    transform-style: preserve-3d;
+    perspective: 1000px;
 }
 
 #game-container.visible {
@@ -79,45 +79,7 @@ body {
     display: none !important;
 }
 
-/* Background Elements (if you have these images) */
-.garage-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('images/garage.jpg'); /* YOU NEED TO PROVIDE THIS IMAGE */
-    background-size: cover;
-    background-position: center;
-    filter: blur(5px) brightness(0.7);
-    z-index: 0;
-}
-
-.floor-glow {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 15%;
-    background: linear-gradient(to top, var(--neon-blue), transparent);
-    opacity: 0.5;
-    filter: blur(15px);
-    z-index: 1;
-}
-
-.car-silhouette {
-    position: absolute;
-    bottom: 0;
-    width: 80%;
-    max-width: 1200px;
-    height: 60%;
-    background-image: url('images/car-silhouette.png'); /* YOU NEED TO PROVIDE THIS IMAGE (PNG with transparency) */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center bottom;
-    z-index: 2;
-    filter: drop-shadow(0 0 20px var(--neon-pink));
-}
+/* Removed: .garage-background, .floor-glow, .car-silhouette styles */
 
 /* Co-Driver Display */
 .co-driver-display {
@@ -134,7 +96,7 @@ body {
     text-align: center;
     z-index: 10;
     border-radius: 10px;
-    min-height: 80px; /* Adjust as needed */
+    min-height: 80px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -243,7 +205,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    min-height: 400px; /* Ensure levels are large enough */
+    min-height: 400px;
 }
 
 .level-section h3 {
@@ -317,7 +279,7 @@ body {
     z-index: 100;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
-    pointer-events: none; /* Allows clicks underneath when hidden */
+    pointer-events: none;
 }
 
 .overlay-message.visible {
@@ -374,13 +336,13 @@ body {
 
 .quiz-question input[type="radio"] {
     margin-right: 8px;
-    accent-color: var(--neon-pink); /* Colors the radio button */
+    accent-color: var(--neon-pink);
 }
 
 #quiz-feedback {
     margin-top: 20px;
     font-weight: bold;
-    color: var(--neon-pink); /* For incorrect */
+    color: var(--neon-pink);
 }
 
 /* Feedback messages */
@@ -416,15 +378,15 @@ body {
     gap: 30px;
     padding: 10px 0;
     flex-grow: 1;
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none;
 }
 
 .memory-timeline::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
 }
 
 .memory-item {
-    flex: 0 0 350px; /* Adjusted size for larger frames */
+    flex: 0 0 350px;
     scroll-snap-align: center;
     background-color: rgba(0, 0, 0, 0.7);
     border: 2px solid var(--neon-pink);
@@ -432,7 +394,7 @@ body {
     border-radius: 10px;
     padding: 20px;
     text-align: center;
-    min-height: 450px; /* Adjusted for larger frames */
+    min-height: 450px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -442,7 +404,7 @@ body {
 .memory-item img,
 .memory-item video {
     max-width: 100%;
-    max-height: 250px; /* Adjusted height for larger frames */
+    max-height: 250px;
     object-fit: contain;
     border-radius: 5px;
     border: 1px solid var(--neon-blue);
@@ -534,7 +496,7 @@ body {
     box-shadow: var(--glow-spread);
     border-radius: 10px;
     overflow: hidden;
-    background-color: black; /* In case video fails to load */
+    background-color: black;
 }
 
 .video-container video {
@@ -559,15 +521,14 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: -1;
-    /* This will be managed by JS for particle effects */
 }
 
 
 /* Healing Toolkit */
 .toolkit-dashboard {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columns */
-    grid-template-rows: auto auto; /* 2 rows */
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
     gap: 20px;
     width: 90%;
     max-width: 800px;
@@ -596,18 +557,18 @@ body {
 
 .dashboard-gauge {
     position: relative;
-    height: 120px; /* Fixed height for gauges */
+    height: 120px;
 }
 
 .gauge-needle {
     position: absolute;
-    bottom: 15px; /* Adjust to pivot point */
+    bottom: 15px;
     left: 50%;
     transform-origin: bottom center;
     width: 2px;
     height: 40px;
     background-color: var(--neon-blue);
-    transform: translateX(-50%) rotate(-45deg); /* Start position for fuel/temp */
+    transform: translateX(-50%) rotate(-45deg);
     transition: transform 0.5s ease-out;
 }
 
@@ -678,13 +639,12 @@ body {
     top: 0;
     left: 0;
     pointer-events: none;
-    /* Add some visual hug effect if desired, e.g., using pseudo-elements */
 }
 
 /* Hidden Heart Message Section */
 #hidden-heart-message-section {
     position: relative;
-    overflow: hidden; /* For particle background */
+    overflow: hidden;
 }
 
 .heart-container {
@@ -738,8 +698,8 @@ body {
     margin-top: 20px;
     font-size: 1.2em;
     color: var(--text-color);
-    white-space: pre-wrap; /* For typewriter effect */
-    min-height: 100px; /* Adjust based on expected message length */
+    white-space: pre-wrap;
+    min-height: 100px;
     text-align: left;
     width: 90%;
     max-width: 500px;
@@ -772,7 +732,6 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: -1;
-    /* Particles will be generated by JS */
 }
 
 /* Audio Player Section */
@@ -789,8 +748,7 @@ body {
 
 #birthday-audio {
     width: 100%;
-    /* Styling for default audio player is limited, but browser will render it */
-    filter: sepia(100%) saturate(200%) hue-rotate(180deg) brightness(1.2); /* Neon effect */
+    filter: sepia(100%) saturate(200%) hue-rotate(180deg) brightness(1.2);
 }
 
 /* Responsive adjustments */
@@ -812,7 +770,7 @@ body {
         height: 350px;
     }
     .memory-item {
-        flex: 0 0 280px; /* Smaller items on mobile */
+        flex: 0 0 280px;
         min-height: 400px;
     }
     .memory-item img,
@@ -820,7 +778,7 @@ body {
         max-height: 200px;
     }
     .toolkit-dashboard {
-        grid-template-columns: 1fr; /* Single column on small screens */
+        grid-template-columns: 1fr;
     }
     .love-quotes-container {
         width: 200px;
