@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('game-container');
     const coDriverDisplay = document.getElementById('co-driver-display');
     const coDriverCue = document.getElementById('co-driver-cue');
-    const ignitionStartButton = document.getElementById('ignition-start-button'); // NEW
-    const ignitionButton = document.getElementById('ignition-button'); // Original START THE JOURNEY button
+    const ignitionStartButton = document.getElementById('ignition-start-button'); // NEW button for intro to level-1 transition
+    const ignitionButton = document.getElementById('ignition-button'); // Original START THE JOURNEY button (now on level-0)
     const artworkFrame = document.getElementById('artwork-frame');
     const artworkOverlay = document.getElementById('artwork-overlay');
     const closeOverlayBtns = document.querySelectorAll('.close-overlay-btn');
@@ -123,13 +123,349 @@ document.addEventListener('DOMContentLoaded', () => {
             backgroundMusic.play().catch(e => console.log("Music autoplay blocked:", e));
         }
 
-        // Display the long intro message immediately in typewriter style
-        displayCoDriverCue(introMessage, true, () => {
-            // Callback after typing effect completes for the intro message
-            ignitionStartButton.classList.remove('hidden'); // Show the "IGNITE THE ENGINE" button
-        });
+        // Initially show level-0 instead of the long intro message
+        showLevel('level-0', false); // No fuel update yet, this is the very first visible state
+        // Start love quote pop-ups immediately (or you can delay until after intro message)
+        quoteInterval = setInterval(showLoveQuote, 10000); // Every 10 seconds
 
     }, 3000); // 3 seconds loading screen
 
 
-    function displayCoDriverCue(message, typewriter
+    function displayCoDriverCue(message, typewriter = false, callback = null) {
+        coDriverCue.textContent = ''; // Clear existing content
+        coDriverCue.classList.remove('typewriter'); // Reset typewriter class
+        coDriverCue.style.animation = 'none'; // Reset any previous animation
+        coDriverDisplay.classList.remove('hidden'); // Ensure display is visible
+        coDriverDisplay.style.opacity = '1'; // Ensure display is fully opaque
+
+        void coDriverCue.offsetWidth; // Trigger reflow for animation reset
+
+        if (typewriter) {
+            coDriverCue.classList.add('typewriter');
+            // Increased typing speed for longer read time (larger value for 'speed' makes it slower)
+            const speed = 70; // Typing speed in ms per character
+            const typingAnimationDuration = message.length * speed / 1000; // Duration in seconds
+
+            // Set the message immediately so width calculation is correct for animation
+            coDriverCue.textContent = message;
+            coDriverCue.style.whiteSpace = 'pre-wrap'; // Preserve line breaks
+
+            // Apply typing and blink-caret animations directly via style
+            coDriverCue.style.animation = `typing ${typingAnimationDuration}s steps(${message.length}, end) forwards, blink-caret .75s step-end infinite`;
+            coDriverCue.style.width = '100%'; // Allow text to fill the frame
+
+            // Set a timeout for when the typing is finished and call the callback
+            setTimeout(() => {
+                coDriverCue.style.borderRight = 'none'; // Hide cursor
+                if (callback) callback();
+            }, typingAnimationDuration * 1000 + 500); // A small delay after typing for cursor to disappear
+        } else {
+            // For standard, non-typewriter messages
+            coDriverCue.textContent = message;
+            coDriverCue.style.opacity = '1';
+            coDriverCue.style.animation = 'textAppear 1s forwards'; // Simple fade in
+            setTimeout(() => {
+                coDriverDisplay.style.opacity = '0'; // Fade out the display
+                // Only hide the display entirely if it's not the initial intro that transitions to level-0
+                // For regular cues, just fade out
+            }, 5000); // Co-driver message visible for 5 seconds
+        }
+    }
+
+
+    // --- NEW: Fuel Tank Animation ---
+    let fuelLevel = 0;
+    // Stages that contribute to fuel:
+    // 0. (Implicit: Start of game at level-0)
+    // 1. After START THE JOURNEY -> Intro Message complete -> IGNITE THE ENGINE click -> Level 1
+    // 2. Level Quiz shown
+    // 3. Level 2 (Memory Lane) shown
+    // 4. Level QA shown
+    // 5. Level Music Video shown
+    // 6. Level Healing Toolkit shown
+    // 7. Hidden Heart Message Section shown (final fuel increment)
+    // Total 7 "steps" to fill from 0% to 100% after the initial level-0
+    const maxFuelLevels = 7;
+    let currentFuelStage = 0; // Start at 0, representing the "Ready for pilot input." stage (level-0)
+
+    function updateFuelTank() {
+        currentFuelStage++; // Increment stage each time this is called
+        if (currentFuelStage > maxFuelLevels) {
+            currentFuelStage = maxFuelLevels; // Cap at max
+        }
+        fuelLevel = (currentFuelStage / maxFuelLevels) * 100;
+        fuelFill.style.height = `${fuelLevel}%`;
+        displayCoDriverCue(`Fuel level increased to ${Math.round(fuelLevel)}%!`);
+    }
+
+    // --- Level Transitions ---
+    function showLevel(levelId, updateFuel = true) {
+        document.querySelectorAll('.level-section').forEach(section => {
+            section.classList.add('hidden');
+        });
+        document.getElementById(levelId).classList.remove('hidden');
+        if (updateFuel) {
+            updateFuelTank(); // Increase fuel with each level change
+        }
+
+        // Specific cues for each level
+        if (levelId === 'level-0') {
+            displayCoDriverCue("System initiated. Ready for pilot input.");
+        } else if (levelId === 'level-1') {
+            displayCoDriverCue("Checkpoint reached! Told ya you’d make it 😉 Initiating Artwork Wall. Observe carefully.");
+        } else if (levelId === 'level-quiz') {
+            displayCoDriverCue("You’ve always been behind the wheel, but you never noticed the map in my hands. Let’s unlock this next gear — together. Initiating Stage 1: Quiz. Answer wisely, Driver.");
+            // Reset quiz state
+            document.querySelectorAll('.quiz-question input[type="radio"]').forEach(radio => radio.checked = false);
+            quizFeedback.textContent = '';
+            quizFeedback.classList.remove('correct', 'incorrect');
+            quizNextLevelBtn.classList.add('hidden');
+            submitQuizBtn.classList.remove('hidden'); // Make sure submit is visible for quiz
+        }
+        else if (levelId === 'level-2') {
+            displayCoDriverCue("Careful… this next level's got heart speed bumps 😳💌 Entering Memory Lane. Navigate with care.");
+            // Ensure timeline is scrolled to start on level entry
+            if (memoryTimeline) memoryTimeline.scrollLeft = 0;
+        } else if (levelId === 'level-qa') {
+            displayCoDriverCue("Initiating Stage 2: Heart Unlock Q&A. Be truthful.");
+            currentQaCardIndex = 0;
+            qaCards.forEach((card, index) => {
+                card.classList.add('hidden');
+                card.querySelector('.qa-input').value = ''; // Clear input
+            });
+            qaFinalMessage.classList.add('hidden');
+            qaFinalMessage.textContent = '';
+            qaNextLevelBtn.classList.add('hidden');
+            qaCards[0].classList.remove('hidden'); // Show first QA card
+        }
+        else if (levelId === 'level-music-video') {
+            displayCoDriverCue("Activating Audio-Visual Module. Prepare for sonic input.");
+            // Add particles for music video section
+            createParticles(videoSectionParticles, 50);
+            startLyricTypingEffect();
+        } else if (levelId === 'level-healing-toolkit') {
+            displayCoDriverCue("Welcome to the Healing Toolkit. Take a moment to recharge.");
+        }
+        else if (levelId === 'hidden-heart-message-section') {
+            displayCoDriverCue("I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line. Final destination reached. Prepare for Heart Message protocol.");
+            createParticles(document.querySelector('#hidden-heart-message-section .particle-background'), 100);
+            updateFuelTank(); // Final fuel update
+        }
+    }
+
+    // --- Event Listeners ---
+    // NEW: Handle the "START THE JOURNEY" button on Level 0
+    if (ignitionButton) {
+        ignitionButton.addEventListener('click', () => {
+            document.getElementById('level-0').classList.add('hidden'); // Hide level-0
+            coDriverDisplay.classList.remove('hidden'); // Show co-driver display
+            displayCoDriverCue(introMessage, true, () => {
+                // Callback after introMessage typing finishes
+                ignitionStartButton.classList.remove('hidden'); // Show "IGNITE THE ENGINE" button
+            });
+        });
+    }
+
+    // NEW: Handle the "IGNITE THE ENGINE" button on co-driver-display
+    if (ignitionStartButton) {
+        ignitionStartButton.addEventListener('click', () => {
+            coDriverDisplay.classList.add('hidden'); // Hide co-driver display
+            ignitionStartButton.classList.add('hidden'); // Hide the button itself
+            showLevel('level-1', true); // Transition to Level 1, update fuel
+        });
+    }
+
+
+    nextLevelBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetLevel = btn.dataset.target;
+            showLevel(targetLevel);
+        });
+    });
+
+    // --- Artwork Reveal Logic ---
+    if (artworkFrame) {
+        artworkFrame.addEventListener('click', () => {
+            artworkFrame.classList.add('revealed');
+            setTimeout(() => {
+                artworkOverlay.classList.add('visible');
+            }, 500); // Show overlay after artwork reveal animation
+        });
+    }
+
+    if (closeOverlayBtns) {
+        closeOverlayBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.closest('.overlay-message').classList.remove('visible');
+                if (artworkFrame && btn.closest('#artwork-overlay')) {
+                    artworkFrame.classList.remove('revealed'); // Reset artwork state
+                }
+            });
+        });
+    }
+
+    // --- Memory Timeline Navigation ---
+    if (memoryTimeline) {
+        navArrows.forEach(arrow => {
+            arrow.addEventListener('click', () => {
+                const memoryItem = memoryTimeline.querySelector('.memory-item');
+                if (!memoryItem) return;
+                const scrollAmount = memoryItem.offsetWidth + 30; // Item width + margin
+                if (arrow.classList.contains('left')) {
+                    memoryTimeline.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                } else {
+                    memoryTimeline.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+            });
+        });
+    }
+
+    // --- Quiz Logic (Stage 1) ---
+    if (submitQuizBtn) {
+        submitQuizBtn.addEventListener('click', () => {
+            const answers = {
+                q1: document.querySelector('input[name="q1"]:checked')?.value,
+                q2: document.querySelector('input[name="q2"]:checked')?.value,
+                q3: document.querySelector('input[name="q3"]:checked')?.value
+            };
+
+            const correctAnswers = {
+                q1: 'hugs',
+                q2: 'black',
+                q3: 'batman'
+            };
+
+            let allCorrect = true;
+            for (const q in correctAnswers) {
+                if (answers[q] !== correctAnswers[q]) {
+                    allCorrect = false;
+                    break;
+                }
+            }
+
+            quizFeedback.classList.remove('correct', 'incorrect');
+            if (allCorrect) {
+                quizFeedback.textContent = "✅ Fuel Loaded. Next checkpoint unlocked 💛";
+                quizFeedback.classList.add('correct');
+                quizNextLevelBtn.classList.remove('hidden');
+                submitQuizBtn.classList.add('hidden'); // Hide submit button
+                displayCoDriverCue("Quiz complete. Fuel level boosted!");
+            } else {
+                quizFeedback.textContent = "❌ Incorrect answers. Try again, Driver!";
+                quizFeedback.classList.add('incorrect');
+                displayCoDriverCue("Incorrect. Recalculating path.");
+            }
+        });
+    }
+
+
+    // --- Q&A Logic (Stage 2) ---
+    if (qaNextBtns.length > 0) {
+        qaNextBtns.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                // Optionally store answer: const answer = btn.previousElementSibling.value;
+                qaCards[index].classList.add('hidden');
+                currentQaCardIndex++;
+                if (currentQaCardIndex < qaCards.length) {
+                    qaCards[currentQaCardIndex].classList.remove('hidden');
+                } else {
+                    // All QA cards done
+                    qaFinalMessage.textContent = "Good answers, Driver. You may now unlock the final gearshift — my heart 💌";
+                    qaFinalMessage.classList.remove('hidden');
+                    qaNextLevelBtn.classList.remove('hidden');
+                    displayCoDriverCue("Q&A complete. Proceeding to final unlock.");
+                }
+            });
+        });
+    }
+
+    // --- Particle Effects (for music video and heart message sections) ---
+    function createParticles(container, count) {
+        container.innerHTML = ''; // Clear existing particles
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 3 + 1; // 1px to 4px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`; // Random color
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.opacity = Math.random();
+            particle.style.animation = `float ${Math.random() * 10 + 5}s infinite ease-in-out forwards`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            container.appendChild(particle);
+        }
+    }
+
+    // Add particle styles to the head (for dynamic particle creation)
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = `
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 5px currentColor;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+
+
+    // --- Lyric Typing Effect (for music video section) ---
+    const lyrics = [
+        "This is the world I imagine with you...",
+        "A place where every moment shines bright.",
+        "Filled with laughter, joy, and endless light.",
+        "Happy Birthday, my dear Shiroo!"
+    ];
+    let lyricIndex = 0;
+    let charIndex = 0;
+    let typingTimeout;
+
+    function typeLyric() {
+        if (lyricIndex < lyrics.length) {
+            if (charIndex < lyrics[lyricIndex].length) {
+                videoLyricStation.textContent += lyrics[lyricIndex].charAt(charIndex);
+                charIndex++;
+                typingTimeout = setTimeout(typeLyric, 50); // Typing speed
+            } else {
+                setTimeout(() => {
+                    videoLyricStation.textContent = ''; // Clear for next lyric
+                    charIndex = 0;
+                    lyricIndex++;
+                    typeLyric();
+                }, 2000); // Pause before next lyric
+            }
+        } else {
+            lyricIndex = 0; // Loop lyrics
+            setTimeout(() => {
+                videoLyricStation.textContent = '';
+                charIndex = 0;
+                typeLyric();
+            }, 2000);
+        }
+    }
+
+    function startLyricTypingEffect() {
+        videoLyricStation.textContent = ''; // Clear any initial text
+        lyricIndex = 0;
+        charIndex = 0;
+        clearTimeout(typingTimeout); // Clear any previous timeouts
+        typeLyric();
+    }
+
+    // --- Healing Toolkit / Hug Logic ---
+    if (hugButton) {
+        hugButton.addEventListener('click', () => {
+            hugOverlay.classList.add('visible');
+            displayCoDriverCue("Virtual hug initiated. Recharge complete.");
+        });
+    }
+});
