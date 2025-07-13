@@ -118,28 +118,31 @@ body {
     100% { transform: translateY(0); }
 }
 
-/* Co-Driver Display */
+/* Co-Driver Display (for intro and general messages) */
 .co-driver-display {
     position: absolute;
-    top: 50px;
+    top: 50%; /* Center vertically */
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%); /* Center horizontally and vertically */
     width: 80%;
-    max-width: 600px;
+    max-width: 800px; /* Increased max-width for more space */
+    height: auto; /* Allow height to adjust to content */
+    max-height: 80vh; /* Prevent it from taking too much vertical space */
     background: rgba(0, 0, 0, 0.7);
     border: 2px solid #00FFFF;
     box-shadow: 0 0 15px #00FFFF, inset 0 0 10px #00FFFF;
-    padding: 20px;
+    padding: 30px; /* Increased padding */
     text-align: center;
     font-family: 'Orbitron', monospace;
-    font-size: 1.2em;
+    font-size: 1.2em; /* Adjusted for better readability with more text */
     color: #00FFC0;
     z-index: 10;
     transition: all 0.5s ease-in-out;
-    min-height: 50px; /* Ensure visibility */
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow-y: auto; /* Allow scrolling if text overflows vertically */
+    box-sizing: border-box;
 }
 
 .co-driver-display p {
@@ -148,6 +151,8 @@ body {
     animation: textAppear 1s forwards;
     animation-delay: 0.5s;
     text-shadow: 0 0 5px #00FFC0;
+    line-height: 1.5; /* Improve readability */
+    text-align: left; /* Align text to left */
 }
 
 /* Typewriter effect for initial intro message */
@@ -156,15 +161,15 @@ body {
     overflow: hidden; /* Ensures the text is hidden until typed */
     animation: none; /* Override initial fade-in */
     opacity: 1; /* Make sure it's visible for typing */
-    text-align: left; /* Align text to left for typing effect */
     width: 0; /* Initial width for typing effect */
     border-right: 2px solid #00FFFF; /* Cursor effect */
-    animation: typing 4s steps(60, end) forwards, blink-caret .75s step-end infinite;
+    animation: typing 4s steps(60, end) forwards, blink-caret .75s step-end infinite; /* Animation defined in JS */
 }
 
+/* Remove fixed width for typing animation to allow full frame usage */
 @keyframes typing {
     from { width: 0 }
-    to { width: 100% }
+    to { width: 100% } /* Occupy full width of its container */
 }
 
 @keyframes blink-caret {
@@ -410,7 +415,7 @@ body {
 
 .memory-item img, .memory-item video {
     width: 100%;
-    height: 200px; /* Fixed height for consistency */
+    height: 250px; /* Increased height for images/videos in memory lane */
     object-fit: cover;
     display: block;
     margin-bottom: 15px;
@@ -578,6 +583,24 @@ body {
     font-size: 1.1em;
     margin: 5px 0;
 }
+
+/* NEW: Final Birthday Message Style */
+#final-birthday-message {
+    font-family: 'Orbitron', monospace;
+    font-size: 4em; /* Make it big! */
+    color: #FFD700; /* Gold color */
+    text-shadow: 0 0 15px #FFD700, 0 0 30px #FFD700, 0 0 45px #FF00FF; /* Gold and magenta glow */
+    margin-top: 50px; /* Space from the heart message */
+    animation: pulsateGlow 2s infinite alternate; /* Add a pulsating glow */
+    z-index: 3; /* Ensure it's above other elements if needed */
+    position: relative; /* Needed for z-index to work */
+}
+
+@keyframes pulsateGlow {
+    0% { transform: scale(1); text-shadow: 0 0 15px #FFD700, 0 0 30px #FFD700, 0 0 45px #FF00FF; }
+    100% { transform: scale(1.05); text-shadow: 0 0 25px #FFD700, 0 0 45px #FFD700, 0 0 70px #FF00FF; }
+}
+
 
 .particle-background {
     position: absolute;
@@ -858,7 +881,7 @@ body {
     }
 
     .memory-item img, .memory-item video {
-        height: 150px;
+        height: 200px; /* Adjusted for smaller screens too */
     }
 
     .video-container {
@@ -878,6 +901,12 @@ body {
 
     .co-driver-display {
         font-size: 1em;
+        padding: 20px; /* Adjust padding for smaller screens */
+    }
+
+    #final-birthday-message {
+        font-size: 2.5em; /* Adjust for smaller screens */
+        margin-top: 30px;
     }
 }
 
@@ -885,7 +914,9 @@ body {
     .co-driver-display {
         width: 90%;
         font-size: 0.9em;
-        top: 20px;
+        top: 20px; /* Move slightly up to allow more central text */
+        transform: translateX(-50%); /* Only horizontal centering */
+        max-height: 90vh; /* Allow more vertical space */
     }
 
     .level-section {
@@ -908,7 +939,7 @@ body {
     }
 
     .memory-item img, .memory-item video {
-        height: 120px;
+        height: 150px; /* Adjusted for smaller screens */
     }
 
     .fuel-tank-container {
@@ -916,5 +947,10 @@ body {
         height: 100px;
         right: 5px;
         top: 5px;
+    }
+
+    #final-birthday-message {
+        font-size: 2em; /* Further adjustment for very small screens */
+        margin-top: 20px;
     }
 }
