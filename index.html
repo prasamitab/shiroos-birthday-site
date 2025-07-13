@@ -23,6 +23,7 @@
 
         <div class="co-driver-display" id="co-driver-display">
             <p id="co-driver-cue" class="typewriter"></p>
+            <button id="ignition-start-button" class="glow-button hidden">IGNITE THE ENGINE</button>
         </div>
 
         <div class="fuel-tank-container">
@@ -60,19 +61,19 @@
             <div class="quiz-questions">
                 <div class="quiz-question" data-question="hugs_or_kisses">
                     <p>Hugs or Kisses?</p>
-                    <label><input type="radio" name="q1" value="hugs"> Hugs</label>
-                    <label><input type="radio" name="q1" value="kisses"> Kisses</label>
+                    <label for="q1_hugs"><input type="radio" id="q1_hugs" name="q1" value="hugs"> Hugs</label>
+                    <label for="q1_kisses"><input type="radio" id="q1_kisses" name="q1" value="kisses"> Kisses</label>
                 </div>
                 <div class="quiz-question" data-question="black_or_white">
                     <p>Black or White?</p>
-                    <label><input type="radio" name="q2" value="black"> Black</label>
-                    <label><input type="radio" name="q2" value="white"> White</label>
+                    <label for="q2_black"><input type="radio" id="q2_black" name="q2" value="black"> Black</label>
+                    <label for="q2_white"><input type="radio" id="q2_white" name="q2" value="white"> White</label>
                 </div>
                 <div class="quiz-question" data-question="superhero">
                     <p>Which superhero do you secretly think you are?</p>
-                    <label><input type="radio" name="q3" value="batman"> Batman</label>
-                    <label><input type="radio" name="q3" value="superman"> Superman</label>
-                    <label><input type="radio" name="q3" value="ironman"> Iron Man</label>
+                    <label for="q3_batman"><input type="radio" id="q3_batman" name="q3" value="batman"> Batman</label>
+                    <label for="q3_superman"><input type="radio" id="q3_superman" name="q3" value="superman"> Superman</label>
+                    <label for="q3_ironman"><input type="radio" id="q3_ironman" name="q3" value="ironman"> Iron Man</label>
                 </div>
             </div>
             <button id="submit-quiz-btn" class="glow-button">Submit Answers</button>
