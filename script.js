@@ -16,23 +16,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const backgroundMusic = document.getElementById('background-music');
     const fuelFill = document.getElementById('fuel-fill');
 
-    // NEW: Quiz Elements
+    // Quiz Elements
     const submitQuizBtn = document.getElementById('submit-quiz-btn');
     const quizFeedback = document.getElementById('quiz-feedback');
     const quizNextLevelBtn = document.querySelector('#level-quiz .next-level-btn');
 
-    // NEW: Q&A Elements
+    // Q&A Elements
     const qaCards = document.querySelectorAll('.qa-card');
     const qaNextBtns = document.querySelectorAll('.qa-next-btn');
     const qaFinalMessage = document.getElementById('qa-final-message');
     const qaNextLevelBtn = document.querySelector('#level-qa .next-level-btn');
     let currentQaCardIndex = 0;
 
-    // NEW: Hug Button and Overlay
+    // Hug Button and Overlay
     const hugButton = document.getElementById('hug-button');
     const hugOverlay = document.getElementById('hug-overlay');
 
-    // NEW: Final Message Text for Typewriter Effect
+    // Final Message Text for Typewriter Effect
     const finalMessageTextContent = `
         To the man who drives forward no matter what and reached here
 
@@ -42,11 +42,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         Ab we aren’t meeting in person toh that doesn’t stop me from riding along with you , mai humesha tere sath rahungi 😘😘kaise na kaise.
 
-        Through every twist, turn, traffic jam, and night drive annd drinks, I’ve watched you move forward never losing momentum and i love that thing about us.
+        Through every twist, turn, traffic jam, and night drive annd drinks, I’ve watched you move forward never losing momentum and i love that thing about youuuuuuuu.
 
-        
+        Ye artwork? Made with my hands.
 
-        The heart behind doing this is  Pooooraa teraaa janeman.
+        Ye page? Built with memories.
+
+        But the heart behind it? Pooooraa teraaa janeman.
 
         I’m your co driver , passenger princess whatever here, always have been.
 
@@ -73,8 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const finalMessageDisplayArea = document.getElementById('final-message-text');
 
-
-    // --- Intro Message Content ---
+    // Intro Message Content
     const introMessage = `Hey driver, buckle up — your co-driver (me) is right here beside you. This ride’s for you, and I’m guiding you through every curve, every speed bump, every smile. Let’s go.
 
     You’re the only one I have, and I love you more than words can express. I miss you so much, and I’m incredibly grateful to have you in my life. You’re everything to me — my solution, my magical world.
@@ -84,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     You are my sunshine, my only sunshine, and you make me so, so happy. I want to live in this magical world of ours forever, and never leave. You are my everything — my heart, my soul, my world.`;
 
 
-    // --- Love Quotes for Pop-In Alerts ---
+    // Love Quotes for Pop-In Alerts
     const loveQuotes = [
         "💗 Made with my hands, but full of memories with you.",
         "💛 Some people just get you — like roads get wheels. You’re that person.",
@@ -105,11 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
         popUp.textContent = quote;
         document.body.appendChild(popUp);
 
-        // Position and animate
-        const startX = Math.random() * (window.innerWidth - 300) + 50; // Random x position
-        const startY = Math.random() * (window.innerHeight - 200) + 50; // Random y position
-        popUp.style.left = `${startX}px`;
-        popUp.style.top = `${startY}px`;
+        // Position and animate (now explicitly top-right)
+        popUp.style.right = `${Math.random() * 10 + 20}px`; // 20-30px from right
+        popUp.style.top = `${Math.random() * (window.innerHeight / 4) + 20}px`; // Random top position in upper quarter
 
         // Force reflow for animation
         void popUp.offsetWidth;
@@ -122,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 5000); // Quote visible for 5 seconds
     }
 
-    // Add styles for love quote pop-ups dynamically
+    // Add styles for love quote pop-ups dynamically (adjusted for top-right)
     const loveQuoteStyle = document.createElement("style");
     loveQuoteStyle.type = "text/css";
     loveQuoteStyle.innerText = `
@@ -138,17 +137,17 @@ document.addEventListener('DOMContentLoaded', () => {
             box-shadow: 0 0 15px rgba(255, 105, 180, 0.7), inset 0 0 8px rgba(255, 255, 255, 0.5);
             z-index: 200;
             opacity: 0;
-            transform: translateY(20px) scale(0.9);
+            transform: translateX(50px) scale(0.9); /* Start slightly off-screen to the right */
             transition: all 0.5s ease-out;
             pointer-events: none; /* Allows clicks to pass through to elements below */
         }
         .love-quote-popup.show {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateX(0) scale(1);
         }
         .love-quote-popup.hide {
             opacity: 0;
-            transform: translateY(-20px) scale(0.9);
+            transform: translateX(50px) scale(0.9);
         }
     `;
     document.head.appendChild(loveQuoteStyle);
@@ -195,12 +194,14 @@ document.addEventListener('DOMContentLoaded', () => {
             coDriverCue.style.animation = `typing ${typingAnimationDuration}s steps(${message.length}, end) forwards, blink-caret .75s step-end infinite`;
             coDriverCue.style.width = '100%';
 
+            // No automatic fade out for typewriter messages.
+            // The display will stay visible until explicitly hidden by the ignitionStartButton click.
             setTimeout(() => {
-                coDriverCue.style.borderRight = 'none'; // Hide cursor
-                if (callback) callback();
+                coDriverCue.style.borderRight = 'none'; // Hide cursor after typing
+                if (callback) callback(); // Execute callback (e.g., showing ignitionStartButton)
             }, typingAnimationDuration * 1000 + 500); // A small delay after typing for cursor to disappear
         } else {
-            // Fade-in animation
+            // Fade-in animation for general cues (like fuel updates)
             coDriverCue.textContent = message;
             coDriverCue.style.opacity = '0'; // Start invisible for fade-in
             coDriverCue.style.animation = 'fadeIn 1s forwards'; // Simple fade in
@@ -321,6 +322,12 @@ document.addEventListener('DOMContentLoaded', () => {
             startLyricTypingEffect();
         } else if (levelId === 'level-healing-toolkit') {
             displayCoDriverCue("Welcome to the Healing Toolkit. Take a moment to recharge.", false); // Fade-in
+            // Initialize dashboard states
+            setGaugeNeedle('fuel-needle', 90); // Example fuel
+            setGaugeNeedle('temp-needle', 50); // Example temp
+            document.getElementById('fuel-reading').textContent = 'FULL';
+            document.getElementById('temp-reading').textContent = 'OPTIMAL';
+            document.querySelector('.dashboard-indicator.hydration .indicator-text').textContent = 'Hydration Level: High'; // Assume hydrated
         }
         else if (levelId === 'hidden-heart-message-section') {
             displayCoDriverCue("I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line. Final destination reached. Prepare for Heart Message protocol.", false, () => {
@@ -331,6 +338,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             createParticles(document.querySelector('#hidden-heart-message-section .particle-background'), 100);
             updateFuelTank(); // Final fuel update
+        }
+        else if (levelId === 'level-audio-message') {
+            displayCoDriverCue("A special message from your Co-Driver is ready. Listen closely.", false, () => {
+                const birthdayAudio = document.getElementById('birthday-audio');
+                if (birthdayAudio) {
+                    birthdayAudio.play().catch(e => console.log("Audio autoplay blocked:", e));
+                }
+            });
         }
     }
 
@@ -343,8 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayCoDriverCue(introMessage, true, () => { // Use typewriter for introMessage
                 // Callback after introMessage typing finishes
                 ignitionStartButton.classList.remove('hidden'); // Show "IGNITE THE ENGINE" button
-                coDriverCue.style.animation = 'none'; // Stop typewriter animation on cue
-                coDriverCue.style.borderRight = 'none'; // Hide cursor
+                // No need to hide coDriverDisplay here, it stays visible until ignitionStartButton is clicked
             });
         });
     }
@@ -577,4 +591,18 @@ document.addEventListener('DOMContentLoaded', () => {
             displayCoDriverCue("Virtual hug initiated. Recharge complete.", false); // Fade-in
         });
     }
+
+    // --- Dashboard Gauge Logic ---
+    function setGaugeNeedle(needleId, percentage) {
+        const needle = document.getElementById(needleId);
+        if (needle) {
+            // Map percentage (0-100) to rotation degrees (e.g., -120deg to +120deg for a 240-degree sweep)
+            const rotation = (percentage / 100) * 240 - 120; // Adjust -120 and 240 based on your gauge's visual sweep
+            needle.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+        }
+    }
+
+    // Initial gauge settings (can be called when level-healing-toolkit is shown)
+    // Example: setGaugeNeedle('fuel-needle', 75); // 75% full
+    // Example: setGaugeNeedle('temp-needle', 60); // 60% of max temp
 });
