@@ -66,19 +66,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let quoteInterval;
 
     function showLoveQuote() {
-        const randomIndex = Math.floor(Math.random() * loveQuotes.length);
+        const randomIndex = Math.floor(M
         const quote = loveQuotes[randomIndex];
-        // Create a temporary pop-up element
         const popUp = document.createElement('div');
         popUp.classList.add('love-quote-popup');
         popUp.textContent = quote;
         document.body.appendChild(popUp);
 
-        // Position and animate
-        const startX = Math.random() * (window.innerWidth - 300) + 50; // Random x position
-        const startY = Math.random() * (window.innerHeight - 200) + 50; // Random y position
-        popUp.style.left = `${startX}px`;
-        popUp.style.top = `${startY}px`;
+        // New positioning to be bottom-centered
+        popUp.style.left = '50%';
+        popUp.style.bottom = '20px'; // Position 20px from the bottom
+        popUp.style.transform = 'translateX(-50%) translateY(20px) scale(0.9)'; // Initial state for animation
 
         // Force reflow for animation
         void popUp.offsetWidth;
@@ -90,6 +88,39 @@ document.addEventListener('DOMContentLoaded', () => {
             popUp.addEventListener('transitionend', () => popUp.remove());
         }, 5000); // Quote visible for 5 seconds
     }
+
+    // Add styles for love quote pop-ups dynamically
+    const loveQuoteStyle = document.createElement("style");
+    loveQuoteStyle.type = "text/css";
+    loveQuoteStyle.innerText = `
+        .love-quote-popup {
+            position: fixed;
+            background: rgba(255, 105, 180, 0.8);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.1em;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.7), inset 0 0 8px rgba(255, 255, 255, 0.5);
+            z-index: 200;
+            opacity: 0;
+            transition: all 0.5s ease-out;
+            pointer-events: none;
+            max-width: 80%;
+            box-sizing: border-box;
+        }
+        .love-quote-popup.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+        .love-quote-popup.hide {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px) scale(0.9);
+        }
+    `;
+    document.head.appendChild(loveQuoteStyle);
+
 
     // --- Loading Sequence ---
     // Simulate loading time
