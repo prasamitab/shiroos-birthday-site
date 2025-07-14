@@ -101,17 +101,17 @@ body {
 /* Co-driver Display */
 .co-driver-display {
     position: absolute;
-    top: 20px; /* Changed from 50% */
-    right: 20px; /* Changed from left: 50% */
-    transform: none; /* Removed translate(-50%, -50%) */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: rgba(13, 13, 13, 0.9);
     border: 2px solid #00FFC0;
-    box-shadow: 0 0 10px #00FFC0; /* Reduced shadow */
-    padding: 10px; /* Reduced padding */
-    border-radius: 5px; /* Reduced border-radius */
-    text-align: left; /* Changed from center */
-    max-width: 300px; /* Reduced max-width */
-    width: auto; /* Allow width to adjust */
+    box-shadow: 0 0 20px #00FFC0;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 700px;
+    width: 80%;
     z-index: 10;
     opacity: 0; /* Starts hidden, will fade in */
     transition: opacity 0.5s ease-in-out;
@@ -122,17 +122,17 @@ body {
 }
 
 #co-driver-cue {
-    font-size: 0.9em; /* Reduced font size */
+    font-size: 1.2em;
     color: #00FFC0;
-    margin-bottom: 0; /* Adjusted margin */
+    margin-bottom: 20px;
     white-space: pre-wrap; /* Preserve line breaks */
     overflow: hidden; /* Ensures text doesn't overflow during typing */
     border-right: .15em solid #00FFC0; /* The typewriter cursor */
     font-family: 'Roboto Mono', monospace;
     animation: blink-caret .75s step-end infinite;
-    max-height: 20vh; /* Reduced max height */
+    max-height: 40vh; /* Allow for more text vertically */
     overflow-y: auto; /* Enable scrolling for long messages */
-    padding-right: 5px; /* Space for scrollbar */
+    padding-right: 15px; /* Space for scrollbar */
 }
 
 /* Typewriter effect for #co-driver-cue */
@@ -157,6 +157,48 @@ body {
     from { opacity: 0; }
     to { opacity: 1; }
 }
+
+/* NEW: Milestone fade message */
+.milestone-fade-message {
+    position: absolute; /* Changed from fixed to absolute to position relative to game-container if needed, or keep fixed based on desired layout */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(13, 13, 13, 0.9);
+    border: 2px solid #00FFC0;
+    box-shadow: 0 0 20px #00FFC0;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 700px;
+    width: 80%;
+    z-index: 1000; /* Higher z-index to be on top of everything */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+.milestone-fade-message.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.milestone-fade-message.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Ensure co-driver-cue is styled within this if it's reused, or create a specific style for the message text */
+.milestone-fade-message p {
+    font-size: 1.2em;
+    color: #00FFC0;
+    margin-bottom: 0;
+    white-space: pre-wrap;
+    /* Remove typewriter related styles from here if this is purely for static fade messages */
+    border-right: none;
+    animation: none;
+}
+
 
 /* Common Level Section Styling */
 .level-section {
@@ -759,12 +801,6 @@ p {
     .co-driver-display {
         font-size: 0.9em; /* Adjusted for smaller screens */
         padding: 20px; /* Adjust padding for smaller screens */
-        top: 10px; /* Adjusted for smaller screens */
-        right: 10px; /* Adjusted for smaller screens */
-        left: auto; /* Ensure it stays right */
-        transform: none; /* Ensure no transform interferes */
-        width: auto; /* Adjust width as needed */
-        max-width: 250px; /* Keep it relatively small */
     }
 
     #final-birthday-message {
@@ -777,12 +813,9 @@ p {
     .co-driver-display {
         width: 90%;
         font-size: 0.8em; /* Further adjusted for very small screens */
-        top: 10px; /* Keep it at the top */
-        right: 5%; /* Adjust for centering on very small screens */
-        left: 5%;
-        transform: none; /* Ensure no transform interferes */
-        max-width: none; /* Remove max-width constraint for full width */
-        padding: 10px;
+        top: 20px; /* Move slightly up to allow more central text */
+        transform: translateX(-50%); /* Only horizontal centering */
+        max-height: 90vh; /* Allow more vertical space */
     }
 
     .level-section {
