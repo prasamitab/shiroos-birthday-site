@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizNextLevelBtn = document.querySelector('#level-quiz .next-level-btn');
 
     // NEW: Q&A Elements
-    const qaCards = document.querySelectorAll('.qa-card');
+    const qaCards = document.querySelectorAll('qa-card');
     const qaNextBtns = document.querySelectorAll('.qa-next-btn');
     const qaFinalMessage = document.getElementById('qa-final-message');
     const qaNextLevelBtn = document.querySelector('#level-qa .next-level-btn');
