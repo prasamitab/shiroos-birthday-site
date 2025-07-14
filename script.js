@@ -3,10 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('game-container');
     const coDriverDisplay = document.getElementById('co-driver-display');
     const coDriverCue = document.getElementById('co-driver-cue');
-    const coDriverContinueBtn = document.getElementById('co-driver-continue-btn'); // New: button to continue from co-driver cue
-    const ignitionButton = document.getElementById('ignition-button'); // Original START THE JOURNEY button (on level-0)
-    const levelIntroGreeting = document.getElementById('level-intro-greeting'); // New: for "Welcome Shiroo" screen
-    const proceedFromGreetingButton = document.getElementById('proceed-from-greeting'); // New: button on "Welcome Shiroo" screen
+    const coDriverContinueBtn = document.getElementById('co-driver-continue-btn'); // Button to continue from co-driver cue ("IGNITE THE ENGINE")
+    const levelIntroGreeting = document.getElementById('level-intro-greeting'); // For "Welcome Shiroo" screen
+    const proceedFromGreetingButton = document.getElementById('proceed-from-greeting'); // Button on "Welcome Shiroo" screen ("START THE JOURNEY")
 
     const artworkFrame = document.getElementById('artwork-frame');
     const artworkOverlay = document.getElementById('artwork-overlay');
@@ -116,6 +115,7 @@ Your Co-Driver.`;
         // Position to the right and randomly vertically
         const randomY = Math.random() * (window.innerHeight * 0.7) + (window.innerHeight * 0.1); // 10% to 80% of screen height
         popUp.style.top = `${randomY}px`;
+        popUp.style.right = '20px'; // Ensure it's always on the right
 
         document.body.appendChild(popUp);
 
@@ -142,33 +142,25 @@ Your Co-Driver.`;
     }, 3000); // 3-second loading screen
 
 
-    // --- NEW: "Welcome Shiroo" Screen Logic ---
+    // --- NEW: "Welcome Shiroo" Screen Logic ("START THE JOURNEY" button) ---
     if (proceedFromGreetingButton) {
         proceedFromGreetingButton.addEventListener('click', () => {
-            levelIntroGreeting.classList.add('hidden');
-            document.getElementById('level-0').classList.remove('hidden'); // Show original level-0
-            // No co-driver cue here, as level-0 has its own text.
-        });
-    }
+            levelIntroGreeting.classList.add('hidden'); // Hide the welcome greeting
+            coDriverDisplay.classList.remove('hidden'); // Show co-driver display
+            coDriverContinueBtn.classList.add('hidden'); // Ensure IGNITE THE ENGINE button is hidden initially, will show after typing
 
-
-    // --- START THE JOURNEY button (on level-0) ---
-    if (ignitionButton) {
-        ignitionButton.addEventListener('click', () => {
-            document.getElementById('level-0').classList.add('hidden'); // Hide level-0
-            coDriverDisplay.classList.remove('hidden');
-            coDriverContinueBtn.classList.remove('hidden'); // Show continue button for intro message
+            // Display the intro message with typewriter effect
             displayCoDriverCue(introMessage, true, () => {
-                // Callback function when typing is complete
-                // The continue button click handles the next step
+                // Callback: After intro message is typed, the IGNITE THE ENGINE button will appear
             });
         });
     }
 
-    // --- NEW: Continue button after introMessage ---
+
+    // --- "IGNITE THE ENGINE" button (after intro message) ---
     if (coDriverContinueBtn) {
         coDriverContinueBtn.addEventListener('click', () => {
-            coDriverDisplay.classList.add('hidden');
+            coDriverDisplay.classList.add('hidden'); // Hide co-driver display
             coDriverContinueBtn.classList.add('hidden'); // Hide button again
             document.getElementById('level-1').classList.remove('hidden'); // Show level-1 (Artwork Wall)
             displayCoDriverCue("Level 1 initiated: The Artwork Wall. Discover your masterpiece.", false);
