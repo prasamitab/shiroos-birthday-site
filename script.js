@@ -310,8 +310,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hugButton) {
         hugButton.addEventListener('click', () => {
             hugOverlay.classList.add('visible');
-            // Set the specific message for the hug overlay
-            hugMessageText.textContent = "Virtual hug generated and sent successfully! 💛"; // NEW: Update the text
+            // This is the crucial line that was re-added:
+            hugMessageText.textContent = "Virtual hug generated and sent successfully! 💛";
             displayCoDriverCue("Virtual hug initiated. Recharge complete.");
         });
     }
