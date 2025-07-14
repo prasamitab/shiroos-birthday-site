@@ -260,7 +260,7 @@ body {
     position: relative;
     width: 80%;
     max-width: 500px;
-    height: 400px; /* This height is kept as requested */
+    height: 300px;
     border: 3px solid #00FFFF;
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
     cursor: pointer;
@@ -291,7 +291,7 @@ body {
     width: 100%;
     height: 100%;
     background-image: url('images/artwork.jpg'); /* Ensure this path is correct! */
-    background-size: cover; /* Reverted to 'cover' as requested */
+    background-size: cover;
     background-position: center;
     filter: brightness(0); /* Starts black */
     transition: filter 1s ease-in-out;
@@ -397,7 +397,7 @@ body {
 .memory-timeline-container {
     position: relative;
     width: 100%;
-    height: 400px; /* This height is kept as requested */
+    height: 300px; /* Fixed height for the scrollable area */
     margin: 20px 0;
     overflow: hidden; /* Hide scrollbars */
 }
@@ -438,7 +438,7 @@ body {
 
 .memory-item img, .memory-item video {
     width: 100%;
-    height: 220px; /* This height is kept as requested */
+    height: 150px;
     object-fit: cover;
     border-radius: 5px;
     margin-bottom: 10px;
@@ -569,7 +569,7 @@ body {
 .video-container {
     position: relative;
     width: 80%;
-    max-width: 700px; /* Reverted to original max-width as requested */
+    max-width: 700px;
     aspect-ratio: 16 / 9;
     background: rgba(0, 0, 0, 0.7);
     border: 2px solid #00FFFF;
@@ -810,7 +810,7 @@ body {
     }
 
     .artwork-frame {
-        height: 350px; /* Adjusted for smaller screens */
+        height: 250px;
     }
 
     .memory-item img, .memory-item video {
@@ -819,7 +819,6 @@ body {
 
     .video-container {
         width: 95%;
-        max-width: 700px; /* Reverted for smaller screens */
     }
 
     .fuel-tank-container {
@@ -864,7 +863,7 @@ body {
     }
 
     .artwork-frame {
-        height: 250px; /* Further adjusted for very small screens */
+        height: 200px;
     }
 
     .memory-item {
@@ -872,7 +871,7 @@ body {
     }
 
     .memory-item img, .memory-item video {
-        height: 150px; /* Adjusted for very small screens */
+        height: 120px;
     }
 
     .nav-arrow {
@@ -925,3 +924,4 @@ body {
         font-size: 0.9em;
         padding: 10px 15px;
     }
+}
