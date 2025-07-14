@@ -15,6 +15,8 @@
     </div>
 
     <audio id="background-music" src="audio/background-music.mp3" loop autoplay></audio>
+    <audio id="birthday-message-audio" src="https://github.com/your-username/your-repo/raw/main/audio/birthday-message.mp3"></audio>
+
 
     <div id="game-container" class="hidden">
         <div class="garage-background"></div>
@@ -179,36 +181,44 @@
             </div>
         </div>
 
-
         <div id="hidden-heart-message-section" class="level-section hidden">
-            <h3>A Message From My Heart</h3>
-            <div class="heart-container">
-                <div class="heart"></div>
-                <div class="heart-message">
-                    <p>To the man who drives forward no matter what and reached here</p>
-                    <p>Happy Birthday, my Shiroo.</p>
-                    <p>Nineetteeennnnn hogayeeeee bbbyy,</p>
-                    <p>Ab we aren’t meeting in person toh that doesn’t stop me from riding along with you , mai humesha tere sath rahungi 😘😘kaise na kaise. </p>
-                    <p>Through every twist, turn, traffic jam, and night drive annd drinks, I’ve watched you move forward never losing momentum and i love that thing about youuuuuuuu. </p>
-                    <p>Ye artwork? Made with my hands.</p>
-                    <p>Ye page? Built with memories.</p>
-                    <p>But the heart behind it? Pooooraa teraaa janeman.</p>
-                    <p>I’m your co driver , passenger princess whatever here, always have been.</p>
-                    <p>I am falling in love with every mile you drive.</p>
-                    <p>You my inspirationn ukk.</p>
-                    <p>Not because you’re perfect but because you’re real, rare, kind, sweet , romantic, caring, annoying and mine in ways words pe nahi bol paungi hehehe.</p>
-                    <p>Keep driving towards what makes you feel alive and Im always right here for you baby.</p>
-                    <p>And aurr kuchh nahiiiiii </p>
-                    <p>I’ll always be in the passenger seat , with the map, giving wrong directions .</p>
-                    <p>Happy Birthdayyyyyyyy Baby.</p>
-                    <p>Forever your co-driver,</p>
-                    <p>Im Yoursssss in the end </p>
-                    <p class="final-line">I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line.</p>
-                </div>
+            <div class="heart-gif-background"></div> <h3>A Message From My Heart</h3>
+            <div class="heart-message-content">
+                <p>To the man who drives forward no matter what and reached here</p>
+                <p>Happy Birthday, my Shiroo.</p>
+                <p>Nineetteeennnnn hogayeeeee bbbyy,</p>
+                <p>Ab we aren’t meeting in person toh that doesn’t stop me from riding along with you , mai humesha tere sath rahungi 😘😘kaise na kaise. </p>
+                <p>Through every twist, turn, traffic jam, and night drive annd drinks, I’ve watched you move forward never losing momentum and i love that thing about youuuuuuuu. </p>
+                <p>Ye artwork? Made with my hands.</p>
+                <p>Ye page? Built with memories.</p>
+                <p>But the heart behind it? Pooooraa teraaa janeman.</p>
+                <p>I’m your co driver , passenger princess whatever here, always have been.</p>
+                <p>I am falling in love with every mile you drive.</p>
+                <p>You my inspirationn ukk.</p>
+                <p>Not because you’re perfect but because you’re real, rare, kind, sweet , romantic, caring, annoying and mine in ways words pe nahi bol paungi hehehe.</p>
+                <p>Keep driving towards what makes you feel alive and Im always right here for you baby.</p>
+                <p>And aurr kuchh nahiiiiii </p>
+                <p>I’ll always be in the passenger seat , with the map, giving wrong directions .</p>
+                <p>Happy Birthdayyyyyyyy Baby.</p>
+                <p>Forever your co-driver,</p>
+                <p>Im Yoursssss in the end </p>
+                <p class="final-line">I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line.</p>
             </div>
-            <h2 id="final-birthday-message">Happyy Birthdayyyy</h2>
+            <button id="final-message-button" class="glow-button" data-target="level-final-birthday-message">Final Message</button>
             <div class="particle-background"></div>
         </div>
+
+        <div id="level-final-birthday-message" class="level-section hidden">
+            <h2>Happyy Birthdayyyy</h2>
+            <div class="audio-player-container">
+                <p>Listen to my special birthday message for you:</p>
+                <button id="audio-toggle-button" class="glow-button">
+                    <i class="fas fa-play"></i> Play Message
+                </button>
+            </div>
+            <div class="particle-background"></div>
+        </div>
+
     </div>
 
     <script src="script.js"></script>
