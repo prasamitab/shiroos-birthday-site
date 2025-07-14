@@ -260,7 +260,7 @@ body {
     position: relative;
     width: 80%;
     max-width: 500px;
-    height: 400px; /* Increased height for the artwork frame */
+    height: 400px; /* This height is kept as requested */
     border: 3px solid #00FFFF;
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
     cursor: pointer;
@@ -291,7 +291,7 @@ body {
     width: 100%;
     height: 100%;
     background-image: url('images/artwork.jpg'); /* Ensure this path is correct! */
-    background-size: contain; /* Changed from 'cover' to ensure whole image is visible */
+    background-size: cover; /* Reverted to 'cover' as requested */
     background-position: center;
     filter: brightness(0); /* Starts black */
     transition: filter 1s ease-in-out;
@@ -397,7 +397,7 @@ body {
 .memory-timeline-container {
     position: relative;
     width: 100%;
-    height: 400px; /* Increased fixed height for the scrollable area */
+    height: 400px; /* This height is kept as requested */
     margin: 20px 0;
     overflow: hidden; /* Hide scrollbars */
 }
@@ -438,7 +438,7 @@ body {
 
 .memory-item img, .memory-item video {
     width: 100%;
-    height: 220px; /* Increased height for images/videos in memory items */
+    height: 220px; /* This height is kept as requested */
     object-fit: cover;
     border-radius: 5px;
     margin-bottom: 10px;
@@ -569,7 +569,7 @@ body {
 .video-container {
     position: relative;
     width: 80%;
-    max-width: 850px; /* UPDATED: Increased max-width to make the video player larger */
+    max-width: 700px; /* Reverted to original max-width as requested */
     aspect-ratio: 16 / 9;
     background: rgba(0, 0, 0, 0.7);
     border: 2px solid #00FFFF;
@@ -819,7 +819,7 @@ body {
 
     .video-container {
         width: 95%;
-        max-width: 600px; /* Adjusted for smaller screens */
+        max-width: 700px; /* Reverted for smaller screens */
     }
 
     .fuel-tank-container {
