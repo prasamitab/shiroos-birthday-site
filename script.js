@@ -32,14 +32,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const hugButton = document.getElementById('hug-button');
     const hugOverlay = document.getElementById('hug-overlay');
 
-    // --- NEW: Intro Message Content ---
-    const introMessage = `Hey driver, buckle up — your co-driver (me) is right here beside you. This ride’s for you, and I’m guiding you through every curve, every speed bump, every smile. Let’s go.
+    // NEW: Audio for Final Message
+    const birthdayAudio = document.getElementById('birthday-audio');
 
-    You’re the only one I have, and I love you more than words can express. I miss you so much, and I’m incredibly grateful to have you in my life. You’re everything to me — my solution, my magical world.
 
-    I imagine myself living in the world you’ve created for me, where I feel safe and loved. I love being in your arms. Without you, this world feels boring and dull, as if it’s black and white. But with you, it’s full of colors, love, and joy. You’re the best part of my life.
-
-    You are my sunshine, my only sunshine, and you make me so, so happy. I want to live in this magical world of ours forever, and never leave. You are my everything — my heart, my soul, my world.`;
+    // --- NEW: Intro Message Content (Split into lines) ---
+    const introMessageLines = [
+        `Hey driver, buckle up — your co-driver (me) is right here beside you.`,
+        `This ride’s for you, and I’m guiding you through every curve, every speed bump, every smile.`,
+        `Let’s go.`,
+        ``, // Empty line for a pause
+        `You’re the only one I have, and I love you more than words can express.`,
+        `I miss you so much, and I’m incredibly grateful to have you in my life.`,
+        `You’re everything to me — my solution, my magical world.`,
+        ``,
+        `I imagine myself living in the world you’ve created for me, where I feel safe and loved.`,
+        `I love being in your arms.`,
+        `Without you, this world feels boring and dull, as if it’s black and white.`,
+        `But with you, it’s full of colors, love, and joy.`,
+        `You’re the best part of my life.`,
+        ``,
+        `You are my sunshine, my only sunshine, and you make me so, so happy.`,
+        `I want to live in this magical world of ours forever, and never leave.`,
+        `You are my everything — my heart, my soul, my world.`
+    ];
 
 
     // --- Love Quotes for Pop-In Alerts ---
@@ -131,19 +147,79 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3000); // 3 seconds loading screen
 
 
-    function displayCoDriverCue(message, typewriter = false, callback = null) {
+    // --- NEW: Typewriter for multiline messages ---
+    let currentLineIndex = 0;
+    let currentCharacterIndex = 0;
+    let typeLineTimeout;
+    let isTyping = false; // Flag to prevent multiple typing instances
+
+    function typeLineByLine(lines, onCompleteCallback = null) {
+        if (isTyping) return; // Prevent new typing if already typing
+        isTyping = true;
         coDriverCue.textContent = ''; // Clear existing content
-        coDriverCue.classList.remove('typewriter'); // Reset typewriter class
+        coDriverCue.classList.add('typewriter-line'); // Add a specific class for line-by-line typing
+        coDriverCue.classList.remove('hidden');
+        coDriverCue.style.animation = 'none'; // Clear previous animation
+        coDriverCue.style.width = 'auto'; // Allow width to adjust per line
+        coDriverCue.style.borderRight = '.15em solid #00FFC0'; // Ensure cursor is visible
+
+        const speed = 30; // Typing speed in ms per character
+        const pauseBetweenLines = 1000; // Pause in ms after each line
+
+        function typeNextCharacter() {
+            if (currentLineIndex < lines.length) {
+                const currentLine = lines[currentLineIndex];
+                if (currentCharacterIndex < currentLine.length) {
+                    coDriverCue.textContent += currentLine.charAt(currentCharacterIndex);
+                    currentCharacterIndex++;
+                    typeLineTimeout = setTimeout(typeNextCharacter, speed);
+                } else {
+                    // Line complete, add a line break
+                    coDriverCue.textContent += '\n'; // Add newline for the next line
+                    coDriverCue.style.borderRight = 'none'; // Hide cursor temporarily
+                    // Move to next line
+                    currentLineIndex++;
+                    currentCharacterIndex = 0;
+                    typeLineTimeout = setTimeout(() => {
+                        coDriverCue.style.borderRight = '.15em solid #00FFC0'; // Show cursor again
+                        typeNextCharacter(); // Start typing the next line
+                    }, pauseBetweenLines);
+                }
+            } else {
+                // All lines typed
+                coDriverCue.style.borderRight = 'none'; // Hide final cursor
+                isTyping = false;
+                if (onCompleteCallback) onCompleteCallback();
+            }
+        }
+
+        // Reset and start
+        currentLineIndex = 0;
+        currentCharacterIndex = 0;
+        typeNextCharacter();
+    }
+
+    // Original displayCoDriverCue for single messages or fading
+    function displayCoDriverCue(message, typewriter = false, callback = null) {
+        clearTimeout(typeLineTimeout); // Clear any ongoing line-by-line typing
+        isTyping = false; // Reset typing flag
+
+        coDriverCue.textContent = ''; // Clear existing content
+        coDriverCue.classList.remove('typewriter', 'typewriter-line'); // Remove all typewriter classes
         coDriverCue.style.animation = 'none'; // Reset any previous animation
+        coDriverCue.style.width = 'auto'; // Reset width
+        coDriverCue.style.borderRight = 'none'; // Hide cursor by default
         coDriverDisplay.classList.remove('hidden'); // Ensure display is visible
         coDriverDisplay.style.opacity = '1'; // Ensure display is fully opaque
-        coDriverDisplay.style.pointerEvents = 'auto'; // Ensure it can receive clicks initially (for intro button)
+        coDriverDisplay.style.pointerEvents = 'auto'; // Ensure it can receive clicks initially
 
         void coDriverCue.offsetWidth; // Trigger reflow for animation reset
 
         if (typewriter) {
+            // This path is now only for single-line typewriter effects if needed elsewhere,
+            // but for introMessage, typeLineByLine is preferred.
             coDriverCue.classList.add('typewriter');
-            const speed = 30; // Typing speed in ms per character - CHANGED TO 30
+            const speed = 30; // Typing speed in ms per character
             const typingAnimationDuration = message.length * speed / 1000; // Duration in seconds
 
             coDriverCue.textContent = message;
@@ -151,17 +227,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             coDriverCue.style.animation = `typing ${typingAnimationDuration}s steps(${message.length}, end) forwards, blink-caret .75s step-end infinite`;
             coDriverCue.style.width = '100%';
+            coDriverCue.style.borderRight = '.15em solid #00FFC0'; // Show cursor for this effect
 
             setTimeout(() => {
                 coDriverCue.style.borderRight = 'none'; // Hide cursor
                 if (callback) callback(); // Call callback (e.g., to show ignition button)
-                // coDriverDisplay remains visible until ignitionStartButton is clicked
             }, typingAnimationDuration * 1000 + 500);
         } else {
             // For standard, non-typewriter messages (e.g., from showLevel)
             coDriverCue.textContent = message;
             coDriverCue.style.opacity = '1';
             coDriverCue.style.animation = 'textAppear 1s forwards'; // Simple fade in
+            coDriverCue.style.whiteSpace = 'pre-wrap';
+
 
             // After a delay, fade out and then hide completely
             setTimeout(() => {
@@ -192,9 +270,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Level QA shown
     // 5. Level Music Video shown
     // 6. Level Healing Toolkit shown
-    // 7. Hidden Heart Message Section shown (final fuel increment)
-    // Total 7 "steps" to fill from 0% to 100% after the initial level-0
-    const maxFuelLevels = 7;
+    // 7. Hidden Heart Message Section shown
+    // 8. Final Message (audio) shown (new fuel increment)
+    // Total 8 "steps" to fill from 0% to 100% after the initial level-0
+    const maxFuelLevels = 8; // Increased from 7 to 8
     let currentFuelStage = 0; // Start at 0, representing the "Ready for pilot input." stage (level-0)
 
     function updateFuelTank() {
@@ -215,6 +294,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(levelId).classList.remove('hidden');
         if (updateFuel) {
             updateFuelTank(); // Increase fuel with each level change
+        }
+
+        // Stop background music if final audio is about to play
+        if (levelId === 'level-final-message' && backgroundMusic) {
+            backgroundMusic.pause();
+            backgroundMusic.currentTime = 0;
+        } else if (backgroundMusic && backgroundMusic.paused && backgroundMusic.currentTime === 0) {
+            // Resume background music if it was paused for the final message and we navigate away
+            // Only play if it's currently at the beginning (was stopped for final message)
+            backgroundMusic.play().catch(e => console.log("Music autoplay blocked:", e));
         }
 
         // Specific cues for each level
@@ -258,7 +347,15 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (levelId === 'hidden-heart-message-section') {
             displayCoDriverCue("I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line. Final destination reached. Prepare for Heart Message protocol.");
             createParticles(document.querySelector('#hidden-heart-message-section .particle-background'), 100);
-            updateFuelTank(); // Final fuel update
+            // No fuel update here, fuel updates when actually *entering* the next level, which is now 'level-final-message'
+        }
+        else if (levelId === 'level-final-message') {
+            displayCoDriverCue("The ultimate checkpoint. Listen to my heart, Driver.");
+            if (birthdayAudio) {
+                birthdayAudio.play().catch(e => console.log("Birthday audio autoplay blocked:", e));
+            }
+            // This is the true final fuel update
+            updateFuelTank();
         }
     }
 
@@ -268,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ignitionButton.addEventListener('click', () => {
             document.getElementById('level-0').classList.add('hidden'); // Hide level-0
             coDriverDisplay.classList.remove('hidden'); // Show co-driver display
-            displayCoDriverCue(introMessage, true, () => {
+            typeLineByLine(introMessageLines, () => { // Use new typeLineByLine function
                 // Callback after introMessage typing finishes
                 ignitionStartButton.classList.remove('hidden'); // Show "IGNITE THE ENGINE" button
                 // The coDriverDisplay needs to remain visible until ignitionStartButton is clicked
