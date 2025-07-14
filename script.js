@@ -55,35 +55,44 @@ document.addEventListener('DOMContentLoaded', () => {
     let quoteInterval;
 
     function showLoveQuote() {
-        const randomIndex = Math.floor(Math.random() * loveQuotes.length);
+        const randomIndex = Math.floor(M`ath.random() * loveQuotes.length);
         const quote = loveQuotes[randomIndex];
-        // Create a temporary pop-up element
         const popUp = document.createElement('div');
         popUp.classList.add('love-quote-popup');
         popUp.textContent = quote;
+
+        // Temporarily add to DOM to measure actual dimensions
+        // Position it off-screen and set opacity to 0 to prevent flashing
+        popUp.style.position = 'fixed'; // Ensure fixed positioning for measurement
+        popUp.style.left = '-9999px';
+        popUp.style.top = '-9999px';
+        popUp.style.opacity = '0';
         document.body.appendChild(popUp);
 
-        // Position and animate
-        // Position pop-up on the right side
-        const popUpWidth = 300; // Approximate width based on CSS padding and text length
-        const popUpHeight = 100; // Approximate height
+        // Force reflow and get actual dimensions
+        const actualWidth = popUp.offsetWidth;
+        const actualHeight = popUp.offsetHeight;
+
         const margin = 20; // Margin from the right edge and top/bottom
 
-        const startX = window.innerWidth - popUpWidth - (2 * 25) - margin; // 2*25 for left/right padding
-        const startY = Math.random() * (window.innerHeight - popUpHeight - 2 * margin) + margin;
+        // Calculate dynamic position for the right side
+        const startX = window.innerWidth - actualWidth - margin;
+        // Ensure it stays within vertical bounds
+        const startY = Math.random() * (window.innerHeight - actualHeight - 2 * margin) + margin;
 
-
+        // Apply calculated position and make visible
         popUp.style.left = `${startX}px`;
         popUp.style.top = `${startY}px`;
+        popUp.style.opacity = '1'; // This will trigger the fade-in via CSS transition
 
-        // Force reflow for animation
-        void popUp.offsetWidth;
+        // Trigger CSS animation (ensure reflow if necessary for some browsers, though opacity change usually suffices)
+        void popUp.offsetWidth; // This is a common trick to force a reflow
         popUp.classList.add('show');
 
         setTimeout(() => {
             popUp.classList.remove('show');
             popUp.classList.add('hide'); // For fade-out animation
-            popUp.addEventListener('transitionend', () => popUp.remove());
+            popUp.addEventListener('transitionend', () => popUp.remove(), { once: true });
         }, 5000); // Quote visible for 5 seconds
     }
 
@@ -162,7 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 coDriverCue.style.borderRight = 'none'; // Hide cursor
                 if (callback) callback(); // Call callback (e.g., to show ignition button)
-                // coDriverDisplay remains visible until ignitionStartButton is clicked
+                // IMPORTANT: For the initial intro message, coDriverDisplay is designed to REMAIN visible
+                // until the "IGNITE THE ENGINE" button is clicked, which then hides it.
+                // It does NOT disappear automatically after a set time in this case.
             }, typingAnimationDuration * 1000 + 500);
         } else {
             // For standard, non-typewriter messages (e.g., from showLevel)
@@ -278,7 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
             displayCoDriverCue(introMessage, true, () => {
                 // Callback after introMessage typing finishes
                 ignitionStartButton.classList.remove('hidden'); // Show "IGNITE THE ENGINE" button
-                // The coDriverDisplay needs to remain visible until ignitionStartButton is clicked
             });
         });
     }
