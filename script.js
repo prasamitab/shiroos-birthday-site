@@ -76,8 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             popUp.classList.remove('show');
             popUp.classList.add('hide'); // For fade-out animation
-            popUp.addEventListener('transitionend', () => popUp.remove());
-        }, 5000); // Quote visible for 5 seconds
+            popUp.addEventListener('transitionend', function handler() {
+                popUp.remove();
+                popUp.removeEventListener('transitionend', handler);
+            }, { once: true });
+        }, 5000); // Love quote visible for 5 seconds
     }
 
     // Add styles for love quote pop-ups dynamically
@@ -131,8 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3000); // 3 seconds loading screen
 
 
-    // This function now has a new parameter `autoHide`
-    function displayCoDriverCue(message, typewriter = false, autoHide = false, callback = null) {
+    // This function now has new parameter `autoHideDuration`
+    // If autoHideDuration is 0 or null, it means don't auto-hide.
+    function displayCoDriverCue(message, typewriter = false, autoHideDuration = 0, callback = null) {
         coDriverCue.textContent = ''; // Clear existing content
         coDriverCue.classList.remove('typewriter'); // Reset typewriter class
         coDriverCue.style.animation = 'none'; // Reset any previous animation
@@ -157,14 +161,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 coDriverCue.style.borderRight = 'none'; // Hide cursor
                 if (callback) callback(); // Call callback (e.g., to show ignition button)
                 // coDriverDisplay remains visible until ignitionStartButton is clicked
-            }, typingAnimationDuration * 1000 + 500);
+            }, typingAnimationDuration * 1000 + 500); // Wait for typing + a short pause
         } else {
             // For standard, non-typewriter messages (e.g., from showLevel)
             coDriverCue.textContent = message;
             coDriverCue.style.opacity = '1';
             coDriverCue.style.animation = 'textAppear 1s forwards'; // Simple fade in
 
-            if (autoHide) { // Only auto-hide if explicitly set
+            if (autoHideDuration > 0) { // Only auto-hide if a duration is provided
                 // After a delay, fade out and then hide completely
                 setTimeout(() => {
                     coDriverDisplay.style.opacity = '0'; // Start fade out
@@ -179,10 +183,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         coDriverDisplay.style.pointerEvents = 'auto';
                         if (callback) callback(); // Call callback if any, after display is fully hidden
                     }, { once: true }); // Ensure this listener runs only once
-                }, 5000); // Co-driver message visible for 5 seconds before starting fade
+                }, autoHideDuration * 1000); // Use the provided duration
             } else {
-                // If not auto-hide, it stays visible and clickable.
-                // This is for messages like "System initiated." that stay until user action.
+                // If autoHideDuration is 0 or not provided, it stays visible and clickable.
+                // This is for messages like the long intro message that stay until user action.
                 if (callback) callback(); // Execute callback if needed without hiding
             }
         }
@@ -211,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         fuelLevel = (currentFuelStage / maxFuelLevels) * 100;
         fuelFill.style.height = `${fuelLevel}%`;
-        displayCoDriverCue(`Fuel level increased to ${Math.round(fuelLevel)}%!`, false, true); // Auto-hide this fuel message
+        displayCoDriverCue(`Fuel level increased to ${Math.round(fuelLevel)}%!`, false, 3); // Auto-hide this fuel message after 3 seconds
     }
 
     // --- Level Transitions ---
@@ -226,18 +230,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Specific cues for each level
         if (levelId === 'level-0') {
-            // For level-0, we want the co-driver cue to stay
-            displayCoDriverCue("System initiated. Ready for pilot input.", false, false, () => {
-                // This callback will run immediately since autoHide is false
-                // Make sure the co-driver display is visible and interactive for the button
-                coDriverDisplay.classList.remove('hidden');
-                coDriverDisplay.style.opacity = '1';
-                coDriverDisplay.style.pointerEvents = 'auto'; // Ensure it can receive clicks
-            });
+            // For level-0, "System initiated." now auto-hides after 3 seconds
+            displayCoDriverCue("System initiated. Ready for pilot input.", false, 3); // Auto-hide after 3 seconds
         } else if (levelId === 'level-1') {
-            displayCoDriverCue("Checkpoint reached! Told ya you’d make it 😉 Initiating Artwork Wall. Observe carefully.", false, true); // Auto-hide
+            displayCoDriverCue("Checkpoint reached! Told ya you’d make it 😉 Initiating Artwork Wall. Observe carefully.", false, 3); // Auto-hide after 3 seconds
         } else if (levelId === 'level-quiz') {
-            displayCoDriverCue("You’ve always been behind the wheel, but you never noticed the map in my hands. Let’s unlock this next gear — together. Initiating Stage 1: Quiz. Answer wisely, Driver.", false, true); // Auto-hide
+            displayCoDriverCue("You’ve always been behind the wheel, but you never noticed the map in my hands. Let’s unlock this next gear — together. Initiating Stage 1: Quiz. Answer wisely, Driver.", false, 3); // Auto-hide after 3 seconds
             // Reset quiz state
             document.querySelectorAll('.quiz-question input[type="radio"]').forEach(radio => radio.checked = false);
             quizFeedback.textContent = '';
@@ -246,11 +244,11 @@ document.addEventListener('DOMContentLoaded', () => {
             submitQuizBtn.classList.remove('hidden'); // Make sure submit is visible for quiz
         }
         else if (levelId === 'level-2') {
-            displayCoDriverCue("Careful… this next level's got heart speed bumps 😳💌 Entering Memory Lane. Navigate with care.", false, true); // Auto-hide
+            displayCoDriverCue("Careful… this next level's got heart speed bumps 😳💌 Entering Memory Lane. Navigate with care.", false, 3); // Auto-hide after 3 seconds
             // Ensure timeline is scrolled to start on level entry
             if (memoryTimeline) memoryTimeline.scrollLeft = 0;
         } else if (levelId === 'level-qa') {
-            displayCoDriverCue("Initiating Stage 2: Heart Unlock Q&A. Be truthful.", false, true); // Auto-hide
+            displayCoDriverCue("Initiating Stage 2: Heart Unlock Q&A. Be truthful.", false, 3); // Auto-hide after 3 seconds
             currentQaCardIndex = 0;
             qaCards.forEach((card, index) => {
                 card.classList.add('hidden');
@@ -262,15 +260,15 @@ document.addEventListener('DOMContentLoaded', () => {
             qaCards[0].classList.remove('hidden'); // Show first QA card
         }
         else if (levelId === 'level-music-video') {
-            displayCoDriverCue("Activating Audio-Visual Module. Prepare for sonic input.", false, true); // Auto-hide
+            displayCoDriverCue("Activating Audio-Visual Module. Prepare for sonic input.", false, 3); // Auto-hide after 3 seconds
             // Add particles for music video section
             createParticles(videoSectionParticles, 50);
             startLyricTypingEffect();
         } else if (levelId === 'level-healing-toolkit') {
-            displayCoDriverCue("Welcome to the Healing Toolkit. Take a moment to recharge.", false, true); // Auto-hide
+            displayCoDriverCue("Welcome to the Healing Toolkit. Take a moment to recharge.", false, 3); // Auto-hide after 3 seconds
         }
         else if (levelId === 'hidden-heart-message-section') {
-            displayCoDriverCue("I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line. Final destination reached. Prepare for Heart Message protocol.", false, true); // Auto-hide
+            displayCoDriverCue("I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line. Final destination reached. Prepare for Heart Message protocol.", false, 3); // Auto-hide after 3 seconds
             createParticles(document.querySelector('#hidden-heart-message-section .particle-background'), 100);
             updateFuelTank(); // Final fuel update
         }
@@ -285,8 +283,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hide level-0 content immediately as the intro message will take over
             document.getElementById('level-0').classList.add('hidden');
 
-            // Now display the long intro message with typewriter effect
-            displayCoDriverCue(introMessage, true, false, () => { // Do NOT auto-hide this long message
+            // Now display the long intro message with typewriter effect. This one *stays* until button click.
+            displayCoDriverCue(introMessage, true, 0, () => { // 0 means do NOT auto-hide
                 // Callback after introMessage typing finishes
                 ignitionStartButton.classList.remove('hidden'); // Show "IGNITE THE ENGINE" button
             });
@@ -383,11 +381,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 quizFeedback.classList.add('correct');
                 quizNextLevelBtn.classList.remove('hidden');
                 submitQuizBtn.classList.add('hidden'); // Hide submit button
-                displayCoDriverCue("Quiz complete. Fuel level boosted!", false, true); // Auto-hide
+                displayCoDriverCue("Quiz complete. Fuel level boosted!", false, 3); // Auto-hide after 3 seconds
             } else {
                 quizFeedback.innerHTML = "❌ Incorrect answers. Try again, Driver!<br>" + feedbackMessages.join("<br>");
                 quizFeedback.classList.add('incorrect');
-                displayCoDriverCue("Incorrect. Recalculating path.", false, true); // Auto-hide
+                displayCoDriverCue("Incorrect. Recalculating path.", false, 3); // Auto-hide after 3 seconds
             }
         });
     }
@@ -407,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     qaFinalMessage.textContent = "Good answers, Driver. You may now unlock the final gearshift — my heart 💌";
                     qaFinalMessage.classList.remove('hidden');
                     qaNextLevelBtn.classList.remove('hidden');
-                    displayCoDriverCue("Q&A complete. Proceeding to final unlock.", false, true); // Auto-hide
+                    displayCoDriverCue("Q&A complete. Proceeding to final unlock.", false, 3); // Auto-hide after 3 seconds
                 }
             });
         });
@@ -499,7 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hugButton) {
         hugButton.addEventListener('click', () => {
             hugOverlay.classList.add('visible');
-            displayCoDriverCue("Virtual hug initiated. Recharge complete.", false, true); // Auto-hide
+            displayCoDriverCue("Virtual hug initiated. Recharge complete.", false, 3); // Auto-hide after 3 seconds
         });
     }
 });
