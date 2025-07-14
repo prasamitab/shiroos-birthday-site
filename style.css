@@ -172,7 +172,7 @@ body {
     text-align: center;
     max-width: 800px;
     width: 90%;
-    z-index: 5; /* Default level z-index */
+    z-index: 15; /* Increased to be above co-driver cue */
     color: #00FFC0;
     max-height: 90vh; /* Prevent content from going off screen */
     overflow-y: auto; /* Enable scrolling for long content */
@@ -416,6 +416,7 @@ p {
     font-size: 1em;
     color: rgba(0, 255, 192, 0.8);
     transition: color 0.2s ease;
+    cursor: pointer;
 }
 
 .quiz-question label:hover {
@@ -772,29 +773,4 @@ p {
     .memory-item {
         height: auto; /* Allow height to adjust based on content */
     }
-}
-
-/* --- NEW: Ensure Quiz Elements are Clickable --- */
-#level-quiz {
-    position: relative; /* Ensure z-index works correctly relative to siblings */
-    z-index: 100; /* Place the quiz section above most other content */
-}
-
-.quiz-question label {
-    cursor: pointer; /* Explicitly show a pointer cursor on hover */
-    pointer-events: all; /* Ensure clicks are registered on the label and its children */
-    z-index: 101; /* Make labels/inputs higher than their container if needed */
-}
-
-.quiz-question input[type="radio"] {
-    pointer-events: all; /* Ensure clicks are registered directly on the radio button */
-    z-index: 102; /* Even higher if necessary */
-}
-
-/* Optional: If the love quote popup is ever staying on screen,
-   ensure it's truly hidden when not needed. Your script already
-   has a good timeout, but you can also ensure its display
-   property is handled. */
-.love-quote-popup.hide {
-    display: none; /* Fully remove from layout after fade out */
 }
