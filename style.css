@@ -9,7 +9,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\"><circle cx=\"10\" cy=\"10\" r=\"4\" fill=\"%2300FFC0\" stroke=\"%2300FFFF\" stroke-width=\"1.5\"/></svg>') 10 10, auto; /* Custom cyberpunk cursor */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\\\"><circle cx=\\\"10\\\" cy=\\\"10\\\" r=\\\"4\\\" fill=\\\"%2300FFC0\\\" stroke=\\\"%2300FFFF\\\" stroke-width=\\\"1.5\\\"/></svg>') 10 10, auto; /* Custom cyberpunk cursor */
     user-select: none; /* Prevent text selection */
 }
 
@@ -637,78 +637,61 @@ p {
 
 /* Final Hidden Heart Message Section */
 #hidden-heart-message-section {
-    position: relative; /* For particle background */
-    display: flex; /* Changed for centering */
-    flex-direction: column; /* Changed for centering */
-    justify-content: center; /* Changed for centering */
-    align-items: center; /* Changed for centering */
-    padding: 20px; /* Adjusted padding */
+    position: fixed; /* Changed to fixed for true centering */
+    top: 50%; /* Centering */
+    left: 50%; /* Centering */
+    transform: translate(-50%, -50%); /* Centering */
+    width: 90%; /* Ensure it's not too wide */
+    max-width: 900px; /* Max width for larger screens */
+    height: auto; /* Adjust height based on content */
+    max-height: 90vh; /* Limit height to viewport */
+    overflow-y: auto; /* Enable scrolling for overflow */
+    background: rgba(13, 13, 13, 0.9);
+    border: 2px solid #00FFC0; /* Default border color */
+    box-shadow: 0 0 20px #00FFC0; /* Default shadow */
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 15;
     color: #FFD700; /* Gold color */
     font-family: 'Orbitron', sans-serif;
     text-shadow: 0 0 15px #FFD700;
-    text-align: center;
-    overflow: hidden; /* For particles */
-
-    /* Centering the section itself */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    position: fixed; /* Use fixed to ensure it stays centered regardless of scroll */
-    width: 90%; /* Adjust width as needed */
-    max-width: 900px; /* Max width for larger screens */
-    height: 90vh; /* Adjust height as needed */
-    max-height: 900px; /* Max height for larger screens */
-    z-index: 15; /* Ensure it's above other elements */
-    background: rgba(13, 13, 13, 0.9); /* Add background for the section */
-    border: 2px solid #00FFC0; /* Re-add border from .level-section */
-    box-shadow: 0 0 20px #00FFC0; /* Re-add shadow from .level-section */
-    border-radius: 10px; /* Re-add border-radius */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* Removed redundant particle-background styles as it's a child element now */
 }
-
 
 /* NEW rule to make the message list scrollable */
 #hidden-heart-message-section .heart-message {
-    max-height: 65vh;
+    max-height: 60vh; /* Adjusted max height to leave room for title/final line */
     overflow-y: auto;
     padding-right: 15px; /* Space for scrollbar */
-    width: 100%; /* Ensure it takes full width of the parent */
 }
 
 
-#hidden-heart-message-section .heart-message p {
-    font-size: 1.2em; /* Slightly reduced font size to fit more content */
-    line-height: 1.7;
-    margin-bottom: 20px; /* Reduced margin */
-    /* Remove max-width, background, padding, border, and box-shadow from individual paragraphs */
-    /* These styles will now be on the .heart-message container */
-    max-width: unset; /* Override previous max-width */
-    background: unset; /* Override previous background */
-    padding: unset; /* Override previous padding */
-    border: unset; /* Override previous border */
-    box-shadow: unset; /* Override previous box-shadow */
-    z-index: unset; /* Override previous z-index */
-    color: #FFD700; /* Keep the gold color for text */
-}
-
-/* Apply the glowing box frame styling to the paragraphs within .heart-message */
-#hidden-heart-message-section .heart-message p {
+#hidden-heart-message-section p {
+    font-size: 1em; /* Reduced font size to fit more content */
+    line-height: 1.5; /* Reduced line height */
+    margin-bottom: 10px; /* Reduced margin */
+    max-width: 900px;
     background: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 15px;
+    padding: 15px; /* Reduced padding */
+    border-radius: 10px;
     border: 2px solid #FFD700;
-    box-shadow: 0 0 30px #FFD700;
-    margin-bottom: 20px; /* Keep margin between paragraphs */
+    box-shadow: 0 0 20px #FFD700; /* Adjusted shadow */
+    z-index: 10; /* Above particles */
 }
-
 
 #hidden-heart-message-section .final-line {
-    font-size: 1.5em; /* Adjusted size */
-    margin-top: 30px; /* Adjusted margin */
+    font-size: 1.3em; /* Adjusted size */
+    margin-top: 20px; /* Adjusted margin */
     font-weight: bold;
     color: #FF00FF; /* Pink for final line */
-    text-shadow: 0 0 20px #FF00FF;
+    text-shadow: 0 0 15px #FF00FF;
     border: 3px solid #FF00FF;
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.8);
     z-index: 10;
@@ -774,7 +757,7 @@ p {
     }
 
     .co-driver-display {
-        font-size: 1em;
+        font-size: 0.9em; /* Adjusted for smaller screens */
         padding: 20px; /* Adjust padding for smaller screens */
     }
 
@@ -782,17 +765,12 @@ p {
         font-size: 2.5em; /* Adjust for smaller screens */
         margin-top: 30px;
     }
-
-    #hidden-heart-message-section {
-        width: 95%; /* Adjust width for smaller screens */
-        height: 95vh; /* Adjust height for smaller screens */
-    }
 }
 
 @media (max-width: 480px) {
     .co-driver-display {
         width: 90%;
-        font-size: 0.9em;
+        font-size: 0.8em; /* Further adjusted for very small screens */
         top: 20px; /* Move slightly up to allow more central text */
         transform: translateX(-50%); /* Only horizontal centering */
         max-height: 90vh; /* Allow more vertical space */
@@ -814,8 +792,5 @@ p {
 
     .memory-item {
         height: auto; /* Allow height to adjust based on content */
-    }
-    #hidden-heart-message-section .heart-message p {
-        padding: 15px; /* Adjust padding for smaller screens */
     }
 }
