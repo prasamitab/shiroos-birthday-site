@@ -32,14 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const hugButton = document.getElementById('hug-button');
     const hugOverlay = document.getElementById('hug-overlay');
 
-    // NEW: Final Message Button
-    const finalMessageButton = document.getElementById('final-message-button');
-
-    // NEW: Birthday Message Audio
-    const birthdayMessageAudio = document.getElementById('birthday-message-audio');
-    const audioToggleButton = document.getElementById('audio-toggle-button');
-
-
     // --- NEW: Intro Message Content ---
     const introMessage = `Hey driver, buckle up — your co-driver (me) is right here beside you. This ride’s for you, and I’m guiding you through every curve, every speed bump, every smile. Let’s go.
 
@@ -88,7 +80,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 5000); // Quote visible for 5 seconds
     }
 
-    // Add styles for love quote pop-ups dynamically (moved to style.css for better organization)
+    // Add styles for love quote pop-ups dynamically
+    const loveQuoteStyle = document.createElement("style");
+    loveQuoteStyle.type = "text/css";
+    loveQuoteStyle.innerText = `
+        .love-quote-popup {
+            position: fixed;
+            background: rgba(255, 105, 180, 0.8); /* Hot pink */
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.1em;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.7), inset 0 0 8px rgba(255, 255, 255, 0.5);
+            z-index: 200;
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.5s ease-out;
+            pointer-events: none; /* Allows clicks to pass through to elements below */
+        }
+        .love-quote-popup.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .love-quote-popup.hide {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.9);
+        }
+    `;
+    document.head.appendChild(loveQuoteStyle);
 
 
     // --- Loading Sequence ---
@@ -122,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (typewriter) {
             coDriverCue.classList.add('typewriter');
-            const speed = 70; // Typing speed in ms per character
+            const speed = 30; // Typing speed in ms per character - CHANGED TO 30
             const typingAnimationDuration = message.length * speed / 1000; // Duration in seconds
 
             coDriverCue.textContent = message;
@@ -171,9 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Level QA shown
     // 5. Level Music Video shown
     // 6. Level Healing Toolkit shown
-    // 7. Hidden Heart Message Section shown
-    // 8. Final Birthday Message (new level)
-    const maxFuelLevels = 8; // Increased by 1 for the new final level
+    // 7. Hidden Heart Message Section shown (final fuel increment)
+    // Total 7 "steps" to fill from 0% to 100% after the initial level-0
+    const maxFuelLevels = 7;
     let currentFuelStage = 0; // Start at 0, representing the "Ready for pilot input." stage (level-0)
 
     function updateFuelTank() {
@@ -236,17 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         else if (levelId === 'hidden-heart-message-section') {
             displayCoDriverCue("I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line. Final destination reached. Prepare for Heart Message protocol.");
-            // No fuel update here as it's updated when entering this section by the button click
             createParticles(document.querySelector('#hidden-heart-message-section .particle-background'), 100);
-        } else if (levelId === 'level-final-birthday-message') {
-            displayCoDriverCue("The ultimate destination. Happy Birthday, my dear Shiroo! Listen to the final message.");
-            updateFuelTank(); // Final fuel update for reaching the birthday message
-            createParticles(document.querySelector('#level-final-birthday-message .particle-background'), 100);
-            // Pause background music and ensure birthday audio is paused initially if it was playing
-            backgroundMusic.pause();
-            birthdayMessageAudio.pause();
-            birthdayMessageAudio.currentTime = 0; // Rewind audio
-            audioToggleButton.innerHTML = '<i class="fas fa-play"></i> Play Message'; // Reset button text
+            updateFuelTank(); // Final fuel update
         }
     }
 
@@ -404,7 +416,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add particle styles to the head (for dynamic particle creation) (moved to style.css for better organization)
+    // Add particle styles to the head (for dynamic particle creation)
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = `
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 5px currentColor;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(styleSheet);
 
 
     // --- Lyric Typing Effect (for music video section) ---
@@ -455,38 +484,6 @@ document.addEventListener('DOMContentLoaded', () => {
         hugButton.addEventListener('click', () => {
             hugOverlay.classList.add('visible');
             displayCoDriverCue("Virtual hug initiated. Recharge complete.");
-        });
-    }
-
-    // NEW: Final Message Button Logic
-    if (finalMessageButton) {
-        finalMessageButton.addEventListener('click', () => {
-            const targetLevel = finalMessageButton.dataset.target;
-            showLevel(targetLevel, true); // Update fuel for the very final level
-        });
-    }
-
-    // NEW: Audio Toggle Button Logic
-    if (audioToggleButton) {
-        audioToggleButton.addEventListener('click', () => {
-            if (birthdayMessageAudio.paused) {
-                birthdayMessageAudio.play()
-                    .then(() => {
-                        audioToggleButton.innerHTML = '<i class="fas fa-pause"></i> Pause Message';
-                        backgroundMusic.pause(); // Pause background music when birthday message plays
-                    })
-                    .catch(e => console.log("Audio playback blocked:", e));
-            } else {
-                birthdayMessageAudio.pause();
-                audioToggleButton.innerHTML = '<i class="fas fa-play"></i> Play Message';
-                backgroundMusic.play().catch(e => console.log("Background music autoplay blocked:", e)); // Resume background music
-            }
-        });
-
-        // Reset button and background music when birthday message ends
-        birthdayMessageAudio.addEventListener('ended', () => {
-            audioToggleButton.innerHTML = '<i class="fas fa-play"></i> Play Message';
-            backgroundMusic.play().catch(e => console.log("Background music autoplay blocked:", e));
         });
     }
 });
