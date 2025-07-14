@@ -23,13 +23,21 @@
 
         <div class="co-driver-display hidden" id="co-driver-display">
             <p id="co-driver-cue" class="typewriter"></p>
-            </div>
+            <button id="co-driver-continue-btn" class="glow-button hidden">Continue</button>
+        </div>
 
         <div class="fuel-tank-container">
             <div class="fuel-tank-fill" id="fuel-fill"></div>
         </div>
 
-        <div id="level-0" class="level-section"> <h2>Welcome, Driver!</h2>
+        <div id="level-intro-greeting" class="level-section hidden">
+            <h2 style="font-weight: bold; margin-bottom: 5px;">Welcome Shiroo</h2>
+            <p style="border-bottom: 2px solid #00FFC0; padding-bottom: 10px; margin-bottom: 20px;">I'm your co-driver, always here for the ride.</p>
+            <button id="proceed-from-greeting" class="glow-button">PROCEED</button>
+        </div>
+
+        <div id="level-0" class="level-section hidden">
+            <h2>Welcome, Driver!</h2>
             <p>Your journey begins now. The road is calling.</p>
             <button id="ignition-button" class="glow-button">START THE JOURNEY</button>
         </div>
@@ -173,7 +181,7 @@
             <audio id="birthday-message-audio" src="audio/birthday-message.mp3"></audio>
             <div id="final-birthday-message-container">
                 <p id="final-birthday-text"></p>
-                </div>
+            </div>
             <div class="particle-background"></div>
         </div>
     </div>
