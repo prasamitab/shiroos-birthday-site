@@ -344,6 +344,13 @@ I’m your co-driver — in this game, in this life, and in every lap ahead. And
                 // If this is the only lyric and we don't want to loop or move on immediately,
                 // we can stop here or reset for a loop. For now, it stays.
             }
+        } else {
+            lyricIndex = 0; // Loop lyrics
+            setTimeout(() => {
+                videoLyricStation.textContent = '';
+                charIndex = 0;
+                typeLyric();
+            }, 2000);
         }
     }
 
