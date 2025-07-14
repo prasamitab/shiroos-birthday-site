@@ -158,7 +158,7 @@ body {
     to { opacity: 1; }
 }
 
-/* NEW: Milestone fade message */
+/* Milestone fade message */
 .milestone-fade-message {
     position: absolute; /* Positioned relative to the game-container */
     bottom: 20px; /* Aligned to the bottom */
@@ -649,6 +649,24 @@ p {
     margin-bottom: 30px;
 }
 
+/* New style for the hug message within the overlay */
+#hug-message {
+    font-size: 2em; /* Larger font size for prominence */
+    font-family: 'Orbitron', sans-serif;
+    color: #FFD700; /* Gold color */
+    text-shadow: 0 0 20px #FFD700; /* Stronger glow */
+    margin-top: 20px;
+    opacity: 0; /* Starts hidden */
+    transform: translateY(20px); /* Starts slightly below */
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+#hug-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
 /* Love Quote Popups */
 .love-quote-popup {
     position: fixed;
@@ -820,6 +838,14 @@ p {
         width: 90%; /* Adjust width for smaller screens */
         padding: 15px 20px; /* Adjust padding */
         font-size: 0.9em;
+    }
+
+    .hug-overlay img {
+        max-width: 90%;
+    }
+
+    #hug-message {
+        font-size: 1.5em; /* Adjust for smaller screens */
     }
 
     .level-section {
