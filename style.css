@@ -98,7 +98,7 @@ body {
     opacity: 0.8;
 }
 
-/* Co-driver Display */
+/* Co-driver Display (for initial intro message) */
 .co-driver-display {
     position: absolute;
     top: 50%;
@@ -160,14 +160,14 @@ body {
 
 /* NEW: Milestone fade message */
 .milestone-fade-message {
-    position: absolute; /* Changed from fixed to absolute to position relative to game-container if needed, or keep fixed based on desired layout */
-    top: 50%;
+    position: absolute; /* Positioned relative to the game-container */
+    bottom: 20px; /* Aligned to the bottom */
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%); /* Center horizontally */
     background: rgba(13, 13, 13, 0.9);
     border: 2px solid #00FFC0;
     box-shadow: 0 0 20px #00FFC0;
-    padding: 30px;
+    padding: 20px 30px; /* Slightly reduced padding */
     border-radius: 10px;
     text-align: center;
     max-width: 700px;
@@ -188,13 +188,11 @@ body {
     visibility: hidden;
 }
 
-/* Ensure co-driver-cue is styled within this if it's reused, or create a specific style for the message text */
 .milestone-fade-message p {
-    font-size: 1.2em;
+    font-size: 1.1em; /* Slightly smaller font for bottom messages */
     color: #00FFC0;
     margin-bottom: 0;
     white-space: pre-wrap;
-    /* Remove typewriter related styles from here if this is purely for static fade messages */
     border-right: none;
     animation: none;
 }
@@ -816,6 +814,12 @@ p {
         top: 20px; /* Move slightly up to allow more central text */
         transform: translateX(-50%); /* Only horizontal centering */
         max-height: 90vh; /* Allow more vertical space */
+    }
+
+    .milestone-fade-message {
+        width: 90%; /* Adjust width for smaller screens */
+        padding: 15px 20px; /* Adjust padding */
+        font-size: 0.9em;
     }
 
     .level-section {
