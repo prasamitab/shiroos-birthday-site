@@ -605,17 +605,18 @@ p {
     box-shadow: 0 0 15px rgba(255, 105, 180, 0.7), inset 0 0 8px rgba(255, 255, 255, 0.5);
     z-index: 200;
     opacity: 0;
-    transform: translateY(20px) scale(0.9);
     transition: all 0.5s ease-out;
     pointer-events: none; /* Allows clicks to pass through to elements below */
+    max-width: 80%; /* Ensure it doesn't stretch too wide */
+    box-sizing: border-box; /* Include padding in width */
 }
 .love-quote-popup.show {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateX(-50%) translateY(0) scale(1);
 }
 .love-quote-popup.hide {
     opacity: 0;
-    transform: translateY(-20px) scale(0.9);
+    transform: translateX(-50%) translateY(-20px) scale(0.9);
     display: none; /* Crucial: Fully remove from layout after fade out */
 }
 
@@ -694,10 +695,10 @@ p {
     transition: height 1s ease-out;
 }
 
-/* NEW: Glowing Text for Birthday Message */
+/* NEW: Glowing Text for Birthday Message (inside overlay) */
 .glowing-text {
     font-family: 'Orbitron', sans-serif;
-    font-size: 4em; /* Adjust size as needed */
+    font-size: 3.5em; /* Adjusted size for better fit */
     color: #FFD700; /* Gold */
     text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700, 0 0 40px #FFD700, 0 0 50px #FFD700;
     animation: glow 1.5s infinite alternate;
@@ -728,8 +729,9 @@ p {
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
     .level-section {
-        padding: 25px;
+        padding: 20px; /* Adjusted padding */
         font-size: 0.95em;
+        max-height: 85vh; /* Slightly increased max-height */
     }
 
     .artwork-frame {
@@ -774,7 +776,7 @@ p {
     }
 
     .glowing-text {
-        font-size: 2.5em; /* Adjust for smaller screens */
+        font-size: 2.5em; /* Adjusted for smaller screens */
     }
 }
 
@@ -790,6 +792,7 @@ p {
     .level-section {
         padding: 15px;
         font-size: 0.9em;
+        max-height: 90vh; /* Allow more vertical space for very small screens */
     }
 
     .glow-button {
