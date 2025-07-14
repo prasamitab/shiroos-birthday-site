@@ -23,7 +23,6 @@
 
         <div class="co-driver-display" id="co-driver-display">
             <p id="co-driver-cue" class="typewriter"></p>
-            <button id="ignition-start-button" class="glow-button hidden">IGNITE THE ENGINE</button>
         </div>
 
         <div class="fuel-tank-container">
@@ -38,7 +37,6 @@
                 <button class="close-overlay-btn glow-button">Close</button>
             </div>
         </div>
-
         <button id="hug-button" class="dashboard-item glow-button hidden">Need a hug?</button>
 
         <div id="level-0" class="level-section active">
@@ -49,25 +47,19 @@
             </div>
         </div>
 
-        <div id="level-1-intro" class="level-section hidden">
+        <div id="level-1" class="level-section hidden">
             <div class="dashboard-item">
                 <h2>Module 1: The Engine's Roar</h2>
                 <p>Our journey begins with the raw power of the engine. Here are some of the forces that drive you.</p>
-                <p class="typewriter-dynamic" id="level-1-intro-text"></p>
-                <button class="next-level-btn glow-button" data-target="level-1-visual">Continue</button>
+                <div class="artwork-frame" id="artwork-frame">
+                    <img src="images/artwork1.jpg" alt="Abstract driving art" class="active-artwork">
+                </div>
+                <p class="artwork-caption" id="artwork-caption">"The road ahead is always exciting."</p>
+                <button class="next-level-btn glow-button" data-target="level-quiz">Continue</button>
             </div>
         </div>
 
-        <div id="level-1-visual" class="level-section hidden">
-            <h3>Visualizing the Drive</h3>
-            <div class="artwork-frame" id="artwork-frame">
-                <img src="images/artwork1.jpg" alt="Abstract driving art" class="active-artwork">
-            </div>
-            <p class="artwork-caption" id="artwork-caption">"The road ahead is always exciting."</p>
-            <button class="next-level-btn glow-button" data-target="level-2-quiz">Next Module</button>
-        </div>
-
-        <div id="level-2-quiz" class="level-section hidden">
+        <div id="level-quiz" class="level-section hidden">
             <h3>Module 2: Fuel Efficiency Challenge</h3>
             <p>To keep the journey smooth, let's test your knowledge about our fuel – your passion!</p>
             <div class="quiz-question">
@@ -83,10 +75,10 @@
             </div>
             <button id="submit-quiz-btn" class="glow-button">Submit Answer</button>
             <p id="quiz-feedback" class="quiz-feedback"></p>
-            <button id="quiz-next-level-btn" class="next-level-btn glow-button hidden" data-target="level-3-timeline">Next Module</button>
+            <button id="quiz-next-level-btn" class="next-level-btn glow-button hidden" data-target="level-2">Next Module</button>
         </div>
 
-        <div id="level-3-timeline" class="level-section hidden">
+        <div id="level-2" class="level-section hidden">
             <h3>Module 3: Milestones on the Road</h3>
             <p>Every journey has its milestones. Let's revisit some special moments.</p>
             <div class="memory-timeline-container">
@@ -100,7 +92,7 @@
                         <img src="images/memory2.jpg" alt="Memory 2">
                         <p>Laughing together.</p>
                     </div>
-                    <div class="memory-item" data-src="videos/memory3.mp4" data-type="video">
+                    <div class="memory-item video-memory-item" data-src="videos/memory3.mp4" data-type="video">
                         <video src="videos/memory3.mp4" muted loop></video>
                         <p>A special moment caught on video.</p>
                     </div>
@@ -122,10 +114,10 @@
                     <button class="close-overlay-btn glow-button">Close</button>
                 </div>
             </div>
-            <button class="next-level-btn glow-button" data-target="level-4-video">Next Module</button>
+            <button class="next-level-btn glow-button" data-target="level-qa">Next Module</button>
         </div>
 
-        <div id="level-4-video" class="level-section hidden">
+        <div id="level-qa" class="level-section hidden">
             <h3>Module 4: The Soundtrack of Our Journey</h3>
             <p>Every great drive needs a perfect soundtrack. Enjoy this special video and its lyrics.</p>
             <div class="video-container">
@@ -137,10 +129,10 @@
                     <p id="video-lyric-station" class="typewriter-lyric"></p>
                 </div>
             </div>
-            <button class="next-level-btn glow-button" data-target="level-final-message-text">Proceed to Final Destination</button>
+            <button class="next-level-btn glow-button" data-target="hidden-heart-message-section">Proceed to Final Destination</button>
         </div>
 
-         <div id="level-final-message-text" class="level-section hidden">
+        <div id="hidden-heart-message-section" class="level-section hidden">
             <div class="dashboard-item final-message-display">
                 <div class="typewriter-long-message">
                     <p>My Dearest Shiroo,</p>
@@ -159,19 +151,16 @@
                     <p class="final-line">I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line.</p>
                 </div>
             </div>
-            <h2 id="final-birthday-message-text">Happyy Birthdayyyy</h2> <div class="particle-background"></div>
-             <button class="next-level-btn glow-button" data-target="level-final-message">Hear Final Message</button>
-        </div>
-
-        <div id="level-final-message" class="level-section hidden">
-            <h3>Your Birthday Message</h3>
+            <h2 id="final-birthday-message-text">Happyy Birthdayyyy</h2>
+            <div class="particle-background"></div>
+            <h3 style="margin-top: 20px;">Your Birthday Message</h3>
             <p>Listen closely, it's just for you.</p>
             <audio controls id="birthday-audio">
                 <source src="audio/birthday-message.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
             <p style="margin-top: 20px;">I hope you enjoyed the journey, my love. Happy Birthday! ❤️</p>
-            </div>
+        </div>
 
     </div>
 
