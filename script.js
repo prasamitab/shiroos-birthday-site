@@ -64,15 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(popUp);
 
         // Position and animate
-        // Position pop-up on the right side
-        const popUpWidth = 300; // Approximate width based on CSS padding and text length
-        const popUpHeight = 100; // Approximate height
-        const margin = 20; // Margin from the right edge and top/bottom
-
-        const startX = window.innerWidth - popUpWidth - (2 * 25) - margin; // 2*25 for left/right padding
-        const startY = Math.random() * (window.innerHeight - popUpHeight - 2 * margin) + margin;
-
-
+        const startX = Math.random() * (window.innerWidth - 300) + 50; // Random x position
+        const startY = Math.random() * (window.innerHeight - 200) + 50; // Random y position
         popUp.style.left = `${startX}px`;
         popUp.style.top = `${startY}px`;
 
