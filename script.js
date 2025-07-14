@@ -137,38 +137,47 @@ document.addEventListener('DOMContentLoaded', () => {
         coDriverCue.style.animation = 'none'; // Reset any previous animation
         coDriverDisplay.classList.remove('hidden'); // Ensure display is visible
         coDriverDisplay.style.opacity = '1'; // Ensure display is fully opaque
+        coDriverDisplay.style.pointerEvents = 'auto'; // Ensure it can receive clicks initially (for intro button)
 
         void coDriverCue.offsetWidth; // Trigger reflow for animation reset
 
         if (typewriter) {
             coDriverCue.classList.add('typewriter');
-            // Increased typing speed for longer read time (larger value for 'speed' makes it slower)
             const speed = 70; // Typing speed in ms per character
             const typingAnimationDuration = message.length * speed / 1000; // Duration in seconds
 
-            // Set the message immediately so width calculation is correct for animation
             coDriverCue.textContent = message;
-            coDriverCue.style.whiteSpace = 'pre-wrap'; // Preserve line breaks
+            coDriverCue.style.whiteSpace = 'pre-wrap';
 
-            // Apply typing and blink-caret animations directly via style
             coDriverCue.style.animation = `typing ${typingAnimationDuration}s steps(${message.length}, end) forwards, blink-caret .75s step-end infinite`;
-            coDriverCue.style.width = '100%'; // Allow text to fill the frame
+            coDriverCue.style.width = '100%';
 
-            // Set a timeout for when the typing is finished and call the callback
             setTimeout(() => {
                 coDriverCue.style.borderRight = 'none'; // Hide cursor
-                if (callback) callback();
-            }, typingAnimationDuration * 1000 + 500); // A small delay after typing for cursor to disappear
+                if (callback) callback(); // Call callback (e.g., to show ignition button)
+                // coDriverDisplay remains visible until ignitionStartButton is clicked
+            }, typingAnimationDuration * 1000 + 500);
         } else {
-            // For standard, non-typewriter messages
+            // For standard, non-typewriter messages (e.g., from showLevel)
             coDriverCue.textContent = message;
             coDriverCue.style.opacity = '1';
             coDriverCue.style.animation = 'textAppear 1s forwards'; // Simple fade in
+
+            // After a delay, fade out and then hide completely
             setTimeout(() => {
-                coDriverDisplay.style.opacity = '0'; // Fade out the display
-                // Only hide the display entirely if it's not the initial intro that transitions to level-0
-                // For regular cues, just fade out
-            }, 5000); // Co-driver message visible for 5 seconds
+                coDriverDisplay.style.opacity = '0'; // Start fade out
+                coDriverDisplay.style.pointerEvents = 'none'; // Immediately disable clicks
+
+                // Wait for the opacity transition to complete before setting display: none
+                coDriverDisplay.addEventListener('transitionend', function handler() {
+                    coDriverDisplay.classList.add('hidden'); // Apply display: none
+                    coDriverDisplay.removeEventListener('transitionend', handler); // Clean up listener
+                    // Reset opacity and pointerEvents for future uses
+                    coDriverDisplay.style.opacity = '1';
+                    coDriverDisplay.style.pointerEvents = 'auto';
+                    if (callback) callback(); // Call callback if any, after display is fully hidden
+                }, { once: true }); // Ensure this listener runs only once
+            }, 5000); // Co-driver message visible for 5 seconds before starting fade
         }
     }
 
@@ -262,6 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayCoDriverCue(introMessage, true, () => {
                 // Callback after introMessage typing finishes
                 ignitionStartButton.classList.remove('hidden'); // Show "IGNITE THE ENGINE" button
+                // The coDriverDisplay needs to remain visible until ignitionStartButton is clicked
             });
         });
     }
@@ -331,16 +341,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const correctAnswers = {
                 q1: 'hugs',
-                q2: 'black',
-                q3: 'batman'
+                q2: 'black', // Updated: Assuming 'black' is the intended answer for "Black or White?"
+                q3: 'batman' // Corrected as per your request
             };
 
             let allCorrect = true;
-            for (const q in correctAnswers) {
-                if (answers[q] !== correctAnswers[q]) {
-                    allCorrect = false;
-                    break;
-                }
+            let feedbackMessages = [];
+
+            if (answers.q1 !== correctAnswers.q1) {
+                allCorrect = false;
+                feedbackMessages.push("Q1: Not quite right. Think about what truly warms the heart. 😉");
+            }
+            if (answers.q2 !== correctAnswers.q2) {
+                allCorrect = false;
+                feedbackMessages.push("Q2: Not exactly. Remember what I said about the world with you? 🤔");
+            }
+            if (answers.q3 !== correctAnswers.q3) {
+                allCorrect = false;
+                feedbackMessages.push("Q3: Close, but I know your secret ambition! Try again. 😉");
             }
 
             quizFeedback.classList.remove('correct', 'incorrect');
@@ -351,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitQuizBtn.classList.add('hidden'); // Hide submit button
                 displayCoDriverCue("Quiz complete. Fuel level boosted!");
             } else {
-                quizFeedback.textContent = "❌ Incorrect answers. Try again, Driver!";
+                quizFeedback.innerHTML = "❌ Incorrect answers. Try again, Driver!<br>" + feedbackMessages.join("<br>");
                 quizFeedback.classList.add('incorrect');
                 displayCoDriverCue("Incorrect. Recalculating path.");
             }
