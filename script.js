@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizNextLevelBtn = document.querySelector('#level-quiz .next-level-btn');
 
     // NEW: Q&A Elements
-    const qaCards = document.querySelectorAll('qa-card');
+    const qaCards = document.querySelectorAll('.qa-card'); // Corrected selector
     const qaNextBtns = document.querySelectorAll('.qa-next-btn');
     const qaFinalMessage = document.getElementById('qa-final-message');
     const qaNextLevelBtn = document.querySelector('#level-qa .next-level-btn');
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // NEW: Hug Button and Overlay
     const hugButton = document.getElementById('hug-button');
     const hugOverlay = document.getElementById('hug-overlay');
+    const hugMessage = document.getElementById('hug-message'); // NEW: Get the hug message element
 
     // NEW: Audio for Final Message
     const birthdayAudio = document.getElementById('birthday-audio');
@@ -263,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- NEW: Function for temporary milestone messages ---
+    // --- Function for temporary milestone messages ---
     function displayMilestoneMessage(message) {
         milestoneMessageCue.textContent = message;
         milestoneMessageDisplay.classList.remove('hidden');
@@ -282,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- NEW: Fuel Tank Animation ---
+    // --- Fuel Tank Animation ---
     let fuelLevel = 0;
     // Stages that contribute to fuel:
     // 0. (Implicit: Start of game at level-0)
@@ -426,7 +427,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeOverlayBtns) {
         closeOverlayBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                btn.closest('.overlay-message').classList.remove('visible');
+                const parentOverlay = btn.closest('.overlay-message');
+                if (parentOverlay) {
+                    parentOverlay.classList.remove('visible');
+                    // Special handling for hug overlay to hide its message
+                    if (parentOverlay.id === 'hug-overlay') {
+                        hugMessage.classList.remove('show'); // Hide the hug message
+                    }
+                }
                 if (artworkFrame && btn.closest('#artwork-overlay')) {
                     artworkFrame.classList.remove('revealed'); // Reset artwork state
                 }
@@ -603,7 +611,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hugButton) {
         hugButton.addEventListener('click', () => {
             hugOverlay.classList.add('visible');
-            displayMilestoneMessage("Virtual hug initiated. Recharge complete.");
+            hugMessage.classList.add('show'); // Show the hug message with fade-in animation
+
+            // Optionally, hide the message after a few seconds
+            setTimeout(() => {
+                hugMessage.classList.remove('show');
+            }, 3000); // Message visible for 3 seconds
+            // The overlay itself will stay visible until the close button is clicked.
+
+            displayMilestoneMessage("Virtual hug initiated. Recharge complete."); // This still appears at the bottom
         });
     }
 });
