@@ -35,6 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // NEW: Audio for Final Message
     const birthdayAudio = document.getElementById('birthday-audio');
 
+    // NEW: Milestone message elements
+    const milestoneMessageDisplay = document.getElementById('milestone-message-display');
+    const milestoneMessageCue = document.getElementById('milestone-message-cue');
+
 
     // --- NEW: Intro Message Content (Split into lines) ---
     const introMessageLines = [
@@ -259,6 +263,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- NEW: Function for temporary milestone messages ---
+    function displayMilestoneMessage(message) {
+        milestoneMessageCue.textContent = message;
+        milestoneMessageDisplay.classList.remove('hidden');
+        milestoneMessageDisplay.classList.add('visible');
+
+        // Set a timeout to fade out and hide after 3 seconds
+        setTimeout(() => {
+            milestoneMessageDisplay.classList.remove('visible');
+            milestoneMessageDisplay.classList.add('fade-out');
+            // After fade out transition completes, actually hide it
+            setTimeout(() => {
+                milestoneMessageDisplay.classList.add('hidden');
+                milestoneMessageDisplay.classList.remove('fade-out'); // Clean up class
+            }, 500); // This should match the transition duration in CSS (0.5s)
+        }, 3000); // Display for 3 seconds
+    }
+
 
     // --- NEW: Fuel Tank Animation ---
     let fuelLevel = 0;
@@ -283,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         fuelLevel = (currentFuelStage / maxFuelLevels) * 100;
         fuelFill.style.height = `${fuelLevel}%`;
-        displayCoDriverCue(`Fuel level increased to ${Math.round(fuelLevel)}%!`);
+        // No longer using coDriverCue for fuel level updates, as they are now handled by milestone messages
     }
 
     // --- Level Transitions ---
@@ -308,11 +330,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Specific cues for each level
         if (levelId === 'level-0') {
-            displayCoDriverCue("System initiated. Ready for pilot input.");
+            // This is the initial message that stays until interaction
+            // No milestone message here, handled by `displayCoDriverCue` in initial load and ignition button
         } else if (levelId === 'level-1') {
-            displayCoDriverCue("Checkpoint reached! Told ya you’d make it 😉 Initiating Artwork Wall. Observe carefully.");
+            displayMilestoneMessage("Checkpoint reached! Initiating Artwork Wall. Observe carefully.");
         } else if (levelId === 'level-quiz') {
-            displayCoDriverCue("You’ve always been behind the wheel, but you never noticed the map in my hands. Let’s unlock this next gear — together. Initiating Stage 1: Quiz. Answer wisely, Driver.");
+            displayMilestoneMessage("You’ve always been behind the wheel, but you never noticed the map in my hands. Let’s unlock this next gear — together. Initiating Stage 1: Quiz. Answer wisely, Driver.");
             // Reset quiz state
             document.querySelectorAll('.quiz-question input[type="radio"]').forEach(radio => radio.checked = false);
             quizFeedback.textContent = '';
@@ -321,11 +344,11 @@ document.addEventListener('DOMContentLoaded', () => {
             submitQuizBtn.classList.remove('hidden'); // Make sure submit is visible for quiz
         }
         else if (levelId === 'level-2') {
-            displayCoDriverCue("Careful… this next level's got heart speed bumps 😳💌 Entering Memory Lane. Navigate with care.");
+            displayMilestoneMessage("Careful… this next level's got heart speed bumps 😳💌 Entering Memory Lane. Navigate with care.");
             // Ensure timeline is scrolled to start on level entry
             if (memoryTimeline) memoryTimeline.scrollLeft = 0;
         } else if (levelId === 'level-qa') {
-            displayCoDriverCue("Initiating Stage 2: Heart Unlock Q&A. Be truthful.");
+            displayMilestoneMessage("Initiating Stage 2: Heart Unlock Q&A. Be truthful.");
             currentQaCardIndex = 0;
             qaCards.forEach((card, index) => {
                 card.classList.add('hidden');
@@ -337,20 +360,20 @@ document.addEventListener('DOMContentLoaded', () => {
             qaCards[0].classList.remove('hidden'); // Show first QA card
         }
         else if (levelId === 'level-music-video') {
-            displayCoDriverCue("Activating Audio-Visual Module. Prepare for sonic input.");
+            displayMilestoneMessage("Activating Audio-Visual Module. Prepare for sonic input.");
             // Add particles for music video section
             createParticles(videoSectionParticles, 50);
             startLyricTypingEffect();
         } else if (levelId === 'level-healing-toolkit') {
-            displayCoDriverCue("Welcome to the Healing Toolkit. Take a moment to recharge.");
+            displayMilestoneMessage("Welcome to the Healing Toolkit. Take a moment to recharge.");
         }
         else if (levelId === 'hidden-heart-message-section') {
-            displayCoDriverCue("I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line. Final destination reached. Prepare for Heart Message protocol.");
+            displayMilestoneMessage("I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line. Final destination reached. Prepare for Heart Message protocol.");
             createParticles(document.querySelector('#hidden-heart-message-section .particle-background'), 100);
             // No fuel update here, fuel updates when actually *entering* the next level, which is now 'level-final-message'
         }
         else if (levelId === 'level-final-message') {
-            displayCoDriverCue("The ultimate checkpoint. Listen to my heart, Driver.");
+            displayMilestoneMessage("The ultimate checkpoint. Listen to my heart, Driver.");
             if (birthdayAudio) {
                 birthdayAudio.play().catch(e => console.log("Birthday audio autoplay blocked:", e));
             }
@@ -464,11 +487,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 quizFeedback.classList.add('correct');
                 quizNextLevelBtn.classList.remove('hidden');
                 submitQuizBtn.classList.add('hidden'); // Hide submit button
-                displayCoDriverCue("Quiz complete. Fuel level boosted!");
+                displayMilestoneMessage("Quiz complete. Fuel level boosted!");
             } else {
                 quizFeedback.innerHTML = "❌ Incorrect answers. Try again, Driver!<br>" + feedbackMessages.join("<br>");
                 quizFeedback.classList.add('incorrect');
-                displayCoDriverCue("Incorrect. Recalculating path.");
+                displayMilestoneMessage("Incorrect. Recalculating path.");
             }
         });
     }
@@ -488,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     qaFinalMessage.textContent = "Good answers, Driver. You may now unlock the final gearshift — my heart 💌";
                     qaFinalMessage.classList.remove('hidden');
                     qaNextLevelBtn.classList.remove('hidden');
-                    displayCoDriverCue("Q&A complete. Proceeding to final unlock.");
+                    displayMilestoneMessage("Q&A complete. Proceeding to final unlock.");
                 }
             });
         });
@@ -580,7 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hugButton) {
         hugButton.addEventListener('click', () => {
             hugOverlay.classList.add('visible');
-            displayCoDriverCue("Virtual hug initiated. Recharge complete.");
+            displayMilestoneMessage("Virtual hug initiated. Recharge complete.");
         });
     }
 });
