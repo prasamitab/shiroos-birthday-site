@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loadingScreen = document.getElementById('loading-screen');
-    const loadingText = document.getElementById('loading-text'); // Get the specific loading text element
     const gameContainer = document.getElementById('game-container');
     const coDriverDisplay = document.getElementById('co-driver-display');
     const coDriverCue = document.getElementById('co-driver-cue');
-    const ignitionStartButton = document.getElementById('ignition-start-button');
-    const ignitionButton = document.getElementById('ignition-button');
+    // Removed ignitionStartButton as it's no longer part of the initial flow
+    const ignitionButton = document.getElementById('ignition-button'); // This is now the "START THE JOURNEY" button on level-0
     const artworkFrame = document.getElementById('artwork-frame');
     const artworkImg = document.querySelector('#artwork-frame .artwork-img'); // Get the actual img tag
     const artworkOverlay = document.getElementById('artwork-overlay');
@@ -35,21 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hidden Heart Message Section
     const hiddenHeartMessageSection = document.getElementById('hidden-heart-message-section');
-    const heartMessageNextBtn = document.getElementById('heart-message-next-btn'); // This button might be redundant now if final message autoplays
+    // heartMessageNextBtn is now redundant if final message autoplays after audio, removed its usage
     const finalBirthdayTextDisplay = document.getElementById('final-birthday-text'); // Element to type the final message into
 
     // Audio for Birthday Message
     const birthdayMessageAudio = document.getElementById('birthday-message-audio');
 
 
-    // --- NEW: Intro Message Content ---
-    const introMessage = `Hey driver, buckle up — your co-driver (me) is right here beside you. This ride’s for you, and I’m guiding you through every curve, every speed bump, every smile. Let’s go.
-
-    You’re the only one I have, and I love you more than words can express. I miss you so much, and I’m incredibly grateful to have you in my life. You’re everything to me — my solution, my magical world.
-
-    I imagine myself living in the world you’ve created for me, where I feel safe and loved. I love being in your arms. Without you, this world feels boring and dull, as if it’s black and white. But with you, it’s full of colors, love, and joy. You’re the best part of my life.
-
-    You are my sunshine, my only sunshine, and you make me so, so happy. I want to live in this magical world of ours forever, and never leave. You are my everything — my heart, my soul, my world.`;
+    // Removed introMessage as it's no longer displayed first
 
     // --- Final Birthday Message Content ---
     const finalBirthdayMessageContent = `Happy Birthday, my dear Shiroo!
@@ -117,15 +109,15 @@ I’m your co-driver — in this game, in this life, and in every lap ahead. And
     // --- Loading Screen and Initial Sequence ---
     setTimeout(() => {
         loadingScreen.classList.add('hidden');
-        gameContainer.classList.remove('hidden');
+        gameContainer.classList.remove('hidden'); // Show the main game content
+
         // Start background music when game container is visible
         if (backgroundMusic) {
             backgroundMusic.play().catch(e => console.error("Error playing background music:", e));
         }
 
-        displayCoDriverCue(introMessage, true, () => {
-            ignitionStartButton.classList.remove('hidden'); // Show "IGNITE THE ENGINE" button
-        });
+        // level-0 is now visible by default because its 'hidden' class was removed in HTML
+        // No need for displayCoDriverCue or ignitionStartButton here for initial load
     }, 3000); // Keep loading screen for 3 seconds
 
     // --- Co-Driver Display & Fuel Logic ---
@@ -144,7 +136,7 @@ I’m your co-driver — in this game, in this life, and in every lap ahead. And
 
         if (typewriterEffect) {
             coDriverCue.textContent = ''; // Clear existing text
-            coDriverCue.classList.add('typewriter');
+            coDriverCue.classList.add('typewriter'); // Add typewriter class for animation/cursor
             let i = 0;
             const speed = 20; // Typing speed (ms)
             const type = () => {
@@ -159,9 +151,9 @@ I’m your co-driver — in this game, in this life, and in every lap ahead. And
                     }
                 }
             };
-            type();
+            type(); // Start typing
         } else {
-            coDriverCue.textContent = message;
+            coDriverCue.textContent = message; // Direct text set
             coDriverCue.style.opacity = '1';
             if (callback) {
                 setTimeout(callback, 1000);
@@ -169,26 +161,20 @@ I’m your co-driver — in this game, in this life, and in every lap ahead. And
         }
     }
 
-    // --- Ignition Button (for intro to level-0) ---
-    if (ignitionStartButton) {
-        ignitionStartButton.addEventListener('click', () => {
-            coDriverDisplay.classList.add('hidden'); // Hide co-driver display
-            document.getElementById('level-0').classList.remove('hidden'); // Show level-0
-            displayCoDriverCue("Welcome, Driver! Your journey begins now. The road is calling.", false, () => {
-                // No button to show here, just a cue
-            });
-        });
-    }
-
     // --- START THE JOURNEY button (on level-0) ---
+    // This button is now the first major interaction after loading
     if (ignitionButton) {
         ignitionButton.addEventListener('click', () => {
             document.getElementById('level-0').classList.add('hidden'); // Hide level-0
             document.getElementById('level-1').classList.remove('hidden'); // Show level-1
+            // You can add an initial co-driver cue here if desired, e.g.:
             displayCoDriverCue("Level 1 initiated: The Artwork Wall. Discover your masterpiece.", false);
             quoteInterval = setInterval(showLoveQuote, 10000); // Start showing quotes every 10 seconds
         });
     }
+
+    // Removed the event listener for ignitionStartButton as it's no longer used.
+
 
     // --- Artwork Reveal Logic ---
     if (artworkFrame) {
@@ -206,6 +192,12 @@ I’m your co-driver — in this game, in this life, and in every lap ahead. And
             if (overlay) {
                 overlay.classList.remove('visible');
             }
+            // Also hide hug overlay if it's open
+            if (button.closest('#hug-overlay')) {
+                hugOverlay.classList.remove('visible');
+            }
+            // Hide co-driver display if it was showing a brief message for an overlay
+            // coDriverDisplay.classList.add('hidden'); // Uncomment if you want co-driver display to hide after message
         });
     });
 
@@ -215,9 +207,9 @@ I’m your co-driver — in this game, in this life, and in every lap ahead. And
         submitQuizBtn.addEventListener('click', () => {
             // Correct answers based on previous interactions (assuming these were the intended ones)
             const correctAnswers = {
-                q1: 'hugs', // Example, adjust if changed
-                q2: 'black', // Example, adjust if changed
-                q3: 'batman' // Example, adjust if changed
+                q1: 'hugs',
+                q2: 'black',
+                q3: 'batman'
             };
 
             let score = 0;
@@ -316,9 +308,6 @@ I’m your co-driver — in this game, in this life, and in every lap ahead. And
                         displayCoDriverCue("You've reached the heart of the journey. Prepare for the final message.", false, () => {
                             setTimeout(triggerFinalBirthdayMessage, 2000); // Delay before showing final message
                         });
-                        // The 'heartMessageNextBtn' is now potentially redundant if auto-triggering.
-                        // I'll keep it hidden as the final message auto-plays.
-                        if (heartMessageNextBtn) heartMessageNextBtn.classList.add('hidden');
                     }
                 }
                 updateFuel(Math.max(0, currentFuelStage - 5)); // Small fuel cost for changing levels
@@ -426,7 +415,7 @@ I’m your co-driver — in this game, in this life, and in every lap ahead. And
         if (birthdayMessageAudio) {
             birthdayMessageAudio.volume = 1; // Ensure full volume for message
             birthdayMessageAudio.play().catch(e => console.error("Error playing birthday message audio:", e));
-            
+
             // Listen for when the birthday message audio ends
             birthdayMessageAudio.onended = () => {
                 if (backgroundMusic) {
