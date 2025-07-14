@@ -638,76 +638,80 @@ p {
 /* Final Hidden Heart Message Section */
 #hidden-heart-message-section {
     position: relative; /* For particle background */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+    display: flex; /* Changed for centering */
+    flex-direction: column; /* Changed for centering */
+    justify-content: center; /* Changed for centering */
+    align-items: center; /* Changed for centering */
+    padding: 20px; /* Adjusted padding */
     color: #FFD700; /* Gold color */
     font-family: 'Orbitron', sans-serif;
     text-shadow: 0 0 15px #FFD700;
     text-align: center;
     overflow: hidden; /* For particles */
-    /* Ensure it takes full available height for centering */
-    height: auto; /* Allow content to dictate height */
-    min-height: 80vh; /* Minimum height for better centering */
-    justify-content: space-between; /* Space out content vertically */
-}
 
-/* New: Heart GIF Background */
-.heart-gif-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eTM0M3FhMXJ4amN0NWNydnpxdW80bHh5c2U3amZkdXk5ZHlqcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LzJkQh4YhK7Pq/giphy.gif') no-repeat center center; /* Example GIF URL */
-    background-size: cover; /* Cover the entire area */
-    opacity: 0.2; /* Subtle background */
-    z-index: -2; /* Even further back than particles */
-    filter: grayscale(100%) brightness(0.5); /* Apply some filter to make it less distracting */
+    /* Centering the section itself */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed; /* Use fixed to ensure it stays centered regardless of scroll */
+    width: 90%; /* Adjust width as needed */
+    max-width: 900px; /* Max width for larger screens */
+    height: 90vh; /* Adjust height as needed */
+    max-height: 900px; /* Max height for larger screens */
+    z-index: 15; /* Ensure it's above other elements */
+    background: rgba(13, 13, 13, 0.9); /* Add background for the section */
+    border: 2px solid #00FFC0; /* Re-add border from .level-section */
+    box-shadow: 0 0 20px #00FFC0; /* Re-add shadow from .level-section */
+    border-radius: 10px; /* Re-add border-radius */
 }
 
 
-/* NEW rule to make the message list scrollable, and align to center */
-#hidden-heart-message-section .heart-message-content {
-    max-height: 65vh; /* This will make the text content scrollable if it exceeds */
+/* NEW rule to make the message list scrollable */
+#hidden-heart-message-section .heart-message {
+    max-height: 65vh;
     overflow-y: auto;
     padding-right: 15px; /* Space for scrollbar */
-    width: 100%; /* Ensure content takes full width */
-    display: flex; /* Use flexbox to center inner paragraphs */
-    flex-direction: column;
-    align-items: center; /* Center horizontally */
+    width: 100%; /* Ensure it takes full width of the parent */
 }
 
 
-#hidden-heart-message-section p {
-    font-size: 1.2em;
+#hidden-heart-message-section .heart-message p {
+    font-size: 1.2em; /* Slightly reduced font size to fit more content */
     line-height: 1.7;
-    margin-bottom: 20px;
-    max-width: 900px;
+    margin-bottom: 20px; /* Reduced margin */
+    /* Remove max-width, background, padding, border, and box-shadow from individual paragraphs */
+    /* These styles will now be on the .heart-message container */
+    max-width: unset; /* Override previous max-width */
+    background: unset; /* Override previous background */
+    padding: unset; /* Override previous padding */
+    border: unset; /* Override previous border */
+    box-shadow: unset; /* Override previous box-shadow */
+    z-index: unset; /* Override previous z-index */
+    color: #FFD700; /* Keep the gold color for text */
+}
+
+/* Apply the glowing box frame styling to the paragraphs within .heart-message */
+#hidden-heart-message-section .heart-message p {
     background: rgba(0, 0, 0, 0.7);
     padding: 20px;
     border-radius: 15px;
     border: 2px solid #FFD700;
     box-shadow: 0 0 30px #FFD700;
-    z-index: 10;
-    /* Remove text-align: center from here to let the parent flexbox handle centering */
-    text-align: left; /* Keep text aligned left within its box, but the box is centered */
+    margin-bottom: 20px; /* Keep margin between paragraphs */
 }
 
+
 #hidden-heart-message-section .final-line {
-    font-size: 1.5em;
-    margin-top: 30px;
+    font-size: 1.5em; /* Adjusted size */
+    margin-top: 30px; /* Adjusted margin */
     font-weight: bold;
-    color: #FF00FF;
+    color: #FF00FF; /* Pink for final line */
     text-shadow: 0 0 20px #FF00FF;
     border: 3px solid #FF00FF;
     padding: 20px;
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.8);
     z-index: 10;
-    text-align: center; /* Ensure this specific line remains centered */
 }
 
 /* Fuel Tank Styling */
@@ -732,58 +736,6 @@ p {
     height: 0%; /* Starts empty */
     background: linear-gradient(to top, #00FFC0, #00FFFF); /* Green to Cyan */
     transition: height 1s ease-out;
-}
-
-/* New Level: Final Birthday Message */
-#level-final-birthday-message {
-    /* Inherits common level-section styles */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #FF00FF; /* Pink for birthday message */
-    text-shadow: 0 0 15px #FF00FF;
-}
-
-#level-final-birthday-message h2 {
-    color: #FF00FF;
-    font-size: 3em;
-    margin-bottom: 20px;
-    animation: pulseGlow 2s infinite alternate;
-}
-
-@keyframes pulseGlow {
-    0% { text-shadow: 0 0 10px #FF00FF, 0 0 20px #FF00FF; }
-    100% { text-shadow: 0 0 20px #FF00FF, 0 0 40px #FF00FF; }
-}
-
-.audio-player-container {
-    margin-top: 30px;
-    background: rgba(0, 0, 0, 0.7);
-    border: 2px solid #FF00FF;
-    box-shadow: 0 0 20px #FF00FF;
-    padding: 20px 30px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.audio-player-container p {
-    font-size: 1.1em;
-    margin-bottom: 15px;
-    color: #FF00FF;
-}
-
-#audio-toggle-button {
-    background: #FF00FF; /* Pink button */
-    color: #0d0d0d;
-    box-shadow: 0 0 15px #FF00FF, inset 0 0 8px rgba(255, 255, 255, 0.5);
-}
-
-#audio-toggle-button:hover {
-    background: #E600E6; /* Darker pink on hover */
-    box-shadow: 0 0 25px #FF00FF, inset 0 0 12px rgba(255, 255, 255, 0.7);
 }
 
 /* Media Queries for Responsiveness */
@@ -826,8 +778,14 @@ p {
         padding: 20px; /* Adjust padding for smaller screens */
     }
 
-    #level-final-birthday-message h2 {
+    #final-birthday-message {
         font-size: 2.5em; /* Adjust for smaller screens */
+        margin-top: 30px;
+    }
+
+    #hidden-heart-message-section {
+        width: 95%; /* Adjust width for smaller screens */
+        height: 95vh; /* Adjust height for smaller screens */
     }
 }
 
@@ -856,5 +814,8 @@ p {
 
     .memory-item {
         height: auto; /* Allow height to adjust based on content */
+    }
+    #hidden-heart-message-section .heart-message p {
+        padding: 15px; /* Adjust padding for smaller screens */
     }
 }
