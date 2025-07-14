@@ -21,192 +21,159 @@
         <div class="floor-glow"></div>
         <div class="car-silhouette"></div>
 
-        <div class="co-driver-display" id="co-driver-display">
+        <div class="co-driver-display hidden" id="co-driver-display">
             <p id="co-driver-cue" class="typewriter"></p>
-            <button id="ignition-start-button" class="glow-button hidden">IGNITE THE ENGINE</button>
-        </div>
+            </div>
 
         <div class="fuel-tank-container">
             <div class="fuel-tank-fill" id="fuel-fill"></div>
-            <div class="fuel-tank-label">FUEL</div>
         </div>
 
-        <div id="level-0" class="level-section hidden">
-            <h3>Welcome, Shiroo!</h3>
-            <p>Your co-driver's waiting inside... Let’s start the ride.</p>
+        <div id="level-0" class="level-section"> <h2>Welcome, Driver!</h2>
+            <p>Your journey begins now. The road is calling.</p>
             <button id="ignition-button" class="glow-button">START THE JOURNEY</button>
         </div>
 
         <div id="level-1" class="level-section hidden">
-            <h3>Level 1: The Artwork Wall</h3>
-            <p>Designed by your favorite artist & copilot.</p>
+            <h2>Level 1: The Artwork Wall</h2>
+            <p>Every stroke, every color — a piece of my heart. Discover your masterpiece.</p>
             <div class="artwork-frame" id="artwork-frame">
                 <img src="images/main-art.jpg" alt="Main Artwork" class="artwork-img">
-                <div class="artwork-spotlight" id="artwork-spotlight"></div>
-            </div>
-            <p class="artwork-message">Click the artwork to reveal the masterpiece!</p>
-            <button class="next-level-btn glow-button" data-target="level-quiz">Next Level</button>
-
-            <div id="artwork-overlay" class="overlay-message hidden">
-                <div class="overlay-content">
-                    <p>This artwork is made thinking about you. It holds a piece of my heart. Not just ink on paper, but a memory you can keep forever.</p>
-                    <button class="close-overlay-btn glow-button">Close</button>
+                <div class="artwork-overlay" id="artwork-overlay">
+                    <p>This isn't just art; it's a reflection of us, a canvas where every color tells a story of our bond. It's a reminder of the beautiful chaos and serene moments we share. Just like this piece, our journey is layered with depth and unexpected beauty.</p>
+                    <button class="close-overlay-btn">Close</button>
                 </div>
             </div>
+            <button class="glow-button next-level-btn" data-target="level-quiz">Proceed to Quiz</button>
         </div>
 
         <div id="level-quiz" class="level-section hidden">
-            <h3>Stage 1: Quiz to Unlock the Letter</h3>
-            <p>"Answer truthfully, Driver — your Co-Driver’s watching 😏"</p>
+            <h2>System Check: Emotional Input Required</h2>
+            <p>Answer these questions to unlock the next message. Your truth fuels our journey.</p>
             <div class="quiz-questions">
-                <div class="quiz-question" data-question="hugs_or_kisses">
-                    <p>Hugs or Kisses?</p>
-                    <label for="q1_hugs"><input type="radio" id="q1_hugs" name="q1" value="hugs"> Hugs</label>
-                    <label for="q1_kisses"><input type="radio" id="q1_kisses" name="q1" value="kisses"> Kisses</label>
+                <div class="quiz-question">
+                    <p>1. Do you prefer hugs or kisses?</p>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q1" value="hugs"> Hugs</label>
+                        <label><input type="radio" name="q1" value="kisses"> Kisses</label>
+                    </div>
                 </div>
-                <div class="quiz-question" data-question="black_or_white">
-                    <p>Black or White?</p>
-                    <label for="q2_black"><input type="radio" id="q2_black" name="q2" value="black"> Black</label>
-                    <label for="q2_white"><input type="radio" id="q2_white" name="q2" value="white"> White</label>
+                <div class="quiz-question">
+                    <p>2. What color defines our bond?</p>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q2" value="black"> Black (our mysterious depths)</label>
+                        <label><input type="radio" name="q2" value="white"> White (our pure beginnings)</label>
+                    </div>
                 </div>
-                <div class="quiz-question" data-question="superhero">
-                    <p>Which superhero do you secretly think you are?</p>
-                    <label for="q3_batman"><input type="radio" id="q3_batman" name="q3" value="batman"> Batman</label>
-                    <label for="q3_superman"><input type="radio" id="q3_superman" name="q3" value="superman"> Superman</label>
-                    <label for="q3_ironman"><input type="radio" id="q3_ironman" name="q3" value="ironman"> Iron Man</label>
+                <div class="quiz-question">
+                    <p>3. Who's your true hero, the one who saves your day?</p>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q3" value="batman"> Batman</label>
+                        <label><input type="radio" name="q3" value="superman"> Superman</label>
+                    </div>
                 </div>
             </div>
             <button id="submit-quiz-btn" class="glow-button">Submit Answers</button>
-            <div id="quiz-feedback" class="feedback-message"></div>
-            <button class="next-level-btn glow-button hidden" data-target="level-2">Next Checkpoint</button>
+            <p id="quiz-feedback"></p>
+            <button id="quiz-next-level-btn" class="glow-button next-level-btn hidden" data-target="level-2">Proceed to Memory Lane</button>
         </div>
 
         <div id="level-2" class="level-section hidden">
-            <h3>Level 2: Memory Lane</h3>
-            <p>Remember this pitstop? You drove through like a champ.</p>
-            <div class="memory-timeline-wrapper">
-                <button class="nav-arrow left">&lt;</button>
-                <div class="memory-timeline" id="memory-timeline">
-                    <div class="memory-item">
-                        <video controls width="100%" height="auto">
-                            <source src="videos/memory-lane-clip.mp4" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <h4>A Special Video Memory</h4>
-                        <p>This video holds a special moment we shared.</p>
-                    </div>
-                    <div class="memory-item">
-                        <img src="images/poster.jpg" alt="The Poster">
-                        <h4>The Poster</h4>
-                        <p>A cool poster for our journey ahead!</p>
-                    </div>
-                    <div class="memory-item">
-                        <img src="images/car-art.jpg" alt="Car Art">
-                        <h4>Car Art</h4>
-                        <p>Our ride, perfectly captured.</p>
-                    </div>
-                    </div>
-                <button class="nav-arrow right">&gt;</button>
+            <h2>Level 2: Memory Lane</h2>
+            <p>A journey through our past, etched in moments and pixels. Relive the milestones that shaped us.</p>
+            <div class="memory-timeline" id="memory-timeline">
+                <div class="memory-item">
+                    <h3>Our First Meet</h3>
+                    <video controls muted poster="images/poster.jpg">
+                        <source src="videos/memory-lane-clip.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p>Remember the exact moment our paths crossed? A spark, a glance, and an entire universe shifted into place. This is where our story began, filled with an unexpected magic that still feels like yesterday.</p>
+                </div>
+                <div class="memory-item">
+                    <h3>The Car Art</h3>
+                    <img src="images/car-art.jpg" alt="Car Artwork">
+                    <p>Every curve and line, a testament to freedom and the open road. This piece reminds me of the adventures we've shared, the ones we dream of, and the journey we're building together, always moving forward.</p>
+                </div>
+                </div>
+            <div class="timeline-nav">
+                <button class="nav-arrow glow-button left"><i class="fas fa-arrow-left"></i></button>
+                <button class="nav-arrow glow-button right"><i class="fas fa-arrow-right"></i></button>
             </div>
-            <button class="next-level-btn glow-button" data-target="level-qa">Next Level</button>
+            <button class="glow-button next-level-btn" data-target="level-qa">Proceed to Heart Unlock</button>
         </div>
 
         <div id="level-qa" class="level-section hidden">
-            <h3>Stage 2: Heart Unlock Q&A</h3>
-            <p>These are just for fun, Driver. Answer from the heart.</p>
-            <div class="qa-cards-container">
+            <h2>Level: Heart Unlock Q&A</h2>
+            <p>Open your heart, share your thoughts. Every answer brings us closer.</p>
+            <div class="qa-container">
                 <div class="qa-card" id="qa-card-1">
-                    <p class="qa-question">Q: What’s your dream road trip destination?</p>
-                    <input type="text" class="qa-input" placeholder="Type your answer...">
-                    <button class="qa-next-btn glow-button">Next</button>
+                    <p>What’s one quality you admire most about yourself, and why?</p>
+                    <input type="text" class="qa-input" placeholder="Your answer here...">
+                    <button class="glow-button qa-next-btn">Next</button>
                 </div>
                 <div class="qa-card hidden" id="qa-card-2">
-                    <p class="qa-question">Q: Describe our bond in 3 words.</p>
-                    <input type="text" class="qa-input" placeholder="Type your answer...">
-                    <button class="qa-next-btn glow-button">Next</button>
+                    <p>Describe a moment where you felt truly understood by me.</p>
+                    <input type="text" class="qa-input" placeholder="Your answer here...">
+                    <button class="glow-button qa-next-btn">Next</button>
                 </div>
                 <div class="qa-card hidden" id="qa-card-3">
-                    <p class="qa-question">Q: If we switched roles for a day, kya karvate merese?</p>
-                    <input type="text" class="qa-input" placeholder="Type your answer...">
-                    <button class="qa-next-btn glow-button">Next</button>
+                    <p>If our journey was a song, what would be its title and why?</p>
+                    <input type="text" class="qa-input" placeholder="Your answer here...">
+                    <button class="glow-button qa-next-btn">Submit</button>
                 </div>
             </div>
-            <p id="qa-final-message" class="feedback-message hidden"></p>
-            <button class="next-level-btn glow-button hidden" data-target="level-music-video">Next Level</button>
+            <p id="qa-final-message" class="hidden"></p>
+            <button id="qa-next-level-btn" class="glow-button next-level-btn hidden" data-target="level-music-video">Continue Journey</button>
         </div>
 
         <div id="level-music-video" class="level-section hidden">
-            <h3>Level: Your Music Video!</h3>
-            <p class="lyric-station" id="video-lyric-station">This is the world I imagine with you...</p>
+            <h2>Level: Our Soundtrack</h2>
+            <p>This is the beat of our journey, the lyrics of our connection. Let the music move you.</p>
             <div class="video-container">
-                <video controls width="640" height="480">
+                <video id="music-video" controls>
                     <source src="videos/music-video.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
-            <div class="video-section-particles" id="video-section-particles"></div>
-            <button class="next-level-btn glow-button" data-target="level-healing-toolkit">Unlock Healing Toolkit</button>
+            <p id="video-lyric-station"></p>
+            <button class="glow-button next-level-btn" data-target="level-healing-toolkit">Enter Healing Toolkit</button>
         </div>
 
         <div id="level-healing-toolkit" class="level-section hidden">
-            <h3>The Healing Toolkit</h3>
-            <p>A pitstop for your soul, Driver.</p>
-            <div class="toolkit-dashboard">
+            <h2>The Healing Toolkit: Co-Driver's Care</h2>
+            <p>Even the toughest drivers need a pit stop. Recharge and recalibrate.</p>
+            <div class="dashboard-grid">
                 <div class="dashboard-item">
-                    <i class="fas fa-tint"></i>
-                    <p class="item-text">Hydration Level: Low — drink water now!</p>
+                    <h3>Hydration Level</h3>
+                    <p>Low — drink water now!</p>
                 </div>
                 <div class="dashboard-item">
-                    <i class="fas fa-thermometer-half"></i>
-                    <p class="item-text">Engine temperature: Rest mode ON</p>
+                    <h3>Engine Temperature</h3>
+                    <p>Rest mode ON (take a break).</p>
                 </div>
                 <div class="dashboard-item">
-                    <i class="fas fa-comment"></i>
-                    <p class="item-text">System note: You’re not alone. You’re loved.</p>
+                    <h3>System Note</h3>
+                    <p>You’re not alone. You’re loved.</p>
                 </div>
             </div>
-            <button id="hug-button" class="glow-button">
-                <i class="fas fa-heart glowing-heart"></i> Need a hug?
-            </button>
-            <button class="next-level-btn glow-button" data-target="hidden-heart-message-section">Unlock Final Message</button>
+            <button id="hug-button" class="glow-button">Need a hug?</button>
+            <button class="glow-button next-level-btn" data-target="hidden-heart-message-section">Unlock Final Message</button>
         </div>
 
-        <div id="hug-overlay" class="overlay-message hidden">
-            <div class="overlay-content hug-content">
-                <p>Virtual Hug from your Co-Driver delivered 💛</p>
-                <div class="hug-arms"></div>
-                <button class="close-overlay-btn glow-button">Close</button>
-            </div>
+        <div id="hug-overlay" class="hug-overlay">
+            <p>Sending a virtual hug! You're stronger than you think. Keep going, Driver.</p>
+            <div class="hug-animation"></div>
+            <button class="close-overlay-btn">Close Hug</button>
         </div>
-
 
         <div id="hidden-heart-message-section" class="level-section hidden">
-            <h3>A Message From My Heart</h3>
-            <div class="heart-container">
-                <div class="heart"></div>
-                <div class="heart-message">
-                    <p>To the man who drives forward no matter what and reached here</p>
-                    <p>Happy Birthday, my Shiroo.</p>
-                    <p>Nineetteeennnnn hogayeeeee bbbyy,</p>
-                    <p>Ab we aren’t meeting in person toh that doesn’t stop me from riding along with you , mai humesha tere sath rahungi 😘😘kaise na kaise. </p>
-                    <p>Through every twist, turn, traffic jam, and night drive annd drinks, I’ve watched you move forward never losing momentum and i love that thing about youuuuuuuu. </p>
-                    <p>Ye artwork? Made with my hands.</p>
-                    <p>Ye page? Built with memories.</p>
-                    <p>But the heart behind it? Pooooraa teraaa janeman.</p>
-                    <p>I’m your co driver , passenger princess whatever here, always have been.</p>
-                    <p>I am falling in love with every mile you drive.</p>
-                    <p>You my inspirationn ukk.</p>
-                    <p>Not because you’re perfect but because you’re real, rare, kind, sweet , romantic, caring, annoying and mine in ways words pe nahi bol paungi hehehe.</p>
-                    <p>Keep driving towards what makes you feel alive and Im always right here for you baby.</p>
-                    <p>And aurr kuchh nahiiiiii </p>
-                    <p>I’ll always be in the passenger seat , with the map, giving wrong directions .</p>
-                    <p>Happy Birthdayyyyyyyy Baby.</p>
-                    <p>Forever your co-driver,</p>
-                    <p>Im Yoursssss in the end </p>
-                    <p class="final-line">I’m your co-driver — in this game, in this life, and in every lap ahead. And I’ll always be cheering for you at the finish line.</p>
+            <h2>The Heart of the Journey</h2>
+            <div class="heart-animation"></div>
+            <audio id="birthday-message-audio" src="audio/birthday-message.mp3"></audio>
+            <div id="final-birthday-message-container">
+                <p id="final-birthday-text"></p>
                 </div>
-            </div>
-            <h2 id="final-birthday-message">Happyy Birthdayyyy</h2>
             <div class="particle-background"></div>
         </div>
     </div>
