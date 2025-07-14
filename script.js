@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('game-container');
     const coDriverDisplay = document.getElementById('co-driver-display');
     const coDriverCue = document.getElementById('co-driver-cue');
-    const ignitionStartButton = document.getElementById('ignition-start-button'); // This was in your original HTML
-    const ignitionButton = document.getElementById('ignition-button'); // Original START THE JOURNEY button (on level-0)
+    const ignitionStartButton = document.getElementById('ignition-start-button');
+    const ignitionButton = document.getElementById('ignition-button');
     const artworkFrame = document.getElementById('artwork-frame');
     const artworkOverlay = document.getElementById('artwork-overlay');
     const closeOverlayBtns = document.querySelectorAll('.close-overlay-btn');
@@ -15,23 +15,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const backgroundMusic = document.getElementById('background-music');
     const fuelFill = document.getElementById('fuel-fill');
 
-    // Quiz Elements
     const submitQuizBtn = document.getElementById('submit-quiz-btn');
     const quizFeedback = document.getElementById('quiz-feedback');
     const quizNextLevelBtn = document.getElementById('quiz-next-level-btn');
 
-    // Hug Button and Overlay
     const hugButton = document.getElementById('hug-button');
     const hugOverlay = document.getElementById('hug-overlay');
-    const hugMessageText = document.getElementById('hug-message-text'); // Get reference to the message text span
+    const hugMessageText = document.getElementById('hug-message-text');
 
-    // Audio elements for final message
     const birthdayAudio = document.getElementById('birthday-audio');
 
-    let currentFuel = 100; // Starting fuel percentage
-    let currentLevel = 'level-0'; // Keep track of the current active level
+    let currentFuel = 100;
+    let currentLevel = 'level-0';
 
-    // --- Loading Screen ---
     setTimeout(() => {
         loadingScreen.classList.add('hidden');
         gameContainer.classList.remove('hidden');
@@ -39,10 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
             backgroundMusic.play().catch(e => console.error("Error playing background music:", e));
         }
         displayCoDriverCue("Welcome, Co-Driver. Are you ready for an unforgettable journey?");
-        ignitionButton.classList.remove('hidden'); // Show START THE JOURNEY button
+        ignitionButton.classList.remove('hidden');
     }, 3000);
 
-    // --- Co-Driver Display ---
     function displayCoDriverCue(message, duration = 4000) {
         coDriverCue.textContent = '';
         coDriverCue.style.animation = 'none';
@@ -50,15 +45,13 @@ document.addEventListener('DOMContentLoaded', () => {
         coDriverCue.style.animation = 'typewriter 2s steps(40, end) forwards';
         coDriverCue.textContent = message;
 
-        // Automatically hide the cue after a duration, unless it's a button prompt
-        if (!message.includes("IGNITE THE ENGINE")) { // Keep this logic if you want IGNITE THE ENGINE to persist
+        if (!message.includes("IGNITE THE ENGINE")) {
             setTimeout(() => {
                 coDriverCue.textContent = '';
             }, duration);
         }
     }
 
-    // --- Navigation & Level Management (Original Logic Preserved) ---
     function showLevel(levelId) {
         const currentLevelElement = document.getElementById(currentLevel);
         if (currentLevelElement) {
@@ -72,38 +65,35 @@ document.addEventListener('DOMContentLoaded', () => {
             nextLevelElement.classList.add('active');
             currentLevel = levelId;
 
-            // Specific actions for certain levels, as per your original structure
-            if (levelId === 'level-1-intro') { // This was in your original script
+            if (levelId === 'level-1-intro') {
                 typewriterEffect("Our journey begins with the raw power of the engine. Here are some of the forces that drive you: resilience, curiosity, and an unyielding spirit.");
-                hugButton.classList.remove('hidden'); // Show hug button on this level
-            } else if (levelId === 'level-4-video') { // This was in your original script
+                hugButton.classList.remove('hidden');
+            } else if (levelId === 'level-4-video') {
                 startLyricTypingEffect();
                 const celebrationVideo = document.getElementById('celebration-video');
                 if (celebrationVideo) {
                     celebrationVideo.play();
                 }
-            } else if (levelId === 'level-final-message') { // This was in your original script
+            } else if (levelId === 'level-final-message') {
                 if (birthdayAudio) {
                     birthdayAudio.play().catch(e => console.error("Error playing birthday audio:", e));
                 }
             }
         }
-        updateFuel(-5); // Consume fuel for each level transition
+        updateFuel(-5);
     }
 
-    // "START THE JOURNEY" button on Level 0
     if (ignitionButton) {
         ignitionButton.addEventListener('click', () => {
             displayCoDriverCue("Systems online. Initiating pre-flight checks.");
             ignitionButton.classList.add('hidden');
-            ignitionStartButton.classList.remove('hidden'); // This button was in your original HTML, so keep its logic
+            ignitionStartButton.classList.remove('hidden');
         });
     }
 
-    // "IGNITE THE ENGINE" button (Original to level-1-intro)
     if (ignitionStartButton) {
         ignitionStartButton.addEventListener('click', () => {
-            showLevel('level-1-intro'); // Go to the level-1-intro as per your original
+            showLevel('level-1-intro');
             displayCoDriverCue("Engine ignited. Get ready to accelerate!");
             ignitionStartButton.classList.add('hidden');
         });
@@ -116,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Fuel System ---
     function updateFuel(amount) {
         currentFuel = Math.max(0, Math.min(100, currentFuel + amount));
         fuelFill.style.height = `${currentFuel}%`;
@@ -131,11 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Artwork Display (Level 1 Visual) ---
+    // Updated artwork array to use main-art.jpg for all entries
     const artworks = [
-        { src: 'images/artwork1.jpg', caption: '"The road ahead is always exciting."' },
-        { src: 'images/artwork2.jpg', caption: '"Navigating new paths."' },
-        { src: 'images/artwork3.jpg', caption: '"Speeding towards dreams."' }
+        { src: 'images/main-art.jpg', caption: '"The road ahead is always exciting."' },
+        { src: 'images/main-art.jpg', caption: '"Navigating new paths."' },
+        { src: 'images/main-art.jpg', caption: '"Speeding towards dreams."' }
     ];
     let currentArtworkIndex = 0;
 
@@ -147,11 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setInterval(showNextArtwork, 5000);
 
-    // --- Overlay Close Buttons (for artwork & hug overlays) ---
     closeOverlayBtns.forEach(button => {
         button.addEventListener('click', () => {
             artworkOverlay.classList.add('hidden');
-            hugOverlay.classList.add('hidden'); // Close hug overlay too
+            hugOverlay.classList.add('hidden');
             const overlayVideo = document.getElementById('overlay-artwork-video');
             if (overlayVideo) {
                 overlayVideo.pause();
@@ -159,7 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Memory Timeline (Level 3 Timeline) ---
     let currentMemoryIndex = 0;
     const memoryItems = document.querySelectorAll('.memory-item');
 
@@ -208,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showMemory(currentMemoryIndex);
 
-    // --- Quiz Logic (Level 2 Quiz) ---
     if (submitQuizBtn) {
         submitQuizBtn.addEventListener('click', () => {
             const selectedFuel = document.querySelector('input[name="fuel"]:checked');
@@ -233,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Typewriter Effect for Level 1 Intro (Original function preserved) ---
     function typewriterEffect(text, elementId = 'level-1-intro-text') {
         const element = document.getElementById(elementId);
         if (!element) return;
@@ -250,7 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
         type();
     }
 
-    // --- Video Lyrics Station (Level 4 Video) ---
     const lyrics = [
         "Every moment with you is a cherished memory,",
         "You light up my world, endlessly.",
@@ -294,11 +278,9 @@ document.addEventListener('DOMContentLoaded', () => {
         typeLyric();
     }
 
-    // --- Healing Toolkit / Hug Logic ---
     if (hugButton) {
         hugButton.addEventListener('click', () => {
             hugOverlay.classList.add('visible');
-            // FIX: Set the message text content here
             hugMessageText.textContent = "Virtual hug generated and sent successfully! 💛";
             displayCoDriverCue("Virtual hug initiated. Recharge complete.");
         });
