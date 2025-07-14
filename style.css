@@ -31,18 +31,24 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 100;
-    color: #00FFFF; /* Cyan */
+}
+
+#loading-text { /* New style for glowing text */
+    color: #00FFFF; /* Bright cyan */
     font-size: 1.5em;
+    font-family: 'Orbitron', monospace; /* Game style font */
+    text-shadow: 0 0 8px #00FFFF, 0 0 15px #00FFFF; /* Glowing effect */
 }
 
 .loading-spinner {
-    border: 8px solid rgba(0, 255, 255, 0.3);
+    border: 8px solid rgba(0, 255, 255, 0.2);
     border-top: 8px solid #00FFFF;
     border-radius: 50%;
     width: 60px;
     height: 60px;
     animation: spin 1.5s linear infinite;
     margin-bottom: 20px;
+    box-shadow: 0 0 15px #00FFFF; /* Glowing spinner */
 }
 
 @keyframes spin {
@@ -50,139 +56,136 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* Game Container */
+/* Game Container (Main Layout) */
 #game-container {
     position: relative;
     width: 100vw;
     height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    background-color: #0d0d0d; /* ADDED: Fallback background for the game container */
+    justify-content: flex-end;
     overflow: hidden;
+    perspective: 1000px; /* For 3D effects */
 }
 
-/* Background Elements */
+/* Background Elements - Garage, Floor, Car Silhouette */
 .garage-background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('images/garage_bg.jpg'); /* Ensure this path is correct! */
-    background-size: cover;
-    background-position: center;
-    filter: brightness(0.6) grayscale(0.2);
-    z-index: 1;
+    background: url('images/garage_bg.jpg') no-repeat center center/cover;
+    filter: blur(3px) brightness(0.7);
+    transform: translateZ(-1px) scale(1.1); /* Slightly scale to prevent blur edges */
+    animation: pulseBackground 15s infinite alternate;
+}
+
+@keyframes pulseBackground {
+    0% { filter: blur(3px) brightness(0.7); }
+    100% { filter: blur(2px) brightness(0.8); }
 }
 
 .floor-glow {
     position: absolute;
     bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background: radial-gradient(ellipse at bottom, rgba(0, 255, 255, 0.5), transparent 70%);
-    z-index: 2;
-    filter: blur(15px);
+    width: 150%;
+    height: 200px;
+    background: radial-gradient(ellipse at bottom, rgba(0, 255, 192, 0.4) 0%, transparent 70%);
+    filter: blur(20px);
+    z-index: 1;
+    animation: floorGlowPulse 5s infinite alternate;
+}
+
+@keyframes floorGlowPulse {
+    0% { transform: scaleY(1); opacity: 0.7; }
+    100% { transform: scaleY(1.1); opacity: 1; }
 }
 
 .car-silhouette {
     position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 800px;
-    height: 450px; /* Adjust as needed */
-    background-image: url('images/car_silhouette.png'); /* Ensure this path is correct! */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    z-index: 3;
+    bottom: 5vh;
+    width: 70%; /* Adjust as needed */
+    max-width: 900px;
+    height: 35vh; /* Increased height */
+    background: url('images/car_silhouette.png') no-repeat center bottom/contain;
+    z-index: 2;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 192, 0.6));
+    animation: carFloat 8s infinite ease-in-out;
 }
 
-/* Co-Driver Display */
+@keyframes carFloat {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+/* Co-Driver Display (for intro and general messages) */
 .co-driver-display {
     position: absolute;
-    top: 50%;
+    top: 50%; /* Center vertically */
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    max-width: 90%;
-    background: rgba(0, 0, 0, 0.9);
+    transform: translate(-50%, -50%); /* Center horizontally and vertically */
+    width: 80%;
+    max-width: 800px; /* Increased max-width for more space */
+    height: auto; /* Allow height to adjust to content */
+    max-height: 80vh; /* Prevent it from taking too much vertical space */
+    background: rgba(0, 0, 0, 0.7);
     border: 2px solid #00FFFF;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+    box-shadow: 0 0 15px #00FFFF, inset 0 0 10px #00FFFF;
+    padding: 30px; /* Increased padding */
     text-align: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2em; /* Adjusted for better readability with more text */
+    color: #00FFC0;
     z-index: 10;
-    opacity: 0; /* Starts hidden, controlled by JS */
-    transition: opacity 0.5s ease-in-out;
-    display: flex; /* For centering content within it */
-    flex-direction: column;
+    transition: all 0.5s ease-in-out;
+    display: flex;
     justify-content: center;
     align-items: center;
-    box-sizing: border-box; /* Include padding in width/height */
+    overflow-y: auto; /* Allow scrolling if text overflows vertically */
+    box-sizing: border-box;
 }
 
 .co-driver-display p {
     margin: 0;
-    padding-bottom: 20px;
-    font-size: 1.2em;
-    color: #00FFC0; /* Cyberpunk green */
+    opacity: 0;
+    animation: textAppear 1s forwards;
+    animation-delay: 0.5s;
+    text-shadow: 0 0 5px #00FFC0;
+    line-height: 1.5; /* Improve readability */
+    text-align: left; /* Align text to left */
 }
 
-/* Typewriter effect for co-driver cue */
+/* Typewriter effect for initial intro message */
 .co-driver-display p.typewriter {
-    overflow: hidden; /* Ensures text doesn't wrap during typing */
-    white-space: nowrap; /* Ensures text stays on one line during typing */
-    border-right: .15em solid #00FFFF; /* The blinking cursor */
-    animation: typing 3.5s steps(40, end) forwards, blink-caret .75s step-end infinite;
-    max-width: 100%;
+    white-space: pre-wrap; /* Preserve whitespace and allow wrapping */
+    overflow: hidden; /* Ensures the text is hidden until typed */
+    animation: none; /* Override initial fade-in */
+    opacity: 1; /* Make sure it's visible for typing */
+    width: 0; /* Initial width for typing effect */
+    border-right: 2px solid #00FFFF; /* Cursor effect */
+    animation: typing 4s steps(60, end) forwards, blink-caret .75s step-end infinite; /* Animation defined in JS */
 }
 
+/* Remove fixed width for typing animation to allow full frame usage */
 @keyframes typing {
     from { width: 0 }
-    to { width: 100% }
+    to { width: 100% } /* Occupy full width of its container */
 }
 
 @keyframes blink-caret {
     from, to { border-color: transparent }
-    50% { border-color: #00FFFF; }
+    50% { border-color: #00FFFF }
 }
 
-@keyframes textAppear {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* Glowing text for "Shiroo" */
+.glowing-text {
+    color: #00FFFF; /* Cyan */
+    text-shadow: 0 0 8px #00FFFF, 0 0 15px #00FFFF;
+    font-weight: bold;
 }
-
-/* Glow Button */
-.glow-button {
-    background: linear-gradient(45deg, #00FFFF, #00FFC0);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    color: #0d0d0d;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.1em;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.7), 0 0 20px rgba(0, 255, 255, 0.5);
-    transition: all 0.3s ease-in-out;
-    margin-top: 20px;
-}
-
-.glow-button:hover {
-    background: linear-gradient(45deg, #00FFC0, #00FFFF);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 1), 0 0 30px rgba(0, 255, 255, 0.8);
-    transform: translateY(-2px);
-}
-
-.glow-button:active {
-    transform: translateY(0);
-    box-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
-}
-
 
 /* Level Sections */
 .level-section {
@@ -190,49 +193,195 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 900px;
-    height: 80%; /* Adjust as needed */
-    max-height: 90vh;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(13, 13, 13, 0.8);
     border: 2px solid #00FFFF;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    z-index: 5; /* Lower than co-driver display */
-    overflow-y: auto; /* Enable scrolling for content that exceeds height */
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+    padding: 40px;
     text-align: center;
-    box-sizing: border-box;
+    width: 90%;
+    max-width: 800px;
+    z-index: 5;
+    animation: fadeIn 1s forwards;
+    box-sizing: border-box; /* Include padding in width */
+    overflow-y: auto; /* Enable scrolling for content that overflows */
+    max-height: 90vh; /* Max height to fit viewport */
 }
 
-.level-section h2 {
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.level-section h3 {
+    font-family: 'Orbitron', monospace;
     color: #00FFFF;
-    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 10px #00FFFF;
     margin-top: 0;
-    margin-bottom: 20px;
+    font-size: 2em;
 }
 
 .level-section p {
-    color: #00FFC0;
-    margin-bottom: 15px;
-    line-height: 1.6;
-}
-
-/* Level 0 Specific */
-#level-0 {
-    text-align: center;
-    padding-top: 50px;
-}
-
-#level-0 p {
     font-size: 1.1em;
+    line-height: 1.6;
+    color: #00FFC0;
+    margin-bottom: 20px;
 }
 
-/* Fuel Tank */
+/* Artwork Wall (Level 1) */
+.artwork-frame {
+    position: relative;
+    width: 80%; /* Adjust based on typical A3 aspect ratio (1:1.414) if needed */
+    max-width: 600px; /* Increased max-width */
+    height: 400px; /* Adjusted height for better visibility, roughly 1:1.5 ratio for A3 */
+    border: 3px solid #00FFFF;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.7), inset 0 0 10px rgba(0, 255, 255, 0.5);
+    cursor: pointer;
+    overflow: hidden;
+    margin-top: 20px;
+    transition: all 0.5s ease-in-out;
+    display: flex; /* Use flexbox to center image */
+    justify-content: center;
+    align-items: center;
+}
+
+.artwork-frame::before {
+    content: "CLICK TO REVEAL";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #00FFFF;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8em; /* Larger reveal text */
+    text-shadow: 0 0 15px #00FFFF;
+    z-index: 2;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.artwork-frame.revealed::before {
+    opacity: 0;
+}
+
+.artwork-img { /* Use this class for the <img> tag */
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensures the whole image is visible within the frame */
+    filter: brightness(0); /* Starts black */
+    transition: filter 1s ease-in-out;
+}
+
+.artwork-frame.revealed .artwork-img {
+    filter: brightness(1); /* Reveals image */
+}
+
+/* Music Video Section - Glowing Box Frame */
+.video-container {
+    position: relative;
+    width: 90%; /* Increased width */
+    max-width: 800px; /* Increased max-width */
+    aspect-ratio: 16 / 9;
+    background: rgba(0, 0, 0, 0.7);
+    border: 3px solid #00FFFF; /* Thicker border */
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.8), inset 0 0 15px rgba(0, 255, 255, 0.6); /* More prominent glow */
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.video-container video {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Memory Timeline (Level 2) */
+.memory-timeline-container {
+    position: relative;
+    width: 100%;
+    height: 450px; /* Increased height */
+    margin: 20px 0;
+    overflow: hidden; /* Hide scrollbars */
+}
+
+.memory-item img, .memory-item video {
+    width: 100%;
+    height: 280px; /* Increased height for memory items */
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #00FFC0;
+}
+
+/* Final Birthday Message Overlay */
+#final-birthday-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #1a0a2a, #0a0a0a, #1a0a2a); /* Matching loading screen style */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#final-birthday-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#final-birthday-overlay .overlay-content {
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #FF00FF; /* Pink border */
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.8), inset 0 0 20px rgba(255, 0, 255, 0.6); /* Pink glowing effect */
+    text-align: center;
+    max-width: 70%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+#final-birthday-heading {
+    font-family: 'Orbitron', sans-serif;
+    color: #FF00FF; /* Pink color */
+    font-size: 3em;
+    text-shadow: 0 0 15px #FF00FF, 0 0 30px #FF00FF;
+    margin-bottom: 30px;
+}
+
+#final-birthday-text {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.3em;
+    color: #FFC0CB; /* Lighter pink for message */
+    line-height: 1.8;
+    text-align: left;
+    white-space: pre-wrap; /* Preserve line breaks and spaces */
+    overflow: hidden;
+    border-right: .15em solid #FF00FF; /* Typewriter cursor */
+    animation: typing-final 6s steps(80, end) forwards, blink-caret-final .75s step-end infinite;
+    width: 0;
+    opacity: 1;
+}
+
+/* Specific typewriter animation for final message */
+@keyframes typing-final {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret-final {
+    from, to { border-color: transparent }
+    50% { border-color: #FF00FF; }
+}
+
+
+/* All other existing styles */
 .fuel-tank-container {
     position: absolute;
     right: 20px;
@@ -246,6 +395,18 @@ body {
     z-index: 10;
 }
 
+.fuel-tank-label {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #00FFC0;
+    font-size: 0.7em;
+    font-family: 'Orbitron', monospace;
+    z-index: 2;
+    text-shadow: 0 0 5px #00FFC0;
+}
+
 .fuel-tank-fill {
     width: 100%;
     height: 0%; /* Controlled by JS */
@@ -253,52 +414,6 @@ body {
     transition: height 0.5s ease-out;
     position: absolute;
     bottom: 0;
-}
-
-/* Artwork Wall (Level 1) */
-.artwork-frame {
-    position: relative;
-    width: 80%;
-    max-width: 500px;
-    height: 300px;
-    border: 3px solid #00FFFF;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
-    cursor: pointer;
-    overflow: hidden;
-    margin-top: 20px;
-    transition: all 0.5s ease-in-out;
-}
-
-.artwork-frame::before {
-    content: "CLICK TO REVEAL";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #00FFFF;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5em;
-    text-shadow: 0 0 10px #00FFFF;
-    z-index: 2;
-    transition: opacity 0.3s ease-in-out;
-}
-
-.artwork-frame.revealed::before {
-    opacity: 0;
-}
-
-.artwork-image {
-    width: 100%;
-    height: 100%;
-    background-image: url('images/artwork.jpg'); /* Ensure this path is correct! */
-    background-size: cover;
-    background-position: center;
-    filter: brightness(0); /* Starts black */
-    transition: filter 1s ease-in-out;
-}
-
-.artwork-frame.revealed .artwork-image {
-    filter: brightness(1); /* Reveals image */
 }
 
 .artwork-overlay {
@@ -393,15 +508,6 @@ body {
     color: #FF00FF;
 }
 
-/* Memory Timeline (Level 2) */
-.memory-timeline-container {
-    position: relative;
-    width: 100%;
-    height: 300px; /* Fixed height for the scrollable area */
-    margin: 20px 0;
-    overflow: hidden; /* Hide scrollbars */
-}
-
 #memory-timeline {
     display: flex;
     align-items: center;
@@ -427,22 +533,13 @@ body {
     border: 1px solid #00FFFF;
     border-radius: 8px;
     padding: 15px;
-    width: 250px; /* Fixed width for each memory item */
+    width: 280px; /* Adjusted width for each memory item */
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
     box-sizing: border-box;
 }
 
 .memory-item:last-child {
     margin-right: 0;
-}
-
-.memory-item img, .memory-item video {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #00FFC0;
 }
 
 .memory-item p {
@@ -557,54 +654,6 @@ body {
     font-weight: bold;
     margin-top: 30px;
 }
-
-
-/* Music Video Section */
-#level-music-video {
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Hide particles that go out of bounds */
-}
-
-.video-container {
-    position: relative;
-    width: 80%;
-    max-width: 700px;
-    aspect-ratio: 16 / 9;
-    background: rgba(0, 0, 0, 0.7);
-    border: 2px solid #00FFFF;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
-    margin-bottom: 20px;
-}
-
-.video-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-#video-lyric-station {
-    font-family: 'Roboto Mono', monospace;
-    font-size: 1.3em;
-    color: #00FFC0;
-    margin-top: 15px;
-    white-space: pre-wrap; /* Preserve line breaks */
-    text-align: center;
-    width: 90%;
-    min-height: 3em; /* Ensure space for lyrics */
-}
-
-.particle-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* Contain particles */
-    pointer-events: none; /* Allow clicks to pass through */
-    z-index: -1; /* Behind content */
-}
-
 
 /* Healing Toolkit Section */
 .healing-item {
@@ -792,14 +841,35 @@ body {
     margin-bottom: 0;
 }
 
-#final-birthday-message {
-    color: #00FFFF;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 3em;
-    text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF;
-    margin-top: 50px;
-    z-index: 2;
+/* NEW: Love Quote Pop-up Styles */
+.love-quote-popup {
+    position: fixed;
+    top: 50%; /* Start vertical center */
+    right: -300px; /* Start off-screen to the right */
+    transform: translateY(-50%) scale(0.8);
+    background: rgba(255, 105, 180, 0.8); /* Pinkish background */
+    color: white;
+    padding: 15px 25px;
+    border-radius: 25px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.1em;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.7), inset 0 0 8px rgba(255, 255, 255, 0.5);
+    z-index: 200;
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Springy transition */
 }
+.love-quote-popup.show {
+    opacity: 1;
+    right: 20px; /* Slide in to 20px from right */
+    transform: translateY(-50%) scale(1);
+}
+.love-quote-popup.hide {
+    opacity: 0;
+    right: -300px; /* Slide out to the right */
+    transform: translateY(-50%) scale(0.8);
+}
+
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
@@ -810,15 +880,16 @@ body {
     }
 
     .artwork-frame {
-        height: 250px;
+        height: 350px; /* Adjusted for smaller screens */
     }
 
     .memory-item img, .memory-item video {
-        height: 200px; /* Adjusted for smaller screens too */
+        height: 220px; /* Adjusted for smaller screens too */
     }
 
     .video-container {
         width: 95%;
+        max-width: 700px;
     }
 
     .fuel-tank-container {
@@ -837,7 +908,7 @@ body {
         padding: 20px; /* Adjust padding for smaller screens */
     }
 
-    #final-birthday-message {
+    #final-birthday-heading {
         font-size: 2.5em; /* Adjust for smaller screens */
         margin-top: 30px;
     }
@@ -863,7 +934,7 @@ body {
     }
 
     .artwork-frame {
-        height: 200px;
+        height: 250px; /* Further adjusted for very small screens */
     }
 
     .memory-item {
@@ -871,7 +942,7 @@ body {
     }
 
     .memory-item img, .memory-item video {
-        height: 120px;
+        height: 180px; /* Adjusted for very small screens */
     }
 
     .nav-arrow {
@@ -916,12 +987,16 @@ body {
         left: 50px;
     }
 
-    #final-birthday-message {
+    #final-birthday-heading {
         font-size: 2em;
     }
 
     .love-quote-popup {
         font-size: 0.9em;
-        padding: 10px 15px;
+        padding: 10px 20px;
+        right: -200px; /* Adjust for smaller screens */
+    }
+    .love-quote-popup.show {
+        right: 10px; /* Adjust for smaller screens */
     }
 }
