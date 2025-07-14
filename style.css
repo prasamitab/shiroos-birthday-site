@@ -259,7 +259,7 @@ p {
     opacity: 0;
 }
 
-.artwork-overlay {
+.overlay-message { /* General style for all overlays */
     position: fixed;
     top: 0;
     left: 0;
@@ -275,7 +275,7 @@ p {
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.artwork-overlay.visible {
+.overlay-message.visible {
     opacity: 1;
     visibility: visible;
 }
@@ -298,6 +298,8 @@ p {
     height: auto;
     margin-bottom: 20px;
     border-radius: 5px;
+    /* Specific to artwork overlay */
+    border: 1px solid rgba(255, 105, 180, 0.5);
 }
 
 .close-overlay-btn {
@@ -575,28 +577,10 @@ p {
 
 /* Hug Overlay */
 .hug-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background: rgba(0, 0, 0, 0.9);
-    display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 200;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
     color: #FFD700;
     font-size: 1.5em;
-    text-align: center;
-}
-
-.hug-overlay.visible {
-    opacity: 1;
-    visibility: visible;
 }
 
 .hug-overlay img {
@@ -632,6 +616,7 @@ p {
 .love-quote-popup.hide {
     opacity: 0;
     transform: translateY(-20px) scale(0.9);
+    display: none; /* Crucial: Fully remove from layout after fade out */
 }
 
 /* Final Hidden Heart Message Section */
@@ -650,7 +635,7 @@ p {
     overflow: hidden; /* For particles */
 }
 
-#hidden-heart-message-section p {
+#typed-final-message-content {
     font-size: 1.5em;
     line-height: 1.8;
     margin-bottom: 25px;
@@ -661,7 +646,16 @@ p {
     border: 2px solid #FFD700;
     box-shadow: 0 0 30px #FFD700;
     z-index: 10; /* Above particles */
+    white-space: pre-wrap; /* Preserve line breaks from JS */
+    overflow: hidden; /* For typewriter effect */
+    border-right: .15em solid transparent; /* Typewriter cursor, initially transparent */
 }
+
+.typing-effect {
+    border-right: .15em solid #00FFC0; /* Active typewriter cursor */
+    animation: blink-caret .75s step-end infinite;
+}
+
 
 #hidden-heart-message-section .final-line {
     font-size: 1.8em;
@@ -699,6 +693,37 @@ p {
     background: linear-gradient(to top, #00FFC0, #00FFFF); /* Green to Cyan */
     transition: height 1s ease-out;
 }
+
+/* NEW: Glowing Text for Birthday Message */
+.glowing-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4em; /* Adjust size as needed */
+    color: #FFD700; /* Gold */
+    text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700, 0 0 40px #FFD700, 0 0 50px #FFD700;
+    animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700;
+    }
+    to {
+        text-shadow: 0 0 20px #FFD700, 0 0 30px #FFD700, 0 0 40px #FFD700, 0 0 50px #FFD700, 0 0 60px #FFD700;
+    }
+}
+
+/* NEW: Birthday Reveal Overlay Specific Styles */
+#birthday-reveal-overlay .overlay-content {
+    border: 2px solid #FFD700; /* Gold border for birthday */
+    box-shadow: 0 0 30px #FFD700;
+    padding: 50px;
+    background: rgba(0, 0, 0, 0.95);
+}
+
+#birthday-reveal-overlay .close-overlay-btn {
+    color: #FFD700;
+}
+
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
@@ -740,9 +765,16 @@ p {
         padding: 20px; /* Adjust padding for smaller screens */
     }
 
-    #final-birthday-message {
+    #hidden-heart-message-section p, #typed-final-message-content {
+        font-size: 1.2em;
+    }
+
+    #hidden-heart-message-section .final-line {
+        font-size: 1.4em;
+    }
+
+    .glowing-text {
         font-size: 2.5em; /* Adjust for smaller screens */
-        margin-top: 30px;
     }
 }
 
@@ -772,29 +804,16 @@ p {
     .memory-item {
         height: auto; /* Allow height to adjust based on content */
     }
-}
 
-/* --- NEW: Ensure Quiz Elements are Clickable --- */
-#level-quiz {
-    position: relative; /* Ensure z-index works correctly relative to siblings */
-    z-index: 100; /* Place the quiz section above most other content */
-}
+    .glowing-text {
+        font-size: 1.8em; /* Further adjust for very small screens */
+    }
 
-.quiz-question label {
-    cursor: pointer; /* Explicitly show a pointer cursor on hover */
-    pointer-events: all; /* Ensure clicks are registered on the label and its children */
-    z-index: 101; /* Make labels/inputs higher than their container if needed */
-}
+    #hidden-heart-message-section p, #typed-final-message-content {
+        font-size: 1em;
+    }
 
-.quiz-question input[type="radio"] {
-    pointer-events: all; /* Ensure clicks are registered directly on the radio button */
-    z-index: 102; /* Even higher if necessary */
-}
-
-/* Optional: If the love quote popup is ever staying on screen,
-   ensure it's truly hidden when not needed. Your script already
-   has a good timeout, but you can also ensure its display
-   property is handled. */
-.love-quote-popup.hide {
-    display: none; /* Fully remove from layout after fade out */
+    #hidden-heart-message-section .final-line {
+        font-size: 1.2em;
+    }
 }
